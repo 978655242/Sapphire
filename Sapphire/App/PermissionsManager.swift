@@ -63,6 +63,8 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
     private lazy var bluetoothManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: 0])
 
     private let automationPermissionRequestedKey = "automationPermissionRequested"
+    private var automationCheckTask: Task<Void, Never>?
+    private var automationCheckPending = false
 
     private struct AutomationTarget {
         let name: String
@@ -292,28 +294,56 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
 
     // MARK: - Automation Logic
 
+    nonisolated static func automationPermissionStatus(for status: OSStatus) -> PermissionStatus {
+        switch Int(status) {
+        case Int(noErr):
+            return .granted
+        case Int(errAEEventNotPermitted), Int(errAETargetAddressNotPermitted):
+            return .denied
+        default:
+            // procNotFound (target not running), errAEEventWouldRequireUserConsent,
+            // paramErr and unknown errors are not a decision by the user.
+            return .notRequested
+        }
+    }
+
+    nonisolated static func aggregateAutomationStatus(_ statuses: [PermissionStatus]) -> PermissionStatus {
+        if statuses.contains(.denied) { return .denied }
+        if !statuses.isEmpty, statuses.allSatisfy({ $0 == .granted }) { return .granted }
+        return .notRequested
+    }
+
     private func checkAutomationStatus() {
         guard UserDefaults.standard.bool(forKey: automationPermissionRequestedKey) else {
-            automationStatus = PermissionStatus.notRequested
+            automationStatus = .notRequested
+            return
+        }
+        // ponytail: single-flight + one trailing refresh; the AE query is not cancellable,
+        // so overlapping callers (activation, onAppear, post-consent) coalesce instead.
+        guard automationCheckTask == nil else {
+            automationCheckPending = true
             return
         }
 
-        let installedTargets = automationTargets.filter {
-            NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0.bundleIdentifier) != nil
-        }
+        let bundleIdentifiers = automationTargets
+            .map(\.bundleIdentifier)
+            .filter { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0) != nil }
 
-        Task {
+        automationCheckTask = Task { [weak self] in
             var statuses: [PermissionStatus] = []
-            for target in installedTargets {
-                statuses.append(await getAutomationPermissionStatus(for: target.name))
+            for bundleIdentifier in bundleIdentifiers {
+                let status = await Self.determineAutomationPermission(
+                    for: bundleIdentifier,
+                    askUserIfNeeded: false
+                )
+                statuses.append(Self.automationPermissionStatus(for: status))
             }
-
-            if statuses.contains(PermissionStatus.denied) {
-                automationStatus = PermissionStatus.denied
-            } else if !statuses.isEmpty && statuses.allSatisfy({ $0 == PermissionStatus.granted }) {
-                automationStatus = PermissionStatus.granted
-            } else {
-                automationStatus = PermissionStatus.notRequested
+            guard let self else { return }
+            self.automationStatus = Self.aggregateAutomationStatus(statuses)
+            self.automationCheckTask = nil
+            if self.automationCheckPending {
+                self.automationCheckPending = false
+                self.checkAutomationStatus()
             }
         }
     }
@@ -380,32 +410,6 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
                 askUserIfNeeded
             )
         }.value
-    }
-
-    private func getAutomationPermissionStatus(for appName: String) async -> PermissionStatus {
-        let command = #"tell application "\#(appName)" to get its name"#
-
-        let errorInfo = await executeAppleScript(command: command, for: appName)
-
-        if errorInfo == nil {
-            return PermissionStatus.granted
-        } else if let errorNumber = errorInfo?[NSAppleScript.errorNumber] as? NSNumber,
-                  errorNumber.intValue == -1743 {
-            return PermissionStatus.denied
-        } else {
-            return PermissionStatus.notRequested
-        }
-    }
-
-    private func executeAppleScript(command: String, for appName: String) async -> NSDictionary? {
-        guard NSWorkspace.shared.urlForApplication(withBundleIdentifier: appName.lowercased() == "spotify" ? "com.spotify.client" : "com.apple.Music") != nil else {
-            print("[PermissionsManager] Application '\(appName)' not found.")
-            return ["error": "\(appName) not found"]
-        }
-
-        var errorInfo: NSDictionary?
-        AppleScriptRunner.execute(command, error: &errorInfo)
-        return errorInfo
     }
 
     // MARK: - Full Disk Access
