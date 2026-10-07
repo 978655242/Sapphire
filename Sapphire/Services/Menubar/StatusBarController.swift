@@ -241,7 +241,7 @@ final class StatusBarController {
         let settings = SettingsModel.shared.settings
         let showDividers = settings.showSectionDividers
         let hideControlIcon = settings.hideMenuBarIcon
-        let image = NSImage(systemSymbolName: "circle.fill", accessibilityDescription: "Separator")?.withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 5, weight: .light))
+        let image = NSImage(systemSymbolName: "circle.fill", accessibilityDescription: "Separator".local)?.withSymbolConfiguration(NSImage.SymbolConfiguration(pointSize: 5, weight: .light))
 
         expandCollapseItem.length = hideControlIcon ? 0 : Lengths.standard
 
@@ -283,7 +283,7 @@ final class StatusBarController {
         guard let button = expandCollapseItem.button else { return }
         let style = SettingsModel.shared.settings.controlItemIconStyle
         let symbolName = style.symbolName(isHidden: isCollapsed && !isEditing)
-        button.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Toggle Hidden Items")
+        button.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "Toggle Hidden Items".local)
     }
 
     // MARK: - Auto-Rehide Logic
@@ -369,23 +369,23 @@ final class StatusBarController {
 
     private func createChevronContextMenu() -> NSMenu {
         let menu = NSMenu()
-        menu.addItem(withTitle: "Edit Menu Bar Items", action: #selector(enterEditMode), keyEquivalent: "").target = self
+        menu.addItem(withTitle: "Edit Menu Bar Items".local, action: #selector(enterEditMode), keyEquivalent: "").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Open Sapphire Setting", action: #selector(openPreferences), keyEquivalent: ",").target = self
+        menu.addItem(withTitle: "Open Sapphire Setting".local, action: #selector(openPreferences), keyEquivalent: ",").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Quit Sapphire", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        menu.addItem(withTitle: "Quit Sapphire".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         return menu
     }
 
     private func createAppContextMenu() -> NSMenu {
         let menu = NSMenu()
         if SettingsModel.shared.settings.hideMenuBarIcon {
-            menu.addItem(withTitle: "Edit Menu Bar Items", action: #selector(enterEditMode), keyEquivalent: "").target = self
+            menu.addItem(withTitle: "Edit Menu Bar Items".local, action: #selector(enterEditMode), keyEquivalent: "").target = self
             menu.addItem(.separator())
         }
-        menu.addItem(withTitle: "Preferences", action: #selector(openPreferences), keyEquivalent: ",").target = self
+        menu.addItem(withTitle: "Preferences".local, action: #selector(openPreferences), keyEquivalent: ",").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Quit Sapphire", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        menu.addItem(withTitle: "Quit Sapphire".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         return menu
     }
 

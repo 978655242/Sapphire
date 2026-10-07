@@ -133,7 +133,8 @@ final class FocusSessionManager: ObservableObject {
 
     private static let shortWeekdayFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEE"
+        formatter.locale = AppLocalization.locale
+        formatter.setLocalizedDateFormatFromTemplate("EEE")
         return formatter
     }()
 
@@ -414,8 +415,8 @@ final class FocusSessionManager: ObservableObject {
                 syncBlocking()
                 NotificationCenter.default.post(name: .focusSessionBlockCompleted, object: nil, userInfo: ["phase": "break"])
                 postCompletionNotification(
-                    title: "Focus block complete ",
-                    body: "Great work! Time for a \(Int(plannedBreakDuration / 60)) minute break."
+                    title: "Focus block complete ".local,
+                    body: String(localized: "Great work! Time for a \(Int(plannedBreakDuration / 60)) minute break.")
                 )
             } else {
                 finishSession()
@@ -434,8 +435,8 @@ final class FocusSessionManager: ObservableObject {
             syncBlocking()
             NotificationCenter.default.post(name: .focusSessionBlockCompleted, object: nil, userInfo: ["phase": "focus"])
             postCompletionNotification(
-                title: "Break over ",
-                body: "Back to it — new focus block started."
+                title: "Break over ".local,
+                body: "Back to it — new focus block started.".local
             )
         case .sessionFinished:
             finishSession()
@@ -455,8 +456,8 @@ final class FocusSessionManager: ObservableObject {
         stopShortcutTimerIfNeeded()
         NotificationCenter.default.post(name: .focusSessionEnded, object: nil)
         postCompletionNotification(
-            title: "Focus session complete ",
-            body: "You finished \(sessionCompletedBlocks) block\(sessionCompletedBlocks == 1 ? "" : "s"). Total focus today: \(Self.format(completedToday))."
+            title: "Focus session complete ".local,
+            body: String(localized: "Focus blocks completed: \(sessionCompletedBlocks). Total focus today: \(Self.format(completedToday)).")
         )
     }
 
@@ -786,8 +787,8 @@ final class FocusSessionManager: ObservableObject {
             let key = cal.dateComponents([.year, .month, .day], from: date)
             let seconds = totals[key, default: 0]
             let label: String = {
-                if daysAgo == 0 { return "Today" }
-                if daysAgo == 1 { return "Yest" }
+                if daysAgo == 0 { return "Today".local }
+                if daysAgo == 1 { return "Yest".local }
                 return Self.shortWeekdayFormatter.string(from: date)
             }()
             return (label, seconds)

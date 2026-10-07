@@ -43,7 +43,7 @@ struct BatteryLowPowerView: View {
                             .font(.system(.title3, design: .rounded).bold())
                             .foregroundColor(isPressed ? accentColor : .primary)
 
-                        Text(isLowPowerActive ? "Tap to turn off Low Power Mode" : "Tap to turn on Low Power Mode")
+                        Text(isLowPowerActive ? "Tap to turn off Low Power Mode".local : "Tap to turn on Low Power Mode".local)
                             .font(.body)
                             .foregroundColor(.secondary)
                     }

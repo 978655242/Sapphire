@@ -100,6 +100,7 @@ private enum DateFormatterCache {
         }
 
         let formatter = DateFormatter()
+        formatter.locale = AppLocalization.locale
         formatter.dateFormat = format
         formatters[format] = formatter
         return formatter

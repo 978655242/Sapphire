@@ -97,7 +97,7 @@ final class IDeviceBattery {
             let pencil = BatteryDevice(
                 deviceID: "Pencil_" + device.deviceID,
                 deviceType: isApplePencil ? "ApplePencil" : "Pencil",
-                deviceName: isApplePencil ? "Apple Pencil".local : "Pencil".local,
+                deviceName: isApplePencil ? "Apple Pencil" : "Pencil",
                 deviceModel: model,
                 batteryLevel: level,
                 isCharging: status,

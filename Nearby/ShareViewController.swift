@@ -314,7 +314,7 @@ class ShareViewController: NSViewController, ShareExtensionDelegate{
 
     func selectDevice(device:RemoteDeviceInfo){
         guard let deviceID=device.id else {
-            connectionFailed(with: NearbyError.protocolError("Selected device has no endpoint identifier"))
+            connectionFailed(with: NearbyError.protocolError(NSLocalizedString("Selected device has no endpoint identifier", comment: "")))
             return
         }
         NearbyConnectionManager.shared.stopDeviceDiscovery()

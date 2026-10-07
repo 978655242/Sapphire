@@ -720,7 +720,7 @@ class SystemHUDManager: ObservableObject {
             PerAppAudioController.shared.setVolume(Double(newVolume), for: targetBundleID)
 
             let runningApp = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == targetBundleID })
-            let appName = runningApp?.localizedName ?? NSWorkspace.shared.frontmostApplication?.localizedName ?? "Unknown App"
+            let appName = runningApp?.localizedName ?? NSWorkspace.shared.frontmostApplication?.localizedName ?? "Unknown App".local
             let iconImage = runningApp?.icon ?? self.currentAppIcon
             self.currentAppIcon = iconImage
 
@@ -789,7 +789,7 @@ class SystemHUDManager: ObservableObject {
                 showHUD(for: hud)
             } else if isControllingAppVolume, let bundleID = self.currentAppBundleID {
                 let runningApp = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleID })
-                let appName = runningApp?.localizedName ?? "Unknown App"
+                let appName = runningApp?.localizedName ?? "Unknown App".local
                 let appIconImage = self.currentAppIcon ?? runningApp?.icon
                 showHUD(for: .appVolume(appName: appName, appIcon: appIconImage, appVolume: self.currentAppVolume))
             } else {
@@ -806,7 +806,7 @@ class SystemHUDManager: ObservableObject {
                     if musicManager.isPlaying, let bundleID = musicManager.lastKnownBundleID,
                        bundleID != "com.spotify.client" && bundleID != "com.apple.Music" && bundleID != Bundle.main.bundleIdentifier {
                         appBundleID = bundleID
-                        appName = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleID })?.localizedName ?? musicManager.title ?? "Unknown App"
+                        appName = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleID })?.localizedName ?? musicManager.title ?? "Unknown App".local
                         appIcon = musicManager.appIcon ?? NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleID })?.icon
                     } else {
                         if let frontmostApp = NSWorkspace.shared.frontmostApplication,
@@ -815,7 +815,7 @@ class SystemHUDManager: ObservableObject {
                             let hasActiveTaps = MultiAudioManager.shared.activeTaps[bundleID] != nil && !MultiAudioManager.shared.activeTaps[bundleID]!.isEmpty
                             if hasActiveTaps {
                                 appBundleID = bundleID
-                                appName = frontmostApp.localizedName ?? "Unknown App"
+                                appName = frontmostApp.localizedName ?? "Unknown App".local
                                 appIcon = frontmostApp.icon
                             }
                         }
@@ -1616,11 +1616,11 @@ struct SystemHUDSlimActivityView {
 
      static func title(for type: HUDType) -> String {
          switch type {
-         case .volume: return "Volume"
-         case .brightness, .multiDisplayBrightness: return "Brightness"
-         case .keyboardBrightness: return "Keyboard Brightness"
+         case .volume: return "Volume".local
+         case .brightness, .multiDisplayBrightness: return "Brightness".local
+         case .keyboardBrightness: return "Keyboard Brightness".local
          case .externalDeviceVolume(let deviceName, _, _, _, let isControllingExternal, _):
-             return isControllingExternal ? deviceName : "Volume"
+             return isControllingExternal ? deviceName : "Volume".local
          case .appVolume(let appName, _, _): return appName
          }
      }

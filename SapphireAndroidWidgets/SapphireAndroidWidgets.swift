@@ -10,7 +10,9 @@ import SwiftUI
 import WidgetKit
 
 struct AndroidWidgetChoice: AppEntity, Identifiable {
-    static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "Android Widget")
+    static var typeDisplayRepresentation: TypeDisplayRepresentation {
+        TypeDisplayRepresentation(name: LocalizedStringResource("Android Widget", locale: AndroidWidgetSnapshotStore.appLocale))
+    }
     static let defaultQuery = AndroidWidgetChoiceQuery()
 
     let id: String
@@ -18,7 +20,7 @@ struct AndroidWidgetChoice: AppEntity, Identifiable {
     let provider: String
 
     var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(title: "\(label)", subtitle: "Android widget")
+        DisplayRepresentation(title: "\(label)", subtitle: LocalizedStringResource("Android widget", locale: AndroidWidgetSnapshotStore.appLocale))
     }
 
     init(snapshot: AndroidWidgetSnapshotRecord) {
@@ -46,10 +48,14 @@ struct AndroidWidgetChoiceQuery: EntityQuery {
 }
 
 struct AndroidWidgetConfigurationIntent: WidgetConfigurationIntent {
-    static let title: LocalizedStringResource = "Android Widget"
-    static let description = IntentDescription("Choose a widget mirrored from your paired Android phone.")
+    static var title: LocalizedStringResource {
+        LocalizedStringResource("Android Widget", locale: AndroidWidgetSnapshotStore.appLocale)
+    }
+    static var description: IntentDescription {
+        IntentDescription(LocalizedStringResource("Choose a widget mirrored from your paired Android phone.", locale: AndroidWidgetSnapshotStore.appLocale))
+    }
 
-    @Parameter(title: "Widget")
+    @Parameter(title: LocalizedStringResource("Widget", locale: AndroidWidgetSnapshotStore.appLocale))
     var widget: AndroidWidgetChoice?
 }
 
@@ -109,7 +115,7 @@ struct AndroidWidgetEntryView: View {
                     Image(systemName: "iphone.gen3.radiowaves.left.and.right")
                         .font(.system(size: 30, weight: .medium))
                         .foregroundStyle(.secondary)
-                    Text(entry.snapshot == nil ? "Add an Android widget in Sapphire" : "Waiting for your phone")
+                    Text(entry.snapshot == nil ? String(localized: LocalizedStringResource("Add an Android widget in Sapphire", locale: AndroidWidgetSnapshotStore.appLocale)) : String(localized: LocalizedStringResource("Waiting for your phone", locale: AndroidWidgetSnapshotStore.appLocale)))
                         .font(.caption)
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
@@ -131,9 +137,10 @@ struct SapphireAndroidWidget: Widget {
             provider: AndroidWidgetTimelineProvider()
         ) { entry in
             AndroidWidgetEntryView(entry: entry)
+                .environment(\.locale, AndroidWidgetSnapshotStore.appLocale)
         }
-        .configurationDisplayName("Android Widget")
-        .description("Place a live widget from your paired Android phone on the Mac desktop or in Notification Center.")
+        .configurationDisplayName(String(localized: LocalizedStringResource("Android Widget", locale: AndroidWidgetSnapshotStore.appLocale)))
+        .description(String(localized: LocalizedStringResource("Place a live widget from your paired Android phone on the Mac desktop or in Notification Center.", locale: AndroidWidgetSnapshotStore.appLocale)))
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
         .contentMarginsDisabled()
     }

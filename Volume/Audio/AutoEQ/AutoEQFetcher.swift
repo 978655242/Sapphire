@@ -70,13 +70,13 @@ final class AutoEQFetcher {
             let (data, response) = try await URLSession.shared.data(from: Self.indexURL)
             guard let httpResponse = response as? HTTPURLResponse,
                   httpResponse.statusCode == 200 else {
-                catalogState = .error("Failed to fetch catalog")
+                catalogState = .error(NSLocalizedString("Failed to fetch catalog", comment: ""))
                 logger.error("Catalog fetch returned non-200 status")
                 return
             }
 
             guard let text = String(data: data, encoding: .utf8) else {
-                catalogState = .error("Invalid catalog data")
+                catalogState = .error(NSLocalizedString("Invalid catalog data", comment: ""))
                 return
             }
 
@@ -89,7 +89,7 @@ final class AutoEQFetcher {
             saveCatalogToCache(entries)
         } catch {
             if catalog.isEmpty {
-                catalogState = .error("Network error: \(error.localizedDescription)")
+                catalogState = .error(String(format: NSLocalizedString("Network error: %@", comment: ""), error.localizedDescription))
             }
             logger.error("Catalog fetch failed: \(error.localizedDescription)")
         }
@@ -295,10 +295,10 @@ final class AutoEQFetcher {
 
         var errorDescription: String? {
             switch self {
-            case .invalidURL: return "Invalid profile URL"
-            case .profileNotFound(let name): return "Profile not found: \(name)"
-            case .invalidData: return "Invalid profile data"
-            case .parseFailed(let name): return "Failed to parse profile: \(name)"
+            case .invalidURL: return NSLocalizedString("Invalid profile URL", comment: "")
+            case .profileNotFound(let name): return String(format: NSLocalizedString("Profile not found: %@", comment: ""), name)
+            case .invalidData: return NSLocalizedString("Invalid profile data", comment: "")
+            case .parseFailed(let name): return String(format: NSLocalizedString("Failed to parse profile: %@", comment: ""), name)
             }
         }
     }

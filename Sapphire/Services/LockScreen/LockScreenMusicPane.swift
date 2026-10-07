@@ -24,12 +24,12 @@ enum LockScreenMusicTab: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .nowPlaying: "Overview"
-        case .artist: "Artist"
-        case .playlists: "Playlists"
-        case .queue: "Queue"
-        case .devices: "Devices"
-        case .lyrics: "Lyrics"
+        case .nowPlaying: "Overview".local
+        case .artist: "Artist".local
+        case .playlists: "Playlists".local
+        case .queue: "Queue".local
+        case .devices: "Devices".local
+        case .lyrics: "Lyrics".local
         }
     }
 
@@ -204,7 +204,7 @@ struct LockScreenFullScreenMusicPane: View {
             Spacer()
 
             VStack(spacing: 2) {
-                Text(musicManager.title ?? "Not Playing")
+                Text(musicManager.title ?? "Not Playing".local)
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .lineLimit(1)
@@ -311,13 +311,13 @@ struct LockScreenFullScreenMusicPane: View {
                         .shadow(color: musicManager.accentColor.opacity(0.5), radius: 32, y: 16)
 
                     VStack(spacing: 6) {
-                        Text(musicManager.title ?? "Not Playing")
+                        Text(musicManager.title ?? "Not Playing".local)
                             .font(.system(size: 34, weight: .black, design: .rounded))
                             .foregroundStyle(.white)
                             .lineLimit(2)
                             .multilineTextAlignment(.center)
 
-                        Text(musicManager.artist ?? "Unknown Artist")
+                        Text(musicManager.artist ?? "Unknown Artist".local)
                             .font(.system(size: 18, weight: .semibold, design: .rounded))
                             .foregroundStyle(.white.opacity(0.55))
                             .lineLimit(1)
@@ -373,7 +373,7 @@ struct LockScreenFullScreenMusicPane: View {
                                                 }
                                             }
                                             if let listeners = artist.monthlyListeners ?? artist.followers {
-                                                Text(listeners.compactFormatted + (artist.monthlyListeners != nil ? " monthly listeners" : " followers"))
+                                                Text(artist.monthlyListeners != nil ? String(localized: "\(listeners.compactFormatted) monthly listeners") : String(localized: "\(listeners.compactFormatted) followers"))
                                                     .font(.system(size: 13, weight: .medium, design: .rounded))
                                                     .foregroundStyle(.white.opacity(0.45))
                                             }
@@ -494,10 +494,10 @@ struct LockScreenFullScreenMusicPane: View {
                                                 .foregroundStyle(.white.opacity(0.2))
                                                 .frame(width: 18)
                                             VStack(alignment: .leading, spacing: 1) {
-                                                Text(track.metadata?.title ?? "Unknown")
+                                                Text(track.metadata?.title ?? "Unknown".local)
                                                     .font(.system(size: 13, weight: .semibold, design: .rounded))
                                                     .foregroundStyle(.white).lineLimit(1)
-                                                Text(track.metadata?.artistName ?? "Unknown Artist")
+                                                Text(track.metadata?.artistName ?? "Unknown Artist".local)
                                                     .font(.system(size: 11, weight: .medium, design: .rounded))
                                                     .foregroundStyle(.white.opacity(0.35)).lineLimit(1)
                                             }
@@ -525,7 +525,7 @@ struct LockScreenFullScreenMusicPane: View {
                                             Text("\(concert.venue), \(concert.city)")
                                                 .font(.system(size: 11, weight: .medium, design: .rounded))
                                                 .foregroundStyle(.white.opacity(0.35))
-                                            Text(concert.startDateIsoString)
+                                            Text(concert.displayDate)
                                                 .font(.system(size: 10, weight: .regular, design: .monospaced))
                                                 .foregroundStyle(.white.opacity(0.25))
                                         }
@@ -571,7 +571,7 @@ struct LockScreenFullScreenMusicPane: View {
 
     // MARK: - Overview Helpers
 
-    private func statPill(icon: String, label: String, value: String, color: Color) -> some View {
+    private func statPill(icon: String, label: LocalizedStringKey, value: String, color: Color) -> some View {
         HStack(spacing: 6) {
             Image(systemName: icon)
                 .font(.system(size: 10))
@@ -608,7 +608,7 @@ struct LockScreenFullScreenMusicPane: View {
             )
     }
 
-    private func overviewSection<Content: View>(title: String, icon: String, accent: Color, @ViewBuilder content: () -> Content) -> some View {
+    private func overviewSection<Content: View>(title: LocalizedStringKey, icon: String, accent: Color, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 7) {
                 Image(systemName: icon)
@@ -653,7 +653,7 @@ struct LockScreenFullScreenMusicPane: View {
                     }
                 }
                 if let listeners = artist.monthlyListeners ?? artist.followers {
-                    Text(listeners.compactFormatted + (artist.monthlyListeners != nil ? " monthly listeners" : " followers"))
+                    Text(artist.monthlyListeners != nil ? String(localized: "\(listeners.compactFormatted) monthly listeners") : String(localized: "\(listeners.compactFormatted) followers"))
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(.white.opacity(0.4))
                 }
@@ -673,11 +673,11 @@ struct LockScreenFullScreenMusicPane: View {
                     .shadow(color: musicManager.accentColor.opacity(0.35), radius: 24, y: 12)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(musicManager.title ?? "Not Playing")
+                    Text(musicManager.title ?? "Not Playing".local)
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .foregroundStyle(.white)
                         .lineLimit(2)
-                    Text(musicManager.artist ?? "Unknown Artist")
+                    Text(musicManager.artist ?? "Unknown Artist".local)
                         .font(.system(size: 14, weight: .medium, design: .rounded))
                         .foregroundStyle(.white.opacity(0.45))
                         .lineLimit(1)
@@ -764,7 +764,7 @@ struct LockScreenFullScreenMusicPane: View {
                         Image(systemName: "music.mic")
                             .font(.system(size: 10))
                             .foregroundStyle(musicManager.accentColor)
-                        Text(listeners.compactFormatted + (artist.monthlyListeners != nil ? " monthly listeners" : " followers"))
+                        Text(artist.monthlyListeners != nil ? String(localized: "\(listeners.compactFormatted) monthly listeners") : String(localized: "\(listeners.compactFormatted) followers"))
                             .font(.system(size: 13, weight: .medium, design: .rounded))
                             .foregroundStyle(.white.opacity(0.5))
                     }
@@ -852,7 +852,7 @@ struct LockScreenFullScreenMusicPane: View {
                             Text("\(concert.venue), \(concert.city)")
                                 .font(.system(size: 12, weight: .medium, design: .rounded))
                                 .foregroundStyle(.white.opacity(0.4))
-                            Text(concert.startDateIsoString)
+                            Text(concert.displayDate)
                                 .font(.system(size: 11, weight: .regular, design: .monospaced))
                                 .foregroundStyle(.white.opacity(0.3))
                         }
@@ -1020,8 +1020,8 @@ struct LockScreenFullScreenMusicPane: View {
                         ForEach(Array(nativeQueue.enumerated()), id: \.offset) { index, track in
                             trackRow(
                                 index: index + 1,
-                                title: track.metadata?.title ?? "Unknown Track",
-                                subtitle: track.metadata?.artistName ?? "Unknown Artist",
+                                title: track.metadata?.title ?? "Unknown Track".local,
+                                subtitle: track.metadata?.artistName ?? "Unknown Artist".local,
                                 imageURL: track.metadata?.imageURL
                             )
                         }
@@ -1207,7 +1207,7 @@ struct LockScreenFullScreenMusicPane: View {
         .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
     }
 
-    private func sectionHeader(_ title: String, icon: String) -> some View {
+    private func sectionHeader(_ title: LocalizedStringKey, icon: String) -> some View {
         HStack(spacing: 7) {
             Image(systemName: icon)
                 .font(.system(size: 13))
@@ -1218,7 +1218,7 @@ struct LockScreenFullScreenMusicPane: View {
         }
     }
 
-    private func emptyState(_ text: String) -> some View {
+    private func emptyState(_ text: LocalizedStringKey) -> some View {
         VStack(spacing: 10) {
             Image(systemName: "music.note")
                 .font(.system(size: 36, weight: .light))
@@ -1278,7 +1278,7 @@ struct LockScreenFullScreenMusicPane: View {
     private func overlayTitle(for overlay: LockScreenMusicPaneOverlay) -> String {
         switch overlay {
         case .playlistDetail(let p): p.name
-        case .loginPrompt: "Connect Spotify"
+        case .loginPrompt: "Connect Spotify".local
         }
     }
 

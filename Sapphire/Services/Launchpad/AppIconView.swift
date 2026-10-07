@@ -77,18 +77,18 @@ class LaunchpadViewModel: ObservableObject {
         guard let item = itemToDelete else { return "" }
         switch item {
         case .app(let appItem):
-            return "Move \"\(getApp(for: appItem)?.name ?? "App")\" to Trash?"
+            return String(localized: "Move \"\(getApp(for: appItem)?.name ?? "App".local)\" to Trash?")
         case .folder:
-            return "Disband Folder?"
+            return "Disband Folder?".local
         }
     }
     var deleteAlertMessage: String {
         guard let item = itemToDelete else { return "" }
         switch item {
         case .app:
-            return "This will permanently remove the app from your Mac."
+            return "This will permanently remove the app from your Mac.".local
         case .folder(let folder):
-            return "The apps in \"\(folder.name)\" will be returned to the Launchpad."
+            return String(localized: "The apps in \"\(folder.name)\" will be returned to the Launchpad.")
         }
     }
 
@@ -216,7 +216,7 @@ class LaunchpadViewModel: ObservableObject {
 
     func createFolder(with draggedItem: LaunchpadItem, on targetItem: LaunchpadPageItem) {
         guard case let .app(targetAppItem) = targetItem else { return }
-        let newFolder = LaunchpadFolder(id: UUID(), name: "Folder", items: [targetAppItem, draggedItem])
+        let newFolder = LaunchpadFolder(id: UUID(), name: "Folder".local, items: [targetAppItem, draggedItem])
         guard let targetPath = findPath(for: targetItem.id) else { return }
 
         draggingItem = nil

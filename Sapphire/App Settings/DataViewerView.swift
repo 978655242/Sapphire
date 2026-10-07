@@ -138,21 +138,21 @@ struct DataViewerView: View {
             HStack(spacing: 20) {
                 StatCard(
                     icon: "chart.bar.fill",
-                    title: "Total Data Points",
+                    title: "Total Data Points".local,
                     value: "\(summary.totalDataPoints)",
                     color: .blue
                 )
 
                 StatCard(
                     icon: "externaldrive.fill",
-                    title: "Database Size",
+                    title: "Database Size".local,
                     value: String(format: "%.2f MB", summary.databaseSizeMB),
                     color: .purple
                 )
 
                 StatCard(
                     icon: "checkmark.circle.fill",
-                    title: "Active Monitors",
+                    title: "Active Monitors".local,
                     value: "\(summary.countsByMonitorType.count)",
                     color: .green
                 )
@@ -186,7 +186,7 @@ struct DataViewerView: View {
                 if let oldest = summary.oldestEntry {
                     DataRangeRow(
                         icon: "calendar.badge.clock",
-                        title: "Oldest Entry",
+                        title: "Oldest Entry".local,
                         date: oldest
                     )
                 }
@@ -194,7 +194,7 @@ struct DataViewerView: View {
                 if let newest = summary.newestEntry {
                     DataRangeRow(
                         icon: "calendar.badge.checkmark",
-                        title: "Newest Entry",
+                        title: "Newest Entry".local,
                         date: newest
                     )
                 }
@@ -268,7 +268,7 @@ struct DataViewerView: View {
                 }
             } catch {
                 await MainActor.run {
-                    self.errorMessage = error.localizedDescription
+                    self.errorMessage = AppLocalization.description(for: error)
                     self.isLoading = false
                 }
             }
@@ -360,6 +360,7 @@ struct DataRangeRow: View {
 
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = AppLocalization.locale
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter

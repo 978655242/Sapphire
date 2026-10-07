@@ -47,11 +47,11 @@ struct LASDiagnostic {
     var statusMessage: String {
         switch probeResult {
         case .foundStandard:
-            return "Sensor detected and ready."
+            return "Sensor detected and ready.".local
         case .foundVendorSpecific:
-            return "Sensor hardware exists, but only a vendor-specific HID interface was found."
+            return "Sensor hardware exists, but only a vendor-specific HID interface was found.".local
         case .notFound:
-            return "No lid angle sensor was detected on this Mac."
+            return "No lid angle sensor was detected on this Mac.".local
         }
     }
 
@@ -62,7 +62,6 @@ struct LASDiagnostic {
 
         print("[LAS] Model: \(model.identifier)")
         print("[LAS] Probe: \(probe)")
-        print("[LAS] Status: \(diagnostic.statusMessage)")
 
         return diagnostic
     }()
@@ -173,7 +172,7 @@ final class LidAngleSensor: ObservableObject {
     @Published private(set) var isAvailable = false
     @Published private(set) var isReporting = false
     @Published private(set) var tick: UInt = 0
-    @Published private(set) var statusMessage = "Sensor not available"
+    @Published private(set) var statusMessage = "Sensor not available".local
 
     private(set) var diagnostic: LASDiagnostic?
 
@@ -332,7 +331,7 @@ final class LidAngleSensor: ObservableObject {
         nextReopenAttemptTime = 0
         if !isReporting {
             isReporting = true
-            statusMessage = diagnostic?.statusMessage ?? "Sensor detected and ready."
+            statusMessage = diagnostic?.statusMessage ?? "Sensor detected and ready.".local
             isFirstUpdate = true
         }
 
@@ -380,7 +379,7 @@ final class LidAngleSensor: ObservableObject {
     private func markReadingUnavailable() {
         isReporting = false
         velocity = 0
-        statusMessage = "The lid angle sensor stopped responding. Reconnecting…"
+        statusMessage = "The lid angle sensor stopped responding. Reconnecting…".local
     }
 
     private func updateVelocity(from rawAngle: Double) {

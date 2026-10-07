@@ -400,7 +400,7 @@ struct PersonalProfile: Codable, Equatable, Sendable {
         } else if !firstName.isEmpty {
             return firstName
         } else {
-            return "User"
+            return "User".local
         }
     }
 

@@ -137,7 +137,7 @@ struct RichTextToolbar: View {
                 .background(MaterialChartPalette.surface, in: RoundedRectangle(cornerRadius: 7, style: .continuous))
         }
         .buttonStyle(.plain)
-        .help(tip)
+        .help(tip.local)
     }
 
     private var liveTextView: NSTextView? {

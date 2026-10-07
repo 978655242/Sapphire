@@ -139,7 +139,7 @@ struct FaceIDRegistrationView: View {
 
     private var isRegistered: Bool { cameraController.appState == .registeredAndIdle }
     private var registrationProgress: Double { cameraController.registrationProgress }
-    private var instructionText: String { isRegistered ? "Registration Complete!" : cameraController.userInstruction }
+    private var instructionText: String { isRegistered ? "Registration Complete!".local : cameraController.userInstruction }
 
     private var isAskExtended: Bool {
         if case .registering(let step) = cameraController.appState, step == .askExtended { return true }
@@ -281,20 +281,20 @@ struct FaceIDRegistrationView: View {
                         VStack(spacing: 16) {
                             if cameraController.isExtendedPhase {
                                 HStack(spacing: 10) {
-                                    poseIndicator(label: "Up", key: "up")
-                                    poseIndicator(label: "Down", key: "down")
-                                    poseIndicator(label: "Tilt L", key: "tiltLeft")
-                                    poseIndicator(label: "Tilt R", key: "tiltRight")
+                                    poseIndicator(label: "Up".local, key: "up")
+                                    poseIndicator(label: "Down".local, key: "down")
+                                    poseIndicator(label: "Tilt L".local, key: "tiltLeft")
+                                    poseIndicator(label: "Tilt R".local, key: "tiltRight")
                                 }
                                 HStack(spacing: 10) {
-                                    poseIndicator(label: "Near", key: "closer")
-                                    poseIndicator(label: "Far", key: "farther")
+                                    poseIndicator(label: "Near".local, key: "closer")
+                                    poseIndicator(label: "Far".local, key: "farther")
                                 }
                             } else {
                                 HStack(spacing: 10) {
-                                    poseIndicator(label: "Front", key: "center")
-                                    poseIndicator(label: "Left", key: "left")
-                                    poseIndicator(label: "Right", key: "right")
+                                    poseIndicator(label: "Front".local, key: "center")
+                                    poseIndicator(label: "Left".local, key: "left")
+                                    poseIndicator(label: "Right".local, key: "right")
                                 }
                             }
 

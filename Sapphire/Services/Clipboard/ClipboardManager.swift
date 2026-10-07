@@ -374,7 +374,7 @@ final class ClipboardManager: ObservableObject {
         endIgnoringExternalPasteboardChanges(ownChangeCount: ownChangeCount)
         lastChangeCount = ownChangeCount
         let w = Int(image.size.width.rounded()), h = Int(image.size.height.rounded())
-        prependImage(pngData: pngData, preview: (w > 0 && h > 0) ? "Image \(w)×\(h)" : "Image")
+        prependImage(pngData: pngData, preview: (w > 0 && h > 0) ? String(localized: "Image \(w)×\(h)") : "Image".local)
         NotificationCenter.default.post(name: .continuityClipboardReceived,
                                         object: nil, userInfo: ["device": deviceName, "isImage": true])
     }
@@ -476,7 +476,7 @@ final class ClipboardManager: ObservableObject {
             let image = NSImage(data: imageData)
             let w = Int(image?.size.width.rounded() ?? 0)
             let h = Int(image?.size.height.rounded() ?? 0)
-            let preview = (w > 0 && h > 0) ? "Image \(w)×\(h)" : "Image"
+            let preview = (w > 0 && h > 0) ? String(localized: "Image \(w)×\(h)") : "Image".local
             prependImage(pngData: imageData, preview: preview)
             return
         }

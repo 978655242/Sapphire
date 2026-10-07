@@ -32,23 +32,23 @@ enum InstalledAppUpdateSource: Equatable {
 
     var displayName: String {
         switch self {
-        case .none: return "No update source"
-        case .sparkle: return "Sparkle"
-        case .appStore: return "Mac App Store"
-        case .keystone: return "Google Update"
-        case .electron(.github): return "electron-updater · GitHub"
-        case .electron(.generic): return "electron-updater"
-        case .homebrew: return "Homebrew"
-        case .mozilla(.firefox): return "Mozilla"
-        case .mozilla(.thunderbird): return "Mozilla"
-        case .jsonManifest: return "App update manifest"
-        case .visualStudioCode: return "Visual Studio Code Update"
-        case .androidStudio: return "Android Studio Update"
-        case .jetBrains: return "JetBrains Update"
-        case .microsoftEdge: return "Microsoft Edge Update"
-        case .github: return "GitHub Releases"
-        case .blender: return "Blender Releases"
-        case .selfUpdating: return "Self-updating"
+        case .none: return "No update source".local
+        case .sparkle: return "Sparkle".local
+        case .appStore: return "Mac App Store".local
+        case .keystone: return "Google Update".local
+        case .electron(.github): return "electron-updater · GitHub".local
+        case .electron(.generic): return "electron-updater".local
+        case .homebrew: return "Homebrew".local
+        case .mozilla(.firefox): return "Mozilla".local
+        case .mozilla(.thunderbird): return "Mozilla".local
+        case .jsonManifest: return "App update manifest".local
+        case .visualStudioCode: return "Visual Studio Code Update".local
+        case .androidStudio: return "Android Studio Update".local
+        case .jetBrains: return "JetBrains Update".local
+        case .microsoftEdge: return "Microsoft Edge Update".local
+        case .github: return "GitHub Releases".local
+        case .blender: return "Blender Releases".local
+        case .selfUpdating: return "Self-updating".local
         }
     }
 
@@ -633,8 +633,8 @@ private enum InstalledAppHTTPError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .insecureResponse: return "Update service redirected to an insecure address"
-        case .responseTooLarge: return "Update metadata was unexpectedly large"
+        case .insecureResponse: return "Update service redirected to an insecure address".local
+        case .responseTooLarge: return "Update metadata was unexpectedly large".local
         }
     }
 }
@@ -877,7 +877,7 @@ private enum ElectronUpdater {
         requireMacAsset: Bool = true
     ) async -> InstalledAppUpdateEntry.Status {
         guard let url = URL(string: "https://api.github.com/repos/\(owner)/\(repo)/releases?per_page=10") else {
-            return .error("Invalid update URL")
+            return .error("Invalid update URL".local)
         }
         do {
             var request = URLRequest(url: url)
@@ -886,7 +886,7 @@ private enum ElectronUpdater {
             request.setValue("Sapphire/\(currentAppVersion)", forHTTPHeaderField: "User-Agent")
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode) else {
-                return .error("GitHub releases unavailable")
+                return .error("GitHub releases unavailable".local)
             }
             let releases = try JSONDecoder().decode([ElectronGitHubRelease].self, from: data)
             let stableReleases = releases.filter { !$0.prerelease }
@@ -895,12 +895,12 @@ private enum ElectronUpdater {
                 AppVersionOrdering.compare($0.version, $1.version) == .orderedAscending
             }),
                   !release.version.isEmpty else {
-                return .error("No releases found")
+                return .error("No releases found".local)
             }
             if AppVersionOrdering.isNewer(release.version, than: currentVersion) {
                 let asset = macAsset(in: release)
                 guard asset != nil || !requireMacAsset else {
-                    return .error("No macOS asset in latest release")
+                    return .error("No macOS asset in latest release".local)
                 }
                 return .updateAvailable(
                     latestVersion: release.version,
@@ -912,7 +912,7 @@ private enum ElectronUpdater {
             }
             return .upToDate(latestVersion: release.version)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 
@@ -933,18 +933,18 @@ private enum ElectronUpdater {
             request.setValue("Sapphire/\(currentAppVersion)", forHTTPHeaderField: "User-Agent")
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode) else {
-                return .error("Update manifest unavailable")
+                return .error("Update manifest unavailable".local)
             }
             guard let text = String(data: data, encoding: .utf8),
                   let parsed = parseLatestMacYAML(text) else {
-                return .error("Malformed update manifest")
+                return .error("Malformed update manifest".local)
             }
             if AppVersionOrdering.isNewer(parsed.version, than: currentVersion) {
                 let path = parsed.path ?? ""
                 guard !path.isEmpty, let downloadURL = URL(string: baseURL.absoluteString.hasSuffix("/")
                     ? baseURL.absoluteString + path
                     : baseURL.absoluteString + "/" + path) else {
-                    return .error("Update manifest has no download")
+                    return .error("Update manifest has no download".local)
                 }
                 return .updateAvailable(
                     latestVersion: parsed.version,
@@ -956,7 +956,7 @@ private enum ElectronUpdater {
             }
             return .upToDate(latestVersion: parsed.version)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 
@@ -1367,13 +1367,13 @@ private enum HomebrewClient {
         let result = await checkBatch([
             (id: token, token: token, currentVersion: currentVersion)
         ])
-        return result.first?.status ?? .error("brew info failed for this cask")
+        return result.first?.status ?? .error("brew info failed for this cask".local)
     }
 
     static func checkBatch(_ requests: [CheckRequest]) async -> [CheckResult] {
         guard !requests.isEmpty else { return [] }
         guard let brew = executablePath() else {
-            return requests.map { ($0.id, .error("Homebrew is not installed")) }
+            return requests.map { ($0.id, .error("Homebrew is not installed".local)) }
         }
         let tokens = Array(Set(requests.map { $0.token })).sorted()
         guard let result = await Self.runProcess(
@@ -1382,7 +1382,7 @@ private enum HomebrewClient {
             timeout: max(30, TimeInterval(tokens.count) * 2),
             captureOutput: true
         ), result.exitCode == 0 else {
-            return requests.map { ($0.id, .error("brew info failed for this cask")) }
+            return requests.map { ($0.id, .error("brew info failed for this cask".local)) }
         }
 
         let casks = (try? JSONDecoder().decode(BrewInfoResponse.self, from: result.output))?.casks ?? []
@@ -1392,7 +1392,7 @@ private enum HomebrewClient {
         )
         return requests.map { request in
             guard let cask = caskByToken[request.token.lowercased()] else {
-                return (request.id, .error("Unknown cask “\(request.token)”"))
+                return (request.id, .error(String(localized: "Unknown cask “\(request.token)”")))
             }
             let latest = normalizedVersion(cask.version)
             if HomebrewUpdateDecision.shouldOffer(
@@ -1403,7 +1403,7 @@ private enum HomebrewClient {
                 return (
                     request.id,
                     .updateAvailable(
-                        latestVersion: latest ?? "Latest",
+                        latestVersion: latest ?? "Latest".local,
                         downloadURL: nil,
                         pageURL: nil,
                         releaseNotes: nil,
@@ -1419,11 +1419,11 @@ private enum HomebrewClient {
                 return (request.id, .upToDate(latestVersion: installed))
             }
             if latest == nil, isLatestSentinel(cask.version) {
-                let installed = request.currentVersion.isEmpty ? "Latest" : request.currentVersion
+                let installed = request.currentVersion.isEmpty ? "Latest".local : request.currentVersion
                 return (request.id, .upToDate(latestVersion: installed))
             }
             guard let latest else {
-                return (request.id, .error("Homebrew returned no comparable version for “\(request.token)”"))
+                return (request.id, .error(String(localized: "Homebrew returned no comparable version for “\(request.token)”")))
             }
             return (request.id, .upToDate(latestVersion: latest))
         }
@@ -1460,7 +1460,7 @@ private enum HomebrewClient {
 private enum MozillaUpdater {
     static func check(product: MozillaProduct, currentVersion: String) async -> InstalledAppUpdateEntry.Status {
         guard let url = URL(string: "https://product-details.mozilla.org/1.0/\(product.rawValue)_versions.json") else {
-            return .error("Invalid update URL")
+            return .error("Invalid update URL".local)
         }
         do {
             var request = URLRequest(url: url)
@@ -1468,11 +1468,11 @@ private enum MozillaUpdater {
             request.setValue("Sapphire/\(currentAppVersion)", forHTTPHeaderField: "User-Agent")
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode) else {
-                return .error("Mozilla version info unavailable")
+                return .error("Mozilla version info unavailable".local)
             }
             let versions = try JSONDecoder().decode([String: String].self, from: data)
             guard let latest = versions[product.latestVersionKey], !latest.isEmpty else {
-                return .error("No release information found")
+                return .error("No release information found".local)
             }
             if AppVersionOrdering.isNewer(latest, than: currentVersion) {
                 let downloadURL = URL(string: "https://download.mozilla.org/?product=\(product.downloadProduct)&os=osx&lang=en-US")
@@ -1486,7 +1486,7 @@ private enum MozillaUpdater {
             }
             return .upToDate(latestVersion: latest)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 }
@@ -1556,7 +1556,7 @@ private enum JSONManifestUpdater {
             }
             guard (200..<300).contains(http.statusCode),
                   let release = JSONUpdateManifestParser.parse(data: data) else {
-                return .error("App update manifest unavailable")
+                return .error("App update manifest unavailable".local)
             }
             if AppVersionOrdering.isNewer(release.version, than: currentVersion) {
                 return .updateAvailable(
@@ -1569,7 +1569,7 @@ private enum JSONManifestUpdater {
             }
             return .upToDate(latestVersion: release.version)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 }
@@ -1604,13 +1604,13 @@ private enum VSCodeUpdater {
                 return .upToDate(latestVersion: currentVersion)
             }
             guard (200..<300).contains(http.statusCode) else {
-                return .error("Visual Studio Code update service unavailable")
+                return .error("Visual Studio Code update service unavailable".local)
             }
             let release = try JSONDecoder().decode(VSCodeUpdateResponse.self, from: data)
             guard let latest = [release.productVersion, release.name]
                 .compactMap({ $0?.trimmingCharacters(in: .whitespacesAndNewlines) })
                 .first(where: { !$0.isEmpty }) else {
-                return .error("Visual Studio Code returned no release version")
+                return .error("Visual Studio Code returned no release version".local)
             }
             let pageURL = URL(string: "https://code.visualstudio.com/updates")
             if AppVersionOrdering.isNewer(latest, than: currentVersion) {
@@ -1624,7 +1624,7 @@ private enum VSCodeUpdater {
             }
             return .upToDate(latestVersion: latest)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 }
@@ -1717,7 +1717,7 @@ private enum AndroidStudioUpdater {
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode),
                   let latest = AndroidStudioUpdateParser.latestStableRelease(data: data) else {
-                return .error("Android Studio update service unavailable")
+                return .error("Android Studio update service unavailable".local)
             }
             if AppVersionOrdering.isNewer(latest.buildNumber, than: currentBuild) {
                 return .updateAvailable(
@@ -1730,7 +1730,7 @@ private enum AndroidStudioUpdater {
             }
             return .upToDate(latestVersion: latest.displayVersion)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 }
@@ -1767,7 +1767,7 @@ private enum JetBrainsUpdater {
             URLQueryItem(name: "latest", value: "true"),
             URLQueryItem(name: "type", value: "release"),
         ]
-        guard let url = components.url else { return .error("Invalid JetBrains update URL") }
+        guard let url = components.url else { return .error("Invalid JetBrains update URL".local) }
         do {
             var request = URLRequest(url: url)
             request.timeoutInterval = 12
@@ -1775,10 +1775,10 @@ private enum JetBrainsUpdater {
             request.setValue("Sapphire/\(currentAppVersion)", forHTTPHeaderField: "User-Agent")
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode) else {
-                return .error("JetBrains update service unavailable")
+                return .error("JetBrains update service unavailable".local)
             }
             guard let latest = JetBrainsReleaseParser.latestRelease(data: data) else {
-                return .error("No JetBrains release information found")
+                return .error("No JetBrains release information found".local)
             }
             let pageURL = InstalledAppUpdateSourceDetector.httpsURL(from: latest.notesLink)
             if AppVersionOrdering.isNewer(latest.version, than: currentVersion) {
@@ -1792,7 +1792,7 @@ private enum JetBrainsUpdater {
             }
             return .upToDate(latestVersion: latest.version)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 }
@@ -1843,7 +1843,7 @@ private enum MicrosoftEdgeUpdater {
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode),
                   let latest = MicrosoftEdgeCatalogParser.latestVersion(data: data, channel: channel) else {
-                return .error("Microsoft Edge update service unavailable")
+                return .error("Microsoft Edge update service unavailable".local)
             }
             let pageURL = URL(string: "https://www.microsoft.com/edge/download")
             if AppVersionOrdering.isNewer(latest, than: currentVersion) {
@@ -1857,7 +1857,7 @@ private enum MicrosoftEdgeUpdater {
             }
             return .upToDate(latestVersion: latest)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 }
@@ -1890,7 +1890,7 @@ private enum BlenderUpdater {
             guard (200..<300).contains(http.statusCode),
                   let html = String(data: data, encoding: .utf8),
                   let latest = BlenderUpdateParser.latestVersion(in: html) else {
-                return .error("Blender release information unavailable")
+                return .error("Blender release information unavailable".local)
             }
             if AppVersionOrdering.isNewer(latest, than: currentVersion) {
                 return .updateAvailable(
@@ -1903,7 +1903,7 @@ private enum BlenderUpdater {
             }
             return .upToDate(latestVersion: latest)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 }
@@ -2070,27 +2070,27 @@ final class InstalledAppUpdatesChecker: ObservableObject {
     var unsupportedCount: Int { entries.filter { $0.status.isUnsupported && !ignoredBundleIDs.contains($0.id) }.count }
 
     var lastCheckedDescription: String {
-        guard let lastCheckedAt else { return "Never" }
-        return lastCheckedAt.formatted(date: .abbreviated, time: .shortened)
+        guard let lastCheckedAt else { return "Never".local }
+        return lastCheckedAt.formatted(Date.FormatStyle(date: .abbreviated, time: .shortened).locale(AppLocalization.locale))
     }
 
     // MARK: Action routing
 
     func buttonLabel(for entry: InstalledAppUpdateEntry) -> String {
-        guard case .updateAvailable = entry.status else { return "Update" }
+        guard case .updateAvailable = entry.status else { return "Update".local }
         switch entry.source {
         case .appStore:
-            return "App Store"
+            return "App Store".local
         case .homebrew:
-            return "Upgrade"
+            return "Upgrade".local
         case .selfUpdating, .sparkle, .electron, .keystone, .mozilla,
              .jsonManifest, .visualStudioCode, .androidStudio, .jetBrains,
              .microsoftEdge:
-            return "Open App"
+            return "Open App".local
         case .github, .blender:
-            return "View Release"
+            return "View Release".local
         default:
-            return "Update"
+            return "Update".local
         }
     }
 
@@ -2348,11 +2348,11 @@ final class InstalledAppUpdatesChecker: ObservableObject {
             request.setValue("Sapphire/\(currentAppVersion)", forHTTPHeaderField: "User-Agent")
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode) else {
-                return .error("Update feed unavailable")
+                return .error("Update feed unavailable".local)
             }
             let items = AppcastParser.parse(data: data)
             guard let latest = AppcastParser.latestItem(in: items) else {
-                return .error("No releases found in update feed")
+                return .error("No releases found in update feed".local)
             }
             let latestVersion = latest.displayVersion
             let latestMarketingIsNewer = AppVersionOrdering.isNewer(latestVersion, than: currentVersion)
@@ -2373,7 +2373,7 @@ final class InstalledAppUpdatesChecker: ObservableObject {
             }
             return .upToDate(latestVersion: latestVersion)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 
@@ -2389,7 +2389,7 @@ final class InstalledAppUpdatesChecker: ObservableObject {
             request.setValue("Sapphire/\(currentAppVersion)", forHTTPHeaderField: "User-Agent")
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode) else {
-                return .error("App Store lookup failed")
+                return .error("App Store lookup failed".local)
             }
             let lookup = try JSONDecoder().decode(AppStoreLookupResponse.self, from: data)
             guard let result = lookup.results.first, let latest = result.version, !latest.isEmpty else {
@@ -2407,7 +2407,7 @@ final class InstalledAppUpdatesChecker: ObservableObject {
             }
             return .upToDate(latestVersion: latest)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 
@@ -2421,14 +2421,14 @@ final class InstalledAppUpdatesChecker: ObservableObject {
         do {
             let (data, http) = try await InstalledAppHTTPClient.data(for: request)
             guard (200..<300).contains(http.statusCode) else {
-                return .error("Google Update unavailable")
+                return .error("Google Update unavailable".local)
             }
             let parsed = KeystoneClient.parseResponse(data: data)
             guard parsed.updatecheckStatus != "error", parsed.appStatus != "error" else {
-                return .error("Google Update reported an error")
+                return .error("Google Update reported an error".local)
             }
             guard let latest = parsed.manifestVersion, !latest.isEmpty else {
-                return parsed.isUpToDate ? .upToDate(latestVersion: currentVersion) : .error("No release information found")
+                return parsed.isUpToDate ? .upToDate(latestVersion: currentVersion) : .error("No release information found".local)
             }
             if AppVersionOrdering.isNewer(latest, than: currentVersion) {
                 return .updateAvailable(
@@ -2441,7 +2441,7 @@ final class InstalledAppUpdatesChecker: ObservableObject {
             }
             return .upToDate(latestVersion: latest)
         } catch {
-            return .error(error.localizedDescription)
+            return .error(AppLocalization.description(for: error))
         }
     }
 
@@ -2644,7 +2644,7 @@ final class InstalledAppUpdatesChecker: ObservableObject {
                 if success {
                     self.refreshAfterBrewUpgrade(entryID: entry.id)
                 } else if let index = self.entries.firstIndex(where: { $0.id == entry.id }) {
-                    self.entries[index].status = .error("brew upgrade failed — run it in Terminal for details.")
+                    self.entries[index].status = .error("brew upgrade failed — run it in Terminal for details.".local)
                 }
             }
         }
@@ -2739,13 +2739,13 @@ final class InstalledAppUpdatesChecker: ObservableObject {
         let names = apps.prefix(3).map(\.name).joined(separator: ", ")
         let title: String
         if apps.count == 1 {
-            title = "Update available for \(names)"
+            title = String(localized: "Update available for \(names)")
         } else {
-            title = "\(apps.count) apps have updates available"
+            title = String(localized: "\(apps.count) apps have updates available")
         }
         let body = apps.count > 3
-            ? "\(names) and \(apps.count - 3) more. Open Settings → Apps to update them."
-            : "Open Settings → Apps to update them."
+            ? String(localized: "\(names) and \(apps.count - 3) more. Open Settings → Apps to update them.")
+            : "Open Settings → Apps to update them.".local
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { notificationSettings in
             guard notificationSettings.authorizationStatus == .authorized

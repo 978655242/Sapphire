@@ -11,6 +11,8 @@
 		A17D00000000000000000007 /* SapphireAndroidWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D00000000000000000003 /* SapphireAndroidWidgets.swift */; };
 		A17D00000000000000000008 /* AndroidWidgetSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A17D00000000000000000006 /* AndroidWidgetSnapshotStore.swift */; };
 		A17D00000000000000000009 /* SapphireAndroidWidgets.appex in Embed Widget Extensions */ = {isa = PBXBuildFile; fileRef = A17D00000000000000000001 /* SapphireAndroidWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A17D00000000000000000014 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A17D00000000000000000015 /* Localizable.xcstrings */; };
+		A17D00000000000000000016 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = A17D00000000000000000017 /* InfoPlist.xcstrings */; };
 		C0DE20000000000000000001 /* comptest in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000001 /* comptest */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DE20000000000000000002 /* idevice_id in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000002 /* idevice_id */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DE20000000000000000003 /* ideviceinfo in Embed iDevice Tools */ = {isa = PBXBuildFile; fileRef = C0DE10000000000000000003 /* ideviceinfo */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -320,6 +322,8 @@
 		A17D00000000000000000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A17D00000000000000000005 /* SapphireAndroidWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SapphireAndroidWidgets.entitlements; sourceTree = "<group>"; };
 		A17D00000000000000000006 /* AndroidWidgetSnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AndroidWidgetSnapshotStore.swift; path = Sapphire/Services/AndroidWidgetSnapshotStore.swift; sourceTree = SOURCE_ROOT; };
+		A17D00000000000000000015 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		A17D00000000000000000017 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		C0DE10000000000000000001 /* comptest */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = comptest; sourceTree = "<group>"; };
 		C0DE10000000000000000002 /* idevice_id */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = idevice_id; sourceTree = "<group>"; };
 		C0DE10000000000000000003 /* ideviceinfo */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = ideviceinfo; sourceTree = "<group>"; };
@@ -678,6 +682,8 @@
 			children = (
 				A17D00000000000000000003 /* SapphireAndroidWidgets.swift */,
 				A17D00000000000000000006 /* AndroidWidgetSnapshotStore.swift */,
+				A17D00000000000000000015 /* Localizable.xcstrings */,
+				A17D00000000000000000017 /* InfoPlist.xcstrings */,
 				A17D00000000000000000004 /* Info.plist */,
 				A17D00000000000000000005 /* SapphireAndroidWidgets.entitlements */,
 			);
@@ -1282,6 +1288,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
 				Base,
 			);
 			mainGroup = DA46CF6D2DCBCA0000F00EC5;
@@ -1325,6 +1332,8 @@
 		A17D0000000000000000000C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			files = (
+				A17D00000000000000000014 /* Localizable.xcstrings in Resources */,
+				A17D00000000000000000016 /* InfoPlist.xcstrings in Resources */,
 			);
 		};
 		CAFE10000000000000000DAA /* Resources */ = {
@@ -1979,7 +1988,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-DSAPPHIRE_IS_BETA_BUILD";
 				SDKROOT = macosx;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2041,7 +2050,7 @@
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "-DSAPPHIRE_IS_BETA_BUILD";
 				SDKROOT = macosx;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;

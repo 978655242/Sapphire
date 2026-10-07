@@ -22,6 +22,21 @@ struct KeyboardShortcutHelper {
         if flags.contains(.command) { description += "⌘" }
         return description
     }
+
+    static func keyDescription(for key: String) -> String {
+        switch key.uppercased() {
+        case "SPACE": return "Space".local
+        case "ENTER": return "Enter".local
+        case "ESCAPE": return "Escape".local
+        case "DELETE": return "Delete".local
+        case "TAB": return "Tab".local
+        case "MISSION CONTROL": return "Mission Control".local
+        case "LAUNCHPAD": return "Launchpad".local
+        case "DICTATION": return "Dictation".local
+        case "GLOBE / FN": return "Globe / Fn".local
+        default: return key
+        }
+    }
 }
 
 struct KeyCodeTranslator {

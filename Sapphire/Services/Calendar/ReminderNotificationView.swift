@@ -18,7 +18,7 @@ struct ReminderNotificationView: View {
         CalendarNotificationLayout(
             color: .orange,
             systemImage: "checklist",
-            category: "Reminder",
+            category: "Reminder".local,
             onDismiss: { liveActivityManager.dismissCalendarNotification() },
             onSnooze: {
                 liveActivityManager.snoozeCalendarNotification(

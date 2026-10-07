@@ -156,7 +156,7 @@ final class BluetoothDeviceMonitor {
 
             if result != kIOReturnSuccess {
                 logger.error("\(device.name): openConnection failed (IOReturn \(result))")
-                finishConnecting(mac: mac, error: "Couldn't connect")
+                finishConnecting(mac: mac, error: NSLocalizedString("Couldn't connect", comment: ""))
                 return
             }
 
@@ -257,7 +257,7 @@ final class BluetoothDeviceMonitor {
             try? await Task.sleep(for: .seconds(connectTimeoutSeconds))
             guard !Task.isCancelled else { return }
             self?.logger.warning("\(name) connect timeout after \(connectTimeoutSeconds)s")
-            self?.finishConnecting(mac: mac, error: "Connection timed out")
+            self?.finishConnecting(mac: mac, error: NSLocalizedString("Connection timed out", comment: ""))
         }
     }
 

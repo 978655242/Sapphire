@@ -27,6 +27,8 @@ enum ManagementState: String, Codable {
     case dischargeStopped = "Discharge Stopped"
     case heatProtectionOn = "Heat Protection Enabled"
     case heatProtectionOff = "Heat Protection Disabled"
+
+    var displayName: String { rawValue.local }
 }
 
 @MainActor

@@ -293,14 +293,14 @@ struct LiveActivityRowView: View {
         switch activityType {
         case .sports:
             optionToggle(
-                "Only when live",
-                detail: "Hide the sports activity when no favorite team has a live game.",
+                "Only when live".local,
+                detail: "Hide the sports activity when no favorite team has a live game.".local,
                 isOn: $settings.settings.sportsLiveActivityWhenLiveOnly
             )
         case .finance:
             optionToggle(
-                "Only during market hours",
-                detail: "Hide the finance activity outside regular US trading hours.",
+                "Only during market hours".local,
+                detail: "Hide the finance activity outside regular US trading hours.".local,
                 isOn: $settings.settings.financeLiveActivityActiveHoursOnly
             )
         default:
@@ -449,7 +449,7 @@ struct AppTogglesListView: View {
     let isEnabled: (SystemApp) -> Binding<Bool>
     var maxHeight: CGFloat = 280
     var showSearch: Bool = false
-    var browsersSectionTitle: String = "Browsers"
+    var browsersSectionTitle: String = "Browsers".local
     var onSelectAll: ((Bool) -> Void)?
 
     @State private var query = ""
@@ -515,7 +515,7 @@ struct AppTogglesListView: View {
                 ScrollView {
                     LazyVStack(spacing: 0) {
                         appSection(browsersSectionTitle, apps: sections.browsers)
-                        appSection("Other Apps", apps: sections.others)
+                        appSection("Other Apps".local, apps: sections.others)
                     }
                 }
                 .frame(maxHeight: maxHeight)
@@ -978,7 +978,7 @@ struct SwipeActionPickerRow<Action: Hashable & Identifiable>: View {
 }
 
 struct LiquidGlassStylePickerRow: View {
-    var title: String = "Liquid Glass Style"
+    var title: String = "Liquid Glass Style".local
     @Binding var selection: LiquidGlassMaterial
 
     var body: some View {
@@ -986,7 +986,7 @@ struct LiquidGlassStylePickerRow: View {
             SettingsRowLabel(title: title, description: selection.summary)
             Spacer()
             HStack(spacing: 4) {
-                stepButton(systemName: "chevron.left", help: "Previous Style", offset: -1)
+                stepButton(systemName: "chevron.left", help: "Previous Style".local, offset: -1)
                 Picker("", selection: $selection) {
                     ForEach(LiquidGlassMaterial.allCases) { style in
                         Text(style.displayName).tag(style)
@@ -995,7 +995,7 @@ struct LiquidGlassStylePickerRow: View {
                 .labelsHidden()
                 .pickerStyle(.menu)
                 .frame(width: 160)
-                stepButton(systemName: "chevron.right", help: "Next Style", offset: 1)
+                stepButton(systemName: "chevron.right", help: "Next Style".local, offset: 1)
             }
         }
         .padding()

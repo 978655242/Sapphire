@@ -117,7 +117,7 @@ class LaunchpadWindowController: NSWindowController {
             gestureManager: gestureManager
         )
 
-        window.contentView = NSHostingView(rootView: launchpadView)
+        window.contentView = NSHostingView(rootView: launchpadView.environment(\.locale, AppLocalization.locale))
     }
 
     required init?(coder: NSCoder) {

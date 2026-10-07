@@ -33,7 +33,7 @@ struct DevActivityLiveActivityView {
 
     private static func subtitle(for task: DevTask, additionalCount: Int) -> String {
         if additionalCount > 0 {
-            let others = additionalCount == 1 ? "1 more task" : "\(additionalCount) more tasks"
+            let others = additionalCount == 1 ? "1 more task".local : String(localized: "\(additionalCount) more tasks")
             return task.detail.isEmpty ? others : "\(task.detail) · \(others)"
         }
         return task.detail.isEmpty ? task.kind.displayName : task.detail

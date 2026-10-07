@@ -104,7 +104,7 @@ struct MirrorWidgetView: View {
                     .font(.system(size: 18, weight: .medium))
                     .foregroundStyle(.white.opacity(0.9))
             }
-            Text(camera.isDenied ? "Camera Denied" : (camera.isError ? "Unavailable" : "Tap to Start"))
+            Text(camera.isDenied ? "Camera Denied".local : (camera.isError ? "Unavailable".local : "Tap to Start".local))
                 .font(.system(size: 10, weight: .medium, design: .rounded))
                 .foregroundStyle(MaterialChartPalette.onSurfaceVariant)
         }

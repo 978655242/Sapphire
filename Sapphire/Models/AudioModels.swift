@@ -85,7 +85,7 @@ enum AudioEQBandLayout: Int, CaseIterable, Identifiable {
     case thirtyOne = 31
 
     var id: Int { rawValue }
-    var displayName: String { "\(rawValue) Bands" }
+    var displayName: String { String(localized: "\(rawValue) Bands") }
 
     var canonicalIndices: [Int] {
         switch self {
@@ -113,17 +113,17 @@ enum EQPreset: String, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .flat: "Flat"
-        case .bassBoost: "Bass Booster"
-        case .trebleBoost: "Treble Booster"
-        case .vocalBoost: "Vocal Booster"
-        case .acoustic: "Acoustic"
-        case .rock: "Rock"
-        case .electronic: "Electronic"
-        case .hipHop: "Hip-Hop"
-        case .podcast: "Podcast"
-        case .loudness: "Loudness"
-        case .custom: "Custom"
+        case .flat: "Flat".local
+        case .bassBoost: "Bass Booster".local
+        case .trebleBoost: "Treble Booster".local
+        case .vocalBoost: "Vocal Booster".local
+        case .acoustic: "Acoustic".local
+        case .rock: "Rock".local
+        case .electronic: "Electronic".local
+        case .hipHop: "Hip-Hop".local
+        case .podcast: "Podcast".local
+        case .loudness: "Loudness".local
+        case .custom: "Custom".local
         }
     }
 

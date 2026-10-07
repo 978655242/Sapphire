@@ -323,7 +323,7 @@ struct MusicPlayerView: View {
                 Button(action: { handleButtonTap(for: .musicQueueAndPlaylists) }) {
                     VStack(alignment: .leading, spacing: 3) {
                         HStack(spacing: 6) {
-                            Text(musicManager.title ?? "Title")
+                            Text(musicManager.title ?? "Title".local)
                                 .font(.system(size: 15, weight: .semibold, design: .rounded))
                                 .lineLimit(1)
                         }
@@ -357,7 +357,7 @@ struct MusicPlayerView: View {
                                 }
                             }
                         } else {
-                            Text(musicManager.artist ?? "Artist")
+                            Text(musicManager.artist ?? "Artist".local)
                                 .font(.system(size: 12, design: .rounded))
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
@@ -466,7 +466,7 @@ struct MusicPlayerView: View {
                         )
                         .frame(width: 44, height: 44)
                         .foregroundStyle(holdFeedbackButtonID == "previous" ? holdFeedbackColor : .primary)
-                        .help(MusicLongPressUI.skipHelp(primary: "Previous", target: .previous, settings: settings.settings))
+                        .help(MusicLongPressUI.skipHelp(primary: "Previous".local, target: .previous, settings: settings.settings))
                         Spacer()
                         LongPressControlButton(
                             onTap: { Task { await (musicManager.isPlaying ? musicManager.pause() : musicManager.play()) } },
@@ -486,7 +486,7 @@ struct MusicPlayerView: View {
                         .contentShape(Rectangle())
                         .animation(.easeInOut(duration: 0.15), value: musicManager.isPlaying)
                         .animation(.easeInOut(duration: 0.15), value: holdFeedbackIcon)
-                        .help(MusicLongPressUI.accessoryHelp(primary: "Play / Pause", target: .playPause, settings: settings.settings))
+                        .help(MusicLongPressUI.accessoryHelp(primary: "Play / Pause".local, target: .playPause, settings: settings.settings))
                         Spacer()
                         SeekButton(
                             systemName: "forward.fill",
@@ -502,7 +502,7 @@ struct MusicPlayerView: View {
                         )
                         .frame(width: 44, height: 44)
                         .foregroundStyle(holdFeedbackButtonID == "next" ? holdFeedbackColor : .primary)
-                        .help(MusicLongPressUI.skipHelp(primary: "Next", target: .next, settings: settings.settings))
+                        .help(MusicLongPressUI.skipHelp(primary: "Next".local, target: .next, settings: settings.settings))
                         Spacer()
                         MusicPlayerActionButton(type: primaryButtons.dropFirst().first, size: .primary)
                     }
@@ -562,9 +562,7 @@ struct MusicPlayerView: View {
     }
 
     private func formattedListenerCount(_ value: Int) -> String {
-        if value >= 1_000_000 { return String(format: "%.1fM", Double(value) / 1_000_000) }
-        if value >= 1_000 { return String(format: "%.1fK", Double(value) / 1_000) }
-        return "\(value)"
+        Double(value).formatted(.number.notation(.compactName).precision(.fractionLength(0...1)).locale(AppLocalization.locale))
     }
 
     private func handleButtonTap(for targetMode: NotchWidgetMode) {
@@ -633,7 +631,7 @@ struct MusicPlayerView: View {
                 .foregroundStyle(holdFeedbackButtonID == "playlists" ? holdFeedbackColor : .secondary)
                 .frame(width: frameSize, height: frameSize)
                 .animation(.easeInOut(duration: 0.15), value: holdFeedbackIcon)
-                .help(MusicLongPressUI.accessoryHelp(primary: "Queue", target: .playlists, settings: settings.settings))
+                .help(MusicLongPressUI.accessoryHelp(primary: "Queue".local, target: .playlists, settings: settings.settings))
 
             case .devices:
                 let deviceIcon: String = musicManager.currentOutputDeviceSystemImage()
@@ -655,7 +653,7 @@ struct MusicPlayerView: View {
                 }
                 .foregroundStyle(holdFeedbackButtonID == "devices" ? holdFeedbackColor : .secondary)
                 .frame(width: frameSize, height: frameSize)
-                .help(MusicLongPressUI.accessoryHelp(primary: "Playback device", target: .devices, settings: settings.settings))
+                .help(MusicLongPressUI.accessoryHelp(primary: "Playback device".local, target: .devices, settings: settings.settings))
                 .id(deviceIcon)
                 .animation(.easeInOut(duration: 0.2), value: deviceIcon)
                 .animation(.easeInOut(duration: 0.15), value: holdFeedbackIcon)
@@ -680,7 +678,7 @@ struct MusicPlayerView: View {
                 .frame(width: frameSize, height: frameSize)
                 .animation(.spring(), value: musicManager.isLiked)
                 .animation(.easeInOut(duration: 0.15), value: holdFeedbackIcon)
-                .help(MusicLongPressUI.accessoryHelp(primary: "Like", target: .like, settings: settings.settings))
+                .help(MusicLongPressUI.accessoryHelp(primary: "Like".local, target: .like, settings: settings.settings))
 
             case .shuffle:
                 LongPressControlButton(
@@ -709,10 +707,10 @@ struct MusicPlayerView: View {
                 .animation(.easeInOut(duration: 0.15), value: holdFeedbackIcon)
                 .help(
                     musicManager.spotifyPrivateAPI.isSmartShuffleActive
-                        ? MusicLongPressUI.accessoryHelp(primary: "Smart Shuffle — tap for Off", target: .shuffle, settings: settings.settings)
+                        ? MusicLongPressUI.accessoryHelp(primary: "Smart Shuffle — tap for Off".local, target: .shuffle, settings: settings.settings)
                         : (musicManager.shuffleState
-                            ? MusicLongPressUI.accessoryHelp(primary: "Shuffle — tap for Smart Shuffle", target: .shuffle, settings: settings.settings)
-                            : MusicLongPressUI.accessoryHelp(primary: "Off — tap for Shuffle", target: .shuffle, settings: settings.settings))
+                            ? MusicLongPressUI.accessoryHelp(primary: "Shuffle — tap for Smart Shuffle".local, target: .shuffle, settings: settings.settings)
+                            : MusicLongPressUI.accessoryHelp(primary: "Off — tap for Shuffle".local, target: .shuffle, settings: settings.settings))
                 )
 
             case .repeat:
@@ -735,7 +733,7 @@ struct MusicPlayerView: View {
                 .frame(width: frameSize, height: frameSize)
                 .animation(.easeInOut, value: musicManager.repeatState)
                 .animation(.easeInOut(duration: 0.15), value: holdFeedbackIcon)
-                .help(MusicLongPressUI.accessoryHelp(primary: "Repeat", target: .repeatMode, settings: settings.settings))
+                .help(MusicLongPressUI.accessoryHelp(primary: "Repeat".local, target: .repeatMode, settings: settings.settings))
             }
         } else {
             Rectangle().fill(Color.clear).frame(width: 40, height: 40)
@@ -777,7 +775,7 @@ struct NextTrackInline: View {
     private let cornerRadius: CGFloat = 10
 
     private var helpText: String {
-        artist.isEmpty ? "Up next: \(title)" : "Up next: \(title) — \(artist)"
+        artist.isEmpty ? String(localized: "Up next: \(title)") : String(localized: "Up next: \(title) — \(artist)")
     }
 
     var body: some View {
@@ -806,7 +804,7 @@ struct NextTrackInline: View {
                         .font(.system(size: 7, weight: .heavy, design: .rounded))
                         .kerning(1.1)
                         .foregroundStyle(accent)
-                    Text(title.isEmpty ? "Unknown track" : title)
+                    Text(title.isEmpty ? "Unknown track".local : title)
                         .font(.system(size: 8, weight: .bold, design: .rounded))
                         .foregroundStyle(.primary)
                         .lineLimit(1)
@@ -904,7 +902,7 @@ struct NotchMediaSourceSwitcher: View {
 
     private func label(for key: String) -> String {
         if musicManager.isPhoneMediaSource(key) {
-            let device = musicManager.phoneMediaDeviceName ?? "Phone"
+            let device = musicManager.phoneMediaDeviceName ?? "Phone".local
             guard let app = musicManager.phoneMediaAppName, !app.isEmpty else { return device }
             return "\(device) · \(app)"
         }
@@ -912,7 +910,7 @@ struct NotchMediaSourceSwitcher: View {
         if let track = musicManager.activeMediaSources[key] {
             return musicManager.appName(for: track.payload.bundleIdentifier)
         }
-        return "App"
+        return "App".local
     }
 }
 
@@ -971,7 +969,7 @@ struct MusicWidgetView: View {
     }
 
     private var albumArt: some View {
-        Image(nsImage: musicManager.artwork ?? musicManager.appIcon ?? NSImage(systemSymbolName: "waveform", accessibilityDescription: "Album art")!)
+        Image(nsImage: musicManager.artwork ?? musicManager.appIcon ?? NSImage(systemSymbolName: "waveform", accessibilityDescription: "Album art".local)!)
             .resizable().aspectRatio(contentMode: .fill)
             .frame(width: 100, height: 100).cornerRadius(30)
             .shadow(color: musicManager.accentColor.opacity(0.7), radius: 8, y: 5)
@@ -1066,7 +1064,7 @@ private struct MusicControlsView: View {
                 )
             )
             .frame(width: buttonHitboxSize, height: buttonHitboxSize)
-            .help(MusicLongPressUI.skipHelp(primary: "Previous", target: .previous, settings: settings.settings))
+            .help(MusicLongPressUI.skipHelp(primary: "Previous".local, target: .previous, settings: settings.settings))
 
             Button(action: onPlayPause) {
                 Image(systemName: isPlaying ? "pause.fill" : "play.fill")
@@ -1090,7 +1088,7 @@ private struct MusicControlsView: View {
                 )
             )
             .frame(width: buttonHitboxSize, height: buttonHitboxSize)
-            .help(MusicLongPressUI.skipHelp(primary: "Next", target: .next, settings: settings.settings))
+            .help(MusicLongPressUI.skipHelp(primary: "Next".local, target: .next, settings: settings.settings))
         }
         .font(.system(size: 16))
         .foregroundColor(.white)

@@ -17,7 +17,7 @@ struct AudioDeviceController {
         let subDeviceUIDs = outputDevices.map { $0.uid as CFString }
 
         let description: [String: Any] = [
-            kAudioAggregateDeviceNameKey: "Sapphire Multi-Output",
+            kAudioAggregateDeviceNameKey: "Sapphire Multi-Output".local,
             kAudioAggregateDeviceUIDKey: "com.cshariq.sapphire.multi-output-device",
             kAudioAggregateDeviceSubDeviceListKey: subDeviceUIDs,
             kAudioAggregateDeviceMasterSubDeviceKey: masterDeviceUID as CFString,

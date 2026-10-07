@@ -126,19 +126,19 @@ class FileConversionManager {
               let cgImage = image.cgImage(forProposedRect: nil, context: nil, hints: nil),
               let destination = CGImageDestinationCreateWithURL(destinationURL as CFURL, type.identifier as CFString, 1, nil)
         else {
-            throw NSError(domain: "FileConversionError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not read source image or create destination."])
+            throw NSError(domain: "FileConversionError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not read source image or create destination.".local])
         }
 
         CGImageDestinationAddImage(destination, cgImage, nil)
         if !CGImageDestinationFinalize(destination) {
-            throw NSError(domain: "FileConversionError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to write image to destination."])
+            throw NSError(domain: "FileConversionError", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to write image to destination.".local])
         }
     }
 
     private func convertVideo(taskID: UUID, from sourceURL: URL, to destinationURL: URL) async throws {
         let asset = AVAsset(url: sourceURL)
         guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetPassthrough) else {
-            throw NSError(domain: "FileConversionError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Could not create AVAssetExportSession for video."])
+            throw NSError(domain: "FileConversionError", code: 3, userInfo: [NSLocalizedDescriptionKey: "Could not create AVAssetExportSession for video.".local])
         }
 
         exportSession.outputURL = destinationURL
@@ -150,7 +150,7 @@ class FileConversionManager {
     private func convertAudio(taskID: UUID, from sourceURL: URL, to destinationURL: URL) async throws {
         let asset = AVAsset(url: sourceURL)
         guard let exportSession = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetAppleM4A) else {
-            throw NSError(domain: "FileConversionError", code: 4, userInfo: [NSLocalizedDescriptionKey: "Could not create AVAssetExportSession for audio."])
+            throw NSError(domain: "FileConversionError", code: 4, userInfo: [NSLocalizedDescriptionKey: "Could not create AVAssetExportSession for audio.".local])
         }
 
         exportSession.outputURL = destinationURL
@@ -168,7 +168,7 @@ class FileConversionManager {
             let pdfData = NSMutableData()
             guard let consumer = CGDataConsumer(data: pdfData),
                   let context = CGContext(consumer: consumer, mediaBox: nil, nil) else {
-                throw NSError(domain: "FileConversionError", code: 5, userInfo: [NSLocalizedDescriptionKey: "Could not create PDF context."])
+                throw NSError(domain: "FileConversionError", code: 5, userInfo: [NSLocalizedDescriptionKey: "Could not create PDF context.".local])
             }
             let frameSetter = CTFramesetterCreateWithAttributedString(attributedString)
             let path = CGPath(rect: CGRect(x: 0, y: 0, width: 595, height: 842), transform: nil)
@@ -184,7 +184,7 @@ class FileConversionManager {
         case .plainText:
             data = attributedString.string.data(using: .utf8) ?? Data()
         default:
-            throw NSError(domain: "FileConversionError", code: 6, userInfo: [NSLocalizedDescriptionKey: "Unsupported text document type."])
+            throw NSError(domain: "FileConversionError", code: 6, userInfo: [NSLocalizedDescriptionKey: "Unsupported text document type.".local])
         }
 
         try data.write(to: destinationURL)

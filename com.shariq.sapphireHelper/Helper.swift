@@ -302,7 +302,7 @@ class Helper: NSObject, HelperProtocol {
             if let limitKey = keyChargeLimit {
                 let data = Data([UInt8(clamped)])
                 let result = smc?.writeData(limitKey, data: data)
-                reply(result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write \(limitKey)."))
+                reply(result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write %@.", arguments: [limitKey]))
             } else if clamped >= 100 {
                 enableCharging(true) { error in
                     reply(error)
@@ -341,7 +341,7 @@ class Helper: NSObject, HelperProtocol {
             if readFirmwareActivation() == value { return nil }
             if attempt < 3 { usleep(20_000) }
         }
-        return makeError(code: .smcWriteFailed, description: "Failed to write and verify \(key).")
+        return makeError(code: .smcWriteFailed, description: "Failed to write and verify %@.", arguments: [key])
     }
 
     private func writeFirmwareLimitValue(_ key: String, _ value: UInt32) -> Error? {
@@ -356,7 +356,7 @@ class Helper: NSObject, HelperProtocol {
             if readFirmwareLimitValue(key) == value { return nil }
             if attempt < 3 { usleep(20_000) }
         }
-        return makeError(code: .smcWriteFailed, description: "Failed to write and verify \(key).")
+        return makeError(code: .smcWriteFailed, description: "Failed to write and verify %@.", arguments: [key])
     }
 
     func deactivateFirmwareChargeLimit() -> Error? {
@@ -403,7 +403,7 @@ class Helper: NSObject, HelperProtocol {
                 let hexString = data.map { String(format: "%02x", $0) }.joined()
                 logger.debug("[SapphireHelper] Writing to SMC Key '\(limitKey)' with data: 0x\(hexString)")
                 let result = smc?.writeData(limitKey, data: data)
-                reply(result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write \(limitKey)."))
+                reply(result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write %@.", arguments: [limitKey]))
                 return
             }
             logger.error("[SapphireHelper] ERROR: No charge control key found. Cannot execute enableCharging.")
@@ -441,7 +441,7 @@ class Helper: NSObject, HelperProtocol {
             }
         }
 
-        reply(succeeded ? nil : makeError(code: .smcWriteFailed, description: "Failed to write charge key '\(chargeKey)'."))
+        reply(succeeded ? nil : makeError(code: .smcWriteFailed, description: "Failed to write charge key '%@'.", arguments: [chargeKey]))
     }
 
     private func writeDischargeControlDirect(_ discharging: Bool) -> Error? {
@@ -475,7 +475,7 @@ class Helper: NSObject, HelperProtocol {
                 }
             }
 
-            return succeeded ? nil : makeError(code: .smcWriteFailed, description: "Failed to write discharge key '\(dischargeKey)'.")
+            return succeeded ? nil : makeError(code: .smcWriteFailed, description: "Failed to write discharge key '%@'.", arguments: [dischargeKey])
         }
 
         if let adapterKey = keyAdapterEnable {
@@ -493,7 +493,7 @@ class Helper: NSObject, HelperProtocol {
                 logger.error("[SapphireHelper] SMC Write FAILED for key '\(adapterKey)' with error code: \(String(describing: result)).")
             }
 
-            return result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write discharge key '\(adapterKey)'.")
+            return result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write discharge key '%@'.", arguments: [adapterKey])
         }
 
         logger.error("[SapphireHelper] ERROR: No discharge control key found. Cannot execute setDischarge.")
@@ -731,19 +731,20 @@ class Helper: NSObject, HelperProtocol {
         newAppPath: String,
         currentAppPath: String,
         expectedVersion: String,
-        completion: @escaping (Bool, String?) -> Void
+        completion: @escaping (Bool, Error?) -> Void
     ) {
         logger.info("[Helper] installUpdate requested (new=\(newAppPath) current=\(currentAppPath))")
 
         guard updateInstallLock.try() else {
-            completion(false, "Another Sapphire update is already being installed.")
+            completion(false, makeError(code: .generalError, description: "Another Sapphire update is already being installed."))
             return
         }
         defer { updateInstallLock.unlock() }
 
-        func fail(_ message: String) {
-            logger.error("[Helper] installUpdate failed: \(message)")
-            completion(false, message)
+        func fail(_ message: String, arguments: [String] = []) {
+            let error = makeError(code: .generalError, description: message, arguments: arguments)
+            logger.error("[Helper] installUpdate failed: \(error.localizedDescription)")
+            completion(false, error)
         }
 
         let fileManager = FileManager.default
@@ -801,7 +802,7 @@ class Helper: NSObject, HelperProtocol {
             try fileManager.copyItem(at: newURL, to: stagingURL)
         } catch {
             try? fileManager.removeItem(at: stagingURL)
-            fail("Could not stage the update: \(error.localizedDescription)")
+            fail("Could not stage the update: %@", arguments: [error.localizedDescription])
             return
         }
 
@@ -835,7 +836,7 @@ class Helper: NSObject, HelperProtocol {
             )
         } catch {
             try? fileManager.removeItem(at: stagingURL)
-            fail("The filesystem could not transactionally install the update: \(error.localizedDescription)")
+            fail("The filesystem could not transactionally install the update: %@", arguments: [error.localizedDescription])
             return
         }
 
@@ -972,8 +973,8 @@ class Helper: NSObject, HelperProtocol {
 
     func getFanInfo(fanIndex: Int, reply: @escaping (FanInfo?) -> Void) {
         guard let smc = smc else { reply(nil); return }
-        let name = smc.getStringValue("F\(fanIndex)ID")
-            ?? (fanIndex == 0 ? "Left fan" : fanIndex == 1 ? "Right fan" : "Fan \(fanIndex)")
+        let hardwareName = smc.getStringValue("F\(fanIndex)ID")
+        let name = hardwareName ?? (fanIndex == 0 ? "Left fan" : fanIndex == 1 ? "Right fan" : "Fan \(fanIndex)")
         let minRPM = Int(smc.getValue("F\(fanIndex)Mn") ?? 0)
         let maxRPM = Int(smc.getValue("F\(fanIndex)Mx") ?? 0)
         let currentRPM = Int(smc.getValue("F\(fanIndex)Ac") ?? 0)
@@ -986,7 +987,8 @@ class Helper: NSObject, HelperProtocol {
             name: name.isEmpty ? "Fan \(fanIndex)" : name,
             minRPM: minRPM,
             maxRPM: max(maxRPM, minRPM),
-            currentRPM: currentRPM
+            currentRPM: currentRPM,
+            usesDefaultName: hardwareName?.isEmpty != false
         ))
     }
     func setFanMode(fanIndex: Int, mode: UInt8, reply: @escaping (Error?) -> Void) {
@@ -1030,7 +1032,7 @@ class Helper: NSObject, HelperProtocol {
             appliedFanStates[fanIndex] = AppliedFanState(mode: .forced, speed: speed)
             fanStateLock.unlock()
         }
-        reply(result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write F\(fanIndex)Tg."))
+        reply(result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write F%@Tg.", arguments: [String(fanIndex)]))
     }
     func setFanToConstantRPM(fanIndex: Int, speed: Int, reply: @escaping (Error?) -> Void) {
         logger.log("Request to set fan \(fanIndex) to a constant \(speed) RPM.")
@@ -1051,7 +1053,7 @@ class Helper: NSObject, HelperProtocol {
         logger.log("Step 2/2: Setting fan \(fanIndex) target speed to \(speed) RPM.")
         let speedResult = smc.setFanSpeed(fanIndex, speed: speed)
         if speedResult != kIOReturnSuccess {
-            logger.error("Failed to set fan target speed for fan \(fanIndex). Error code: \(speedResult)"); _ = smc.setFanMode(fanIndex, mode: .automatic); reply(makeError(code: .smcWriteFailed, description: "Failed to write F\(fanIndex)Tg.")); return
+            logger.error("Failed to set fan target speed for fan \(fanIndex). Error code: \(speedResult)"); _ = smc.setFanMode(fanIndex, mode: .automatic); reply(makeError(code: .smcWriteFailed, description: "Failed to write F%@Tg.", arguments: [String(fanIndex)])); return
         }
         fanStateLock.lock()
         appliedFanStates[fanIndex] = AppliedFanState(mode: .forced, speed: speed)
@@ -1227,7 +1229,7 @@ class Helper: NSObject, HelperProtocol {
             reply(nil)
         } else {
             logger.error("Failed to enable Low Power Mode. Exit code: \(result)")
-            reply(makeError(code: .generalError, description: "Failed to enable Low Power Mode. Exit code: \(result)"))
+            reply(makeError(code: .generalError, description: "Failed to enable Low Power Mode. Exit code: %@", arguments: [String(result)]))
         }
     }
 
@@ -1239,7 +1241,7 @@ class Helper: NSObject, HelperProtocol {
             reply(nil)
         } else {
             logger.error("Failed to disable Low Power Mode. Exit code: \(result)")
-            reply(makeError(code: .generalError, description: "Failed to disable Low Power Mode. Exit code: \(result)"))
+            reply(makeError(code: .generalError, description: "Failed to disable Low Power Mode. Exit code: %@", arguments: [String(result)]))
         }
     }
 
@@ -1278,7 +1280,7 @@ class Helper: NSObject, HelperProtocol {
         } else {
             let errorDescription = "Failed to disable system sleep via IOKit. Error: \(result)"
             logger.error("\(errorDescription)")
-            reply(makeError(code: .generalError, description: errorDescription))
+            reply(makeError(code: .generalError, description: "Failed to disable system sleep via IOKit. Error: %@", arguments: [String(result)]))
         }
     }
 
@@ -1290,7 +1292,7 @@ class Helper: NSObject, HelperProtocol {
         } else {
             let errorDescription = "Failed to enable system sleep via IOKit. Error: \(result)"
             logger.error("\(errorDescription)")
-            reply(makeError(code: .generalError, description: errorDescription))
+            reply(makeError(code: .generalError, description: "Failed to enable system sleep via IOKit. Error: %@", arguments: [String(result)]))
         }
     }
 

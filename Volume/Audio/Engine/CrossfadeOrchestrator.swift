@@ -17,15 +17,15 @@ enum CrossfadeError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .tapCreationFailed(let status):
-            return "Failed to create process tap: \(status)"
+            return String(format: NSLocalizedString("Failed to create process tap: %d", comment: ""), status)
         case .aggregateCreationFailed(let status):
-            return "Failed to create aggregate device: \(status)"
+            return String(format: NSLocalizedString("Failed to create aggregate device: %d", comment: ""), status)
         case .deviceNotReady:
-            return "Device not ready within timeout"
+            return NSLocalizedString("Device not ready within timeout", comment: "")
         case .secondaryTapFailed:
-            return "Secondary tap invalid after timeout"
+            return NSLocalizedString("Secondary tap invalid after timeout", comment: "")
         case .noTapDescription:
-            return "No tap description available"
+            return NSLocalizedString("No tap description available", comment: "")
         }
     }
 }

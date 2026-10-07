@@ -1555,7 +1555,7 @@ class LiveActivityManager: ObservableObject {
         if musicWidget.showQuickPeek || showHoverPeek {
             bottomContentType =
                 .peek(
-                    title: " " + (musicWidget.title ?? "Now Playing"),
+                    title: " " + (musicWidget.title ?? "Now Playing".local),
                     artist: musicWidget.artist ?? ""
                 )
             bottomContentIdentifier = "peek"
@@ -1658,7 +1658,7 @@ class LiveActivityManager: ObservableObject {
                 let view = AnyView(
                     CalendarNotificationView(
                         event: event,
-                        timeUntil: "in about 30 minutes"
+                        timeUntil: "in about 30 minutes".local
                     )
                 )
                 return (.calendar, .full(view: view, id: id), 60.0)
@@ -1667,7 +1667,7 @@ class LiveActivityManager: ObservableObject {
                 let view = AnyView(
                     MultipleCalendarNotificationView(
                         events: eventsIn30Min,
-                        timeUntil: "in the next 30 mins"
+                        timeUntil: "in the next 30 mins".local
                     )
                 )
                 return (.calendar, .full(view: view, id: id), 60.0)
@@ -1701,7 +1701,7 @@ class LiveActivityManager: ObservableObject {
                 let view = AnyView(
                     CalendarNotificationView(
                         event: event,
-                        timeUntil: "tomorrow"
+                        timeUntil: "tomorrow".local
                     )
                 )
                 return (.calendar, .full(view: view, id: id), 60.0)
@@ -1710,7 +1710,7 @@ class LiveActivityManager: ObservableObject {
                 let view = AnyView(
                     MultipleCalendarNotificationView(
                         events: eventsIn24Hours,
-                        timeUntil: "tomorrow"
+                        timeUntil: "tomorrow".local
                     )
                 )
                 return (.calendar, .full(view: view, id: id), 60.0)
@@ -1754,7 +1754,7 @@ class LiveActivityManager: ObservableObject {
                         view: AnyView(
                             ReminderNotificationView(
                                 reminder: reminder,
-                                timeUntil: "in about 30 minutes"
+                                timeUntil: "in about 30 minutes".local
                             )
                         ),
                         id: "\(reminderId)_30min"
@@ -1887,7 +1887,7 @@ class LiveActivityManager: ObservableObject {
 
         if !newStatus.isActive && (oldStatus?.isActive ?? false) {
             let offModeInfo = FocusModeInfo(
-                name: "Off",
+                name: "Off".local,
                 identifier: "focus.off.activity",
                 symbolName: oldStatus?.symbolName ?? "moon.zzz.fill",
                 tintColorName: "systemGrayColor",
@@ -2038,7 +2038,7 @@ class LiveActivityManager: ObservableObject {
                 id: eventID,
                 code: code,
                 source: notification.appName,
-                title: notification.title.isEmpty ? "Verification code" : notification.title,
+                title: notification.title.isEmpty ? "Verification code".local : notification.title,
                 body: notification.body,
                 date: notification.date
             )
@@ -2334,11 +2334,11 @@ class LiveActivityManager: ObservableObject {
             let errorString: String
             if let nearbyError = error as? NearbyError, case .canceled(let reason) = nearbyError {
                 errorString = switch reason {
-                case .userRejected: "Declined"; case .userCanceled: "Canceled"; case .notEnoughSpace: "Not enough space"; case .unsupportedType: "Unsupported type"; case .timedOut: "Timed out"
+                case .userRejected: "Declined".local; case .userCanceled: "Canceled".local; case .notEnoughSpace: "Not enough space".local; case .unsupportedType: "Unsupported type".local; case .timedOut: "Timed out".local
                 }
             } else { errorString = error.localizedDescription }
             payload.state =
-                .failed(errorString.isEmpty ? "Unknown Error" : errorString)
+                .failed(errorString.isEmpty ? "Unknown Error".local : errorString)
         } else { payload.state = .finished }
         payload.progress = nil
         self.currentNearDropPayload = payload

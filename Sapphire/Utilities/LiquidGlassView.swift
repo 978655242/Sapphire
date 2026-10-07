@@ -32,41 +32,41 @@ enum LiquidGlassMaterial: String, Codable, CaseIterable, Identifiable, Hashable 
 
     var displayName: String {
         switch self {
-        case .sidebar: return "Sidebar"
-        case .sheet: return "Sheet"
-        case .hud: return "HUD"
-        case .windowBackground: return "Window Background"
-        case .popover: return "Popover"
-        case .menu: return "Menu"
-        case .fullscreenUI: return "Fullscreen UI"
-        case .controlCenter: return "Control Center"
-        case .widgets: return "Widgets"
-        case .inspector: return "Inspector"
-        case .titlebar: return "Titlebar"
-        case .tooltip: return "Tooltip"
-        case .frosted: return "Frosted"
-        case .clearGlass: return "Clear Glass"
-        case .chromatic: return "Chromatic"
+        case .sidebar: return "Sidebar".local
+        case .sheet: return "Sheet".local
+        case .hud: return "HUD".local
+        case .windowBackground: return "Window Background".local
+        case .popover: return "Popover".local
+        case .menu: return "Menu".local
+        case .fullscreenUI: return "Fullscreen UI".local
+        case .controlCenter: return "Control Center".local
+        case .widgets: return "Widgets".local
+        case .inspector: return "Inspector".local
+        case .titlebar: return "Titlebar".local
+        case .tooltip: return "Tooltip".local
+        case .frosted: return "Frosted".local
+        case .clearGlass: return "Clear Glass".local
+        case .chromatic: return "Chromatic".local
         }
     }
 
     var summary: String {
         switch self {
-        case .sidebar: return "Thick, vibrant blur like a macOS sidebar."
-        case .sheet: return "The standard glass used by modal sheets."
-        case .hud: return "Dark, satiny glass like the Dock."
-        case .windowBackground: return "Subtle, lightly blurred glass."
-        case .popover: return "Modern popover glass."
-        case .menu: return "Notification Center-style glass."
-        case .fullscreenUI: return "Deep blur used by fullscreen media controls."
-        case .controlCenter: return "Translucent Control Center module glass."
-        case .widgets: return "Desktop widget background glass."
-        case .inspector: return "Sidebar glass tuned for inspector panels."
-        case .titlebar: return "Sidebar glass that blends into the title bar."
-        case .tooltip: return "Loupe glass used by hover cards."
-        case .frosted: return "Soft, strong blur with bright diffusion."
-        case .clearGlass: return "Almost no blur, crisp and transparent."
-        case .chromatic: return "Frosted glass with chromatic aberration."
+        case .sidebar: return "Thick, vibrant blur like a macOS sidebar.".local
+        case .sheet: return "The standard glass used by modal sheets.".local
+        case .hud: return "Dark, satiny glass like the Dock.".local
+        case .windowBackground: return "Subtle, lightly blurred glass.".local
+        case .popover: return "Modern popover glass.".local
+        case .menu: return "Notification Center-style glass.".local
+        case .fullscreenUI: return "Deep blur used by fullscreen media controls.".local
+        case .controlCenter: return "Translucent Control Center module glass.".local
+        case .widgets: return "Desktop widget background glass.".local
+        case .inspector: return "Sidebar glass tuned for inspector panels.".local
+        case .titlebar: return "Sidebar glass that blends into the title bar.".local
+        case .tooltip: return "Loupe glass used by hover cards.".local
+        case .frosted: return "Soft, strong blur with bright diffusion.".local
+        case .clearGlass: return "Almost no blur, crisp and transparent.".local
+        case .chromatic: return "Frosted glass with chromatic aberration.".local
         }
     }
 

@@ -231,6 +231,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         guard !Self.isRunningUnitTests else { return }
+        _ = settingsModel
         RemoteViewCrashGuardInstall()
 
         AX.installGlobalMessagingTimeout()
@@ -467,7 +468,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         emojiShortcutManager.stopMonitoring()
         clipboardPickerManager.stopMonitoring()
         clipboardAutoClearManager.stop()
+        #if SAPPHIRE_FULL_BUILD
         cleanURLManager.stopMonitoring()
+        #else
+        cleanURLManager.stopPolling()
+        #endif
         finderCutPasteManager.removeTap()
         snippetManager.removeHandler()
         mouseControlManager.shutdown()
@@ -529,7 +534,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             window.standardWindowButton(.closeButton)?.isHidden = true
             window.standardWindowButton(.miniaturizeButton)?.isHidden = true
             window.standardWindowButton(.zoomButton)?.isHidden = true
-            window.title = "Sapphire Onboarding"
+            window.title = "Sapphire Onboarding".local
             window.isMovableByWindowBackground = true
             window.isOpaque = false
             window.backgroundColor = .clear
@@ -543,7 +548,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             )
             window.setContentSize(size)
             window.sharingType = settingsModel.settings.hideFromScreenSharing ? .none : .readOnly
-            let hostingView = FocusableHostingView(rootView: OnboardingView(onComplete: { self.onboardingDidComplete() }).environmentObject(settingsModel).environmentObject(musicManager))
+            let hostingView = FocusableHostingView(rootView: OnboardingView(onComplete: { self.onboardingDidComplete() }).environmentObject(settingsModel).environmentObject(musicManager).environment(\.locale, AppLocalization.locale))
             hostingView.wantsLayer = true
             hostingView.layer?.backgroundColor = NSColor.clear.cgColor
             window.contentView = hostingView
@@ -586,6 +591,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                 }
             })
                 .environmentObject(settingsModel)
+                .environment(\.locale, AppLocalization.locale)
         )
         hostingView.wantsLayer = true
         hostingView.layer?.backgroundColor = NSColor.clear.cgColor
@@ -1216,7 +1222,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             url.scheme == "sapphire"
         else { return }
         if url.host == "android-widgets" {
+            #if SAPPHIRE_FULL_BUILD
             continuityManager.openWidgets()
+            #else
+            UtilityWindowPresenter.activateAsRegularApp()
+            let alert = NSAlert()
+            alert.messageText = "Android Widgets".local
+            alert.informativeText = "Android widget management requires the full build of Sapphire. The public source does not include the phone integration.".local
+            alert.runModal()
+            #endif
             return
         }
         musicManager.spotifyOfficialAPI.handleRedirect(url: url)
@@ -1245,12 +1259,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
                 statusItem?.button?.image = NSImage(
                     systemSymbolName: "square.grid.3x3.fill",
-                    accessibilityDescription: "Sapphire Launchpad"
+                    accessibilityDescription: "Sapphire Launchpad".local
                 )
                 let menu = NSMenu()
-                menu.addItem(NSMenuItem(title: "Show Launchpad", action: #selector(showLaunchpadAction), keyEquivalent: ""))
+                menu.addItem(NSMenuItem(title: "Show Launchpad".local, action: #selector(showLaunchpadAction), keyEquivalent: ""))
                 menu.addItem(.separator())
-                menu.addItem(NSMenuItem(title: "Quit Sapphire", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+                menu.addItem(NSMenuItem(title: "Quit Sapphire".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
                 for item in menu.items { item.target = self }
                 statusItem?.menu = menu
             }
@@ -1577,7 +1591,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             backing: .buffered,
             defer: false
         )
-        window.title = "Settings"
+        window.title = "Settings".local
         window.titleVisibility = .hidden
         window.titlebarAppearsTransparent = true
         window.titlebarSeparatorStyle = .none
@@ -1598,6 +1612,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         let root = SettingsView()
             .environmentObject(powerStateController)
+            .environment(\.locale, AppLocalization.locale)
 
         let hosting = FocusableHostingView(rootView: root)
         window.contentView = hosting
@@ -1627,7 +1642,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             backing: .buffered,
             defer: false
         )
-        window.title = "Lyrics"
+        window.title = "Lyrics".local
         window.isMovableByWindowBackground = false
         window.backgroundColor = .clear
         window.isOpaque = false
@@ -1638,6 +1653,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         let root = LyricsDetachedWindowView()
             .environmentObject(musicManager)
             .environmentObject(settingsModel)
+            .environment(\.locale, AppLocalization.locale)
 
         let hosting = FocusableHostingView(rootView: root)
         window.contentView = hosting

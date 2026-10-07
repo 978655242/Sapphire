@@ -29,8 +29,8 @@ struct AudioSettingsView: View {
                         .padding([.top, .horizontal])
 
                     CompactToggleRow(
-                        title: "Multi-Audio in Notch",
-                        description: "Show the per-app mixer in the expanded notch.",
+                        title: "Multi-Audio in Notch".local,
+                        description: "Show the per-app mixer in the expanded notch.".local,
                         isOn: Binding(
                             get: { settings.settings.notchButtonOrder.contains(.multiAudio) },
                             set: { enabled in
@@ -45,8 +45,8 @@ struct AudioSettingsView: View {
                     .disabled(permissionsManager.screenRecordingStatus != .granted)
                     Divider().padding(.leading, 20)
                     CompactToggleRow(
-                        title: "Haptic Feedback",
-                        description: "Subtle vibration when adjusting audio controls.",
+                        title: "Haptic Feedback".local,
+                        description: "Subtle vibration when adjusting audio controls.".local,
                         isOn: $settings.settings.hapticFeedbackEnabled
                     )
                     Divider().padding(.leading, 20)
@@ -97,9 +97,9 @@ struct AudioSettingsView: View {
                         .padding([.top, .horizontal])
 
                     AudioResetRow(
-                        title: "Reset Per-App Adjustments",
-                        subtitle: "Clears custom volumes, mutes, EQ, and 8D spatial audio for all apps.",
-                        buttonTitle: "Reset Apps",
+                        title: "Reset Per-App Adjustments".local,
+                        subtitle: "Clears custom volumes, mutes, EQ, and 8D spatial audio for all apps.".local,
+                        buttonTitle: "Reset Apps".local,
                         buttonColor: .red
                     ) {
                         showResetAppConfirmation = true
@@ -114,9 +114,9 @@ struct AudioSettingsView: View {
                     Divider().padding(.leading, 20)
 
                     AudioResetRow(
-                        title: "Reset Device Settings",
-                        subtitle: "Clears master volume, balance, delay, and EQ for all devices.",
-                        buttonTitle: "Reset Devices",
+                        title: "Reset Device Settings".local,
+                        subtitle: "Clears master volume, balance, delay, and EQ for all devices.".local,
+                        buttonTitle: "Reset Devices".local,
                         buttonColor: .red
                     ) {
                         showResetDeviceConfirmation = true
@@ -262,8 +262,8 @@ private struct MicrophoneAmplifierSettingsView: View {
                 .padding([.top, .horizontal])
 
             CompactToggleRow(
-                title: "Preview gain",
-                description: "Applies gain to Sapphire's live level meter so you can check clipping. Other apps still receive the original microphone signal.",
+                title: "Preview gain".local,
+                description: "Applies gain to Sapphire's live level meter so you can check clipping. Other apps still receive the original microphone signal.".local,
                 isOn: $mic.amplifierEnabled
             )
 
@@ -288,7 +288,7 @@ private struct MicrophoneAmplifierSettingsView: View {
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Label(mic.isClipping ? "Clipping detected" : "Live input level", systemImage: mic.isClipping ? "exclamationmark.triangle.fill" : "mic.fill")
+                    Label(mic.isClipping ? "Clipping detected".local : "Live input level".local, systemImage: mic.isClipping ? "exclamationmark.triangle.fill" : "mic.fill")
                         .foregroundStyle(mic.isClipping ? .red : .primary)
                     Spacer()
                     Text("\(Int(mic.audioLevel * 100))%")
@@ -307,7 +307,7 @@ private struct MicrophoneAmplifierSettingsView: View {
                     }
                 }
                 .frame(height: 8)
-                Text(mic.isMicInUse ? (mic.isClipping ? "Lower the gain or microphone input level." : "Peak: \(Int(mic.peakLevel * 100))%") : "Start using the microphone to see its level.")
+                Text(mic.isMicInUse ? (mic.isClipping ? "Lower the gain or microphone input level.".local : String(localized: "Peak: \(Int(mic.peakLevel * 100))%")) : "Start using the microphone to see its level.".local)
                     .font(.caption)
                     .foregroundStyle(mic.isClipping ? .red : .secondary)
             }

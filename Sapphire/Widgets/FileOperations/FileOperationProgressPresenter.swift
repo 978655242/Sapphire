@@ -40,7 +40,7 @@ final class FileOperationProgressPresenter {
         guard panel == nil else { return }
 
         let size = NSSize(width: 340, height: 92)
-        let hosting = NSHostingView(rootView: FileOperationProgressPopupView(state: state))
+        let hosting = NSHostingView(rootView: FileOperationProgressPopupView(state: state).environment(\.locale, AppLocalization.locale))
         hosting.frame = NSRect(origin: .zero, size: size)
 
         let panel = NSPanel(
@@ -165,9 +165,9 @@ private struct FileOperationProgressPopupView: View {
             totalBytes: task.totalSize,
             bytesPerSecond: task.speed
         ) {
-            parts.append("\(eta) left")
+            parts.append(String(localized: "\(eta) left"))
         }
-        return parts.isEmpty ? "Working…" : parts.joined(separator: " • ")
+        return parts.isEmpty ? "Working…".local : parts.joined(separator: " • ")
     }
 
 }

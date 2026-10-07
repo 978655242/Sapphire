@@ -83,8 +83,8 @@ struct MultiAudioPermissionRequiredView: View {
 
     private var grantedTitle: String {
         permissionsManager.screenRecordingStatus == .denied
-            ? "Open System Settings"
-            : "Enable Screen Recording"
+            ? "Open System Settings".local
+            : "Enable Screen Recording".local
     }
 
     private var permissionSymbolName: String {
@@ -120,8 +120,8 @@ struct SystemAudioPanel: View {
         } else {
             VStack(spacing: 0) {
                 HStack(spacing: 4) {
-                    tabButton("Apps", icon: "square.grid.2x2", tab: .apps)
-                    tabButton("Devices", icon: "tv.and.hifispeaker.fill", tab: .devices)
+                    tabButton("Apps".local, icon: "square.grid.2x2", tab: .apps)
+                    tabButton("Devices".local, icon: "tv.and.hifispeaker.fill", tab: .devices)
                     Spacer()
                 }
                 .padding(.horizontal, 12)
@@ -213,10 +213,10 @@ fileprivate struct AppControlCard: View {
     var isSurroundAudioEnabled: Bool = false
 
     private var statusText: String {
-        if isMuted { return "Muted" }
-        if isCurrentlyOutputting { return "Playing" }
-        if isRecentlyActive { return "Recent" }
-        return "Idle"
+        if isMuted { return "Muted".local }
+        if isCurrentlyOutputting { return "Playing".local }
+        if isRecentlyActive { return "Recent".local }
+        return "Idle".local
     }
 
     private var statusColor: Color {
@@ -282,7 +282,7 @@ fileprivate struct AppVolumeSlider: View {
 
     var body: some View {
         BoldPillSlider(
-            label: "Volume",
+            label: "Volume".local,
             value: $localValue,
             range: 0...100,
             specifier: "%.0f%%"
@@ -380,7 +380,7 @@ fileprivate struct DeviceControlCard: View {
             }
             .frame(width: 85, alignment: .leading)
 
-            BoldPillSlider(label: device.isOutput ? "Volume" : "Gain", value: $internalGain, range: 0...100, specifier: "%.0f%%")
+            BoldPillSlider(label: device.isOutput ? "Volume".local : "Gain".local, value: $internalGain, range: 0...100, specifier: "%.0f%%")
                 .frame(height: 30)
                 .onChange(of: internalGain) { _, nv in
                     if abs(nv/100.0 - volumeBinding.wrappedValue) > 0.01 { volumeBinding.wrappedValue = nv/100.0 }
@@ -416,7 +416,7 @@ fileprivate struct DeviceControlCard: View {
 
     private func getIcon() -> String { device.isOutput ? "hifispeaker.2.fill" : (isMicMuted ? "mic.slash.fill" : "mic.fill") }
     private func getColor() -> Color { device.isOutput ? (isActive ? .accentColor : .primary.opacity(0.8)) : (isMicMuted ? .red : .primary.opacity(0.8)) }
-    private func getSubtitle() -> String { device.isOutput ? (isActive ? "Active Channel" : "Standby") : (isMicMuted ? "Muted" : "Microphone") }
+    private func getSubtitle() -> String { device.isOutput ? (isActive ? "Active Channel".local : "Standby".local) : (isMicMuted ? "Muted".local : "Microphone".local) }
     private func getSubtitleColor() -> Color { device.isOutput ? (isActive ? .accentColor.opacity(0.8) : .secondary) : (isMicMuted ? .red.opacity(0.8) : .secondary) }
     private func getBg() -> Color { device.isOutput ? (isActive ? Color.accentColor.opacity(0.08) : Color.white.opacity(0.05)) : (isMicMuted ? Color.red.opacity(0.08) : Color.white.opacity(0.05)) }
     private func getBorder() -> Color { device.isOutput ? (isExplicitlySelected ? .accentColor : (isActive ? .accentColor.opacity(0.4) : .clear)) : (isMicMuted ? .red.opacity(0.4) : .clear) }
@@ -515,7 +515,7 @@ fileprivate final class MainMenuPerAppVolumeStore: ObservableObject {
                 } ?? false
                 return MainMenuRunningAppItem(
                     bundleID: bundleID,
-                    name: application.localizedName ?? "Unknown App",
+                    name: application.localizedName ?? "Unknown App".local,
                     icon: existingIcons[bundleID] ?? application.icon,
                     isRecentlyActive: isRecentlyActive,
                     isCurrentlyOutputting: activeAudio.contains(bundleID),

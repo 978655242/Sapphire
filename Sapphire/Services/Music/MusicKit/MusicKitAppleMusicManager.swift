@@ -310,7 +310,7 @@ final class MusicKitAppleMusicManager: ObservableObject {
                     name: playlist.name,
                     uri: playlist.id.rawValue,
                     images: playlist.artwork.map { [SpotifyImage(url: loadableArtworkURL($0)?.absoluteString ?? "")] } ?? [],
-                    owner: SpotifyUserSimple(id: "apple_music", displayName: "Me", images: nil),
+                    owner: SpotifyUserSimple(id: "apple_music", displayName: "Me".local, images: nil),
                     collaborators: nil
                 )
             }

@@ -130,7 +130,7 @@ class MusicManager: ObservableObject {
         }
         let track = nowPlayingTrack ?? spotifyPrivateAPI.playerState?.track
         if let uri = track?.metadata?.artistUri, !uri.isEmpty {
-            let name = track?.metadata?.artistName ?? artist ?? "Artist"
+            let name = track?.metadata?.artistName ?? artist ?? "Artist".local
             return (uri, name)
         }
         return nil
@@ -1274,7 +1274,7 @@ class MusicManager: ObservableObject {
 
         let uriForScript = trackUri.isEmpty ? (contextUri ?? "") : trackUri
         guard !uriForScript.isEmpty else {
-            return .failure(reason: "Nothing to play.")
+            return .failure(reason: "Nothing to play.".local)
         }
         if !spotifyAppleScript.isAppRunning() {
             await spotifyAppleScript.launchAndPlay()
@@ -1466,7 +1466,7 @@ class MusicManager: ObservableObject {
     }
 
     func appName(for bundleID: String?) -> String {
-        guard let bundleID = bundleID else { return "Unknown" }
+        guard let bundleID = bundleID else { return "Unknown".local }
         if let url = appURL(for: bundleID) {
             return url.deletingPathExtension().lastPathComponent
         }
@@ -1804,7 +1804,7 @@ class MusicManager: ObservableObject {
             return TrackInfo(payload: TrackInfo.Payload(
                 bundleIdentifier: "com.spotify.client",
                 title: "Spotify",
-                artist: "Not playing",
+                artist: "Not playing".local,
                 isPlaying: false,
                 playbackRate: 0,
                 isMusicApp: true,
@@ -2260,7 +2260,7 @@ class MusicManager: ObservableObject {
     func transferSpotifyPlayback(to deviceId: String) async -> PlaybackResult {
         if spotifyPrivateAPI.isLoggedIn {
             let success = await spotifyPrivateAPI.transferPlayback(to: deviceId)
-            return success ? .success : .failure(reason: "Private API transfer failed.")
+            return success ? .success : .failure(reason: "Private API transfer failed.".local)
         } else if isPremiumUser {
             return await spotifyOfficialAPI.transferPlayback(to: deviceId)
         }

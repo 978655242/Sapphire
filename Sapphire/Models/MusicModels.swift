@@ -586,7 +586,7 @@ struct SpotifyNativeDevice: Decodable, Hashable, Identifiable {
 
         name = try container.decodeIfPresent(String.self, forKey: .name)
             ?? flexible.decodeIfPresent(String.self, forKey: FlexibleDeviceKey("name"))
-            ?? "Unknown Device"
+            ?? "Unknown Device".local
         deviceId = try container.decodeIfPresent(String.self, forKey: .deviceId)
             ?? flexible.decodeIfPresent(String.self, forKey: FlexibleDeviceKey("device_id"))
             ?? UUID().uuidString
@@ -1035,7 +1035,7 @@ struct SpotifyPlaylistDetailsResponse: Decodable {
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             uri = try container.decodeIfPresent(String.self, forKey: .uri)
-            name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Unknown Album"
+            name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Unknown Album".local
             coverArt = try container.decodeIfPresent(ImageCollection.self, forKey: .coverArt) ?? .empty
             publishDate = try container.decodeIfPresent(PublishDate.self, forKey: .publishDate)
         }

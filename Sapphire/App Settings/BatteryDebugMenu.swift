@@ -68,7 +68,7 @@ struct BatteryDebugMenu: View {
                 Task { await refreshEverything() }
             }
             .buttonStyle(.bordered)
-            Button(debugMode.isEnabled ? "Disable Debug Mode" : "Enable Debug Mode") {
+            Button(debugMode.isEnabled ? "Disable Debug Mode".local : "Enable Debug Mode".local) {
                 debugMode.isEnabled.toggle()
             }
             .buttonStyle(.borderedProminent)
@@ -85,8 +85,8 @@ struct BatteryDebugMenu: View {
 
             Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 6) {
                 gridRow("SMAppService status", helperManager.status.description)
-                gridRow("Running", helperManager.isRunning ? "Yes" : "No")
-                gridRow("Issue", helperManager.lastIssue?.code ?? "None")
+                gridRow("Running", helperManager.isRunning ? "Yes".local : "No".local)
+                gridRow("Issue", helperManager.lastIssue?.code ?? "None".local)
                 gridRow("Protocol version", protocolVersion.map(String.init) ?? "—")
                 gridRow("Charge-control mode", chargeControlMode.map { String(describing: $0) } ?? "—")
             }
@@ -123,18 +123,18 @@ struct BatteryDebugMenu: View {
             sectionTitle("Battery State", systemImage: "battery.100percent", color: .green)
 
             let state = battery
-            let management = batteryStatus.currentState.managementState.rawValue
+            let management = batteryStatus.currentState.managementState.displayName
             let derived = derivedBatteryState
 
             Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 6) {
                 gridRow("Level", state.map { "\($0.level)%" } ?? "—")
-                gridRow("Charging", state.map { $0.isCharging ? "Yes" : "No" } ?? "—")
-                gridRow("Plugged in", state.map { $0.isPluggedIn ? "Yes" : "No" } ?? "—")
+                gridRow("Charging".local, state.map { $0.isCharging ? "Yes".local : "No".local } ?? "—")
+                gridRow("Plugged in", state.map { $0.isPluggedIn ? "Yes".local : "No".local } ?? "—")
                 gridRow("Management state", management)
                 gridRow("Derived state", derived)
                 gridRow("LED color", "\(batteryStatus.currentState.ledColor)")
-                gridRow("Sleeping", batteryStatus.currentState.isSleeping ? "Yes" : "No")
-                gridRow("Low power mode", powerModeManager.isLowPowerModeActive ? "On" : "Off")
+                gridRow("Sleeping", batteryStatus.currentState.isSleeping ? "Yes".local : "No".local)
+                gridRow("Low power mode", powerModeManager.isLowPowerModeActive ? "On".local : "Off".local)
                 gridRow("Temperature", batteryTemp.map { String(format: "%.1f °C", $0) } ?? "—")
                 gridRow("Hardware %", hardwarePercent.map(String.init) ?? "—")
             }
@@ -150,15 +150,15 @@ struct BatteryDebugMenu: View {
     }
 
     private var derivedBatteryState: String {
-        guard let state = battery else { return "Unknown" }
+        guard let state = battery else { return "Unknown".local }
         let management = batteryStatus.currentState.managementState
         switch management {
         case .inhibited, .sailing, .heatProtection, .discharging, .calibrating:
-            return management.rawValue
+            return management.displayName
         default:
-            if state.isCharging { return "Charging" }
-            if state.isPluggedIn { return "Plugged in (not charging)" }
-            return "On battery"
+            if state.isCharging { return "Charging".local }
+            if state.isPluggedIn { return "Plugged in (not charging)".local }
+            return "On battery".local
         }
     }
 
@@ -215,7 +215,7 @@ struct BatteryDebugMenu: View {
                     BatteryManager.shared.setMagSafeLED(color: 1)
                     appendLog("setMagSafeLED(off)")
                 }
-                Button(powerModeManager.isLowPowerModeActive ? "Low Power: Off" : "Low Power: On") {
+                Button(powerModeManager.isLowPowerModeActive ? "Low Power: Off".local : "Low Power: On".local) {
                     if powerModeManager.isLowPowerModeActive {
                         powerModeManager.disableLowPowerMode()
                     } else {
@@ -305,13 +305,13 @@ struct BatteryDebugMenu: View {
     private func sectionTitle(_ title: String, systemImage: String, color: Color) -> some View {
         HStack(spacing: 6) {
             Image(systemName: systemImage).foregroundStyle(color)
-            Text(title).font(.headline)
+            Text(title.local).font(.headline)
         }
     }
 
     private func gridRow(_ label: String, _ value: String) -> some View {
         GridRow {
-            Text(label).foregroundStyle(.secondary)
+            Text(label.local).foregroundStyle(.secondary)
             Text(value).textSelection(.enabled)
         }
     }

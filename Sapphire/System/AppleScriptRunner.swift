@@ -27,7 +27,7 @@ enum AppleScriptRunner {
         guard let script = NSAppleScript(source: source) else {
             error = [
                 NSAppleScript.errorNumber: -1,
-                NSAppleScript.errorMessage: "Could not compile AppleScript source.",
+                NSAppleScript.errorMessage: "Could not compile AppleScript source.".local,
             ]
             return nil
         }

@@ -36,6 +36,17 @@ enum AndroidWidgetSnapshotStore {
     static let appGroupIdentifier = "group.com.cshariq.sapphire"
     static let widgetKind = "com.cshariq.sapphire.android-widget"
 
+    /// Widgets use the language committed by the main app on its last launch.
+    /// The shared native preference is removed when following the system.
+    static var appLocale: Locale {
+        let preferences = UserDefaults(suiteName: appGroupIdentifier)?
+            .stringArray(forKey: "AppleLanguages") ?? Locale.preferredLanguages
+        let language = Bundle.preferredLocalizations(
+            from: ["en", "zh-Hans"], forPreferences: preferences
+        ).first ?? "en"
+        return Locale(identifier: language)
+    }
+
     private static let directoryName = "AndroidWidgets"
     private static let catalogFilename = "catalog.json"
 

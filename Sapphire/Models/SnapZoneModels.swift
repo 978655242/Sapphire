@@ -38,6 +38,12 @@ struct SnapLayout: Codable, Equatable, Identifiable, Hashable {
     var name: String
     var zones: [SnapZone]
 
+    var displayName: String {
+        guard let template = LayoutTemplate.allTemplates.first(where: { $0.id == id }),
+              name == template.name else { return name }
+        return template.name.local
+    }
+
     init(name: String, zones: [SnapZone]) {
         self.id = UUID()
         self.name = name

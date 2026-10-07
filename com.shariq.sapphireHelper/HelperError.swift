@@ -15,7 +15,13 @@ public enum HelperErrorCode: Int {
     case generalError = 3
 }
 
-func makeError(code: HelperErrorCode, description: String) -> NSError {
-    let userInfo = [NSLocalizedDescriptionKey: description]
+func makeError(code: HelperErrorCode, description: String, arguments: [String] = []) -> NSError {
+    // Preserve the diagnostic identity; the UI host resolves the native localization.
+    let diagnostic = arguments.isEmpty ? description : String(format: description, arguments: arguments)
+    let userInfo: [String: Any] = [
+        NSLocalizedDescriptionKey: diagnostic,
+        "SapphireLocalizationKey": description,
+        "SapphireLocalizationArguments": arguments
+    ]
     return NSError(domain: HelperErrorDomain, code: code.rawValue, userInfo: userInfo)
 }

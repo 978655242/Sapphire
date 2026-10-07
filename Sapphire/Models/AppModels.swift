@@ -172,10 +172,10 @@ enum CircleSearchBrowserEngine: String, Codable, CaseIterable, Identifiable, Has
 
     var displayName: String {
         switch self {
-        case .google: return "Google Lens"
-        case .bing: return "Bing"
-        case .yandex: return "Yandex"
-        case .tineye: return "tineye"
+        case .google: return "Google Lens".local
+        case .bing: return "Bing".local
+        case .yandex: return "Yandex".local
+        case .tineye: return "tineye".local
         }
     }
 }

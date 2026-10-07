@@ -385,9 +385,9 @@ private struct LockScreenBatteryInfoSlot: View {
         Group {
             if let state = batteryMonitor.currentState {
                 let statusText: String = {
-                    if state.isCharging { return "Charging" }
-                    if state.isPluggedIn { return "Plugged In" }
-                    return "On Battery"
+                    if state.isCharging { return "Charging".local }
+                    if state.isPluggedIn { return "Plugged In".local }
+                    return "On Battery".local
                 }()
                 HStack(spacing: LockScreenConfiguration.infoWidgetGenericHSpacing) {
                     if settings.settings.lockScreenBatteryInfo.contains(.statusIcon) {
@@ -448,7 +448,7 @@ private struct LockScreenBatteryInfoSlot: View {
                         if settings.settings.showEstimatedBatteryTime,
                            let timeRemaining = batteryEstimator.estimatedTimeRemaining,
                            !timeRemaining.isEmpty,
-                           timeRemaining != "Charged" {
+                           timeRemaining != "Charged".local {
                             Text(timeRemaining)
                                 .font(.system(size: LockScreenConfiguration.infoWidgetMediumFontSize, weight: .medium, design: .rounded))
                                 .foregroundColor(.white.opacity(0.8))

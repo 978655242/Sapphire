@@ -419,6 +419,7 @@ struct NotchController: View {
     var body: some View {
         if let config = config {
             configuredNotchView(config: config)
+                .environment(\.locale, AppLocalization.locale)
         } else {
             Color.clear
                 .onAppear {

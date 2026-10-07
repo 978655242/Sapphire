@@ -948,11 +948,11 @@ class MultiAudioManager: ObservableObject {
         )
         var format = AudioStreamBasicDescription()
         var size = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
-        guard AudioObjectGetPropertyData(deviceID, &address, 0, nil, &size, &format) == noErr else { return "Unknown" }
+        guard AudioObjectGetPropertyData(deviceID, &address, 0, nil, &size, &format) == noErr else { return "Unknown".local }
 
         let bitDepth = format.mBitsPerChannel
         let channels = format.mChannelsPerFrame
-        return "\(channels) Ch / \(bitDepth)-bit"
+        return String(localized: "\(channels) Ch / \(bitDepth)-bit")
     }
 }
 

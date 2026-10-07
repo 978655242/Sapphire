@@ -56,7 +56,7 @@ public extension NSScreen {
   }
 
   var displayLabel: String {
-    let name = displayName ?? (CGDisplayIsBuiltin(displayID) != 0 ? "Built-in Display" : "Display")
+    let name = displayName ?? (CGDisplayIsBuiltin(displayID) != 0 ? "Built-in Display".local : "Display".local)
     return name
   }
 

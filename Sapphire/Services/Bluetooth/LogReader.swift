@@ -132,7 +132,6 @@ extension View {
 
 extension String {
     var boolValue: Bool { return (self as NSString).boolValue }
-    var local: String { return NSLocalizedString(self, comment: "") }
 }
 
 extension NSMenuItem {

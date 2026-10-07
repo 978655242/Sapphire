@@ -37,7 +37,7 @@ struct PlaneEditorView: View {
 
                 Picker("Layout:", selection: $plane.layoutID) {
                     ForEach(allLayouts) { layout in
-                        Text(layout.name).tag(layout.id)
+                        Text(layout.displayName).tag(layout.id)
                     }
                 }
 
@@ -57,7 +57,7 @@ struct PlaneEditorView: View {
                             Text("Recording... (Esc to cancel)")
                                 .foregroundColor(.accentColor)
                         } else if let shortcut = plane.shortcut {
-                            Text("\(KeyboardShortcutHelper.description(for: shortcut.modifiers)) \(shortcut.key)")
+                            Text("\(KeyboardShortcutHelper.description(for: shortcut.modifiers)) \(KeyboardShortcutHelper.keyDescription(for: shortcut.key))")
                         } else {
                             Text("Record Shortcut")
                         }

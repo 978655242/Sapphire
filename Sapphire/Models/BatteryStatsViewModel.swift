@@ -26,7 +26,7 @@ class BatteryStatsViewModel: ObservableObject {
         var maxCapacity = 0
         var appleMaxCapacity = 0
         var cycleCount = 0
-        var health = "Unknown"
+        var health = "Unknown".local
         var powerAdapterInfo: PowerAdapterInfo?
     }
 
@@ -154,9 +154,9 @@ class BatteryStatsViewModel: ObservableObject {
         let hours = minutes / 60
         let remainingMinutes = minutes % 60
         if hours > 0 {
-            return "\(hours)h \(remainingMinutes)m"
+            return String(localized: "\(hours)h \(remainingMinutes)m")
         }
-        return "\(remainingMinutes)m"
+        return String(localized: "\(remainingMinutes)m")
     }
 
     var maxCapacityPercentage: Int {

@@ -114,7 +114,7 @@ struct LockScreenNotesInfoView: View {
                 let title = note.title.trimmingCharacters(in: .whitespacesAndNewlines)
                 if !title.isEmpty { return title }
                 let body = note.body.trimmingCharacters(in: .whitespacesAndNewlines)
-                return body.isEmpty ? "Untitled" : body
+                return body.isEmpty ? "Untitled".local : body
             }
     }
 
@@ -152,9 +152,9 @@ struct LockScreenClipboardInfoView: View {
 
     private var latestPreview: String? {
         guard let item = clipboardManager.recentItems.first else { return nil }
-        if item.isImage { return "Image" }
+        if item.isImage { return "Image".local }
         let text = item.preview.trimmingCharacters(in: .whitespacesAndNewlines)
-        return text.isEmpty ? "Clipboard item" : text
+        return text.isEmpty ? "Clipboard item".local : text
     }
 
     var body: some View {
@@ -240,12 +240,12 @@ struct LockScreenCaffeineMiniWidget: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Caffeine")
                         .font(.system(size: 15, weight: .semibold, design: .rounded))
-                    Text(caffeineManager.isActive ? "Keeping awake" : "Tap to enable")
+                    Text(caffeineManager.isActive ? "Keeping awake".local : "Tap to enable".local)
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
                 Spacer(minLength: 0)
-                Text(caffeineManager.isActive ? "On" : "Off")
+                Text(caffeineManager.isActive ? "On".local : "Off".local)
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(caffeineManager.isActive ? .orange : .secondary)
                     .padding(.horizontal, 10)
@@ -271,7 +271,7 @@ struct LockScreenTimerMiniWidget: View {
                 .background(Color.orange.opacity(0.15), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(timerManager.activeTimer == .stopwatch ? "Stopwatch" : "Timer")
+                Text(timerManager.activeTimer == .stopwatch ? "Stopwatch".local : "Timer".local)
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
                 if timerManager.isRunning {
                     LockScreenTimerClockText(timerManager: timerManager, fontSize: 18)
@@ -326,7 +326,7 @@ struct LockScreenFocusMiniWidget: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text("Focus")
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
-                Text(status.isActive ? info.name : "Focus Off")
+                Text(status.isActive ? info.name : "Focus Off".local)
                     .font(.system(size: 13, weight: .medium, design: .rounded))
                     .foregroundStyle(status.isActive ? .white : .secondary)
                     .lineLimit(1)
@@ -372,7 +372,7 @@ struct LockScreenBluetoothMiniWidget: View {
                 .background(Color.blue.opacity(0.15), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(device?.name ?? "Bluetooth")
+                Text(device?.name ?? "Bluetooth".local)
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
                     .lineLimit(1)
                 if let level = device?.batteryLevel, device?.eventType == .connected {
@@ -429,7 +429,7 @@ struct LockScreenSystemMiniWidget: View {
         }
     }
 
-    private func systemMeter(title: String, value: Int, color: Color) -> some View {
+    private func systemMeter(title: LocalizedStringKey, value: Int, color: Color) -> some View {
         VStack(spacing: 6) {
             ZStack {
                 ProgressRingView(

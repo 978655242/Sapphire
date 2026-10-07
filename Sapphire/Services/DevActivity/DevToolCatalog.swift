@@ -17,9 +17,9 @@ enum DevTaskKind: String, Codable, CaseIterable, Identifiable, Equatable {
 
     var displayName: String {
         switch self {
-        case .ai: return "AI Agents"
-        case .build: return "Builds & Tests"
-        case .command: return "Terminal Commands"
+        case .ai: return "AI Agents".local
+        case .build: return "Builds & Tests".local
+        case .command: return "Terminal Commands".local
         }
     }
 
@@ -38,9 +38,9 @@ struct DevTool: Identifiable, Hashable {
     let symbol: String
     let tint: Color
 
-    static let genericAI = DevTool(id: "ai", displayName: "AI Agent", symbol: "sparkles", tint: .purple)
-    static let genericBuild = DevTool(id: "build", displayName: "Build", symbol: "hammer.fill", tint: .orange)
-    static let genericCommand = DevTool(id: "shell", displayName: "Command", symbol: "terminal.fill", tint: .gray)
+    static let genericAI = DevTool(id: "ai", displayName: "AI Agent".local, symbol: "sparkles", tint: .purple)
+    static let genericBuild = DevTool(id: "build", displayName: "Build".local, symbol: "hammer.fill", tint: .orange)
+    static let genericCommand = DevTool(id: "shell", displayName: "Command".local, symbol: "terminal.fill", tint: .gray)
 }
 
 enum DevBusySignal: Equatable {
@@ -137,10 +137,10 @@ enum DevToolCatalog {
     static let node = DevTool(id: "node", displayName: "Node", symbol: "shippingbox.fill", tint: Color(red: 0.40, green: 0.72, blue: 0.31))
     static let docker = DevTool(id: "docker", displayName: "Docker", symbol: "shippingbox.fill", tint: Color(red: 0.14, green: 0.52, blue: 0.93))
     static let make = DevTool(id: "make", displayName: "Make", symbol: "hammer.fill", tint: .orange)
-    static let tests = DevTool(id: "tests", displayName: "Tests", symbol: "checkmark.seal.fill", tint: Color(red: 0.36, green: 0.78, blue: 0.45))
+    static let tests = DevTool(id: "tests", displayName: "Tests".local, symbol: "checkmark.seal.fill", tint: Color(red: 0.36, green: 0.78, blue: 0.45))
     static let python = DevTool(id: "python", displayName: "Python", symbol: "chevron.left.forwardslash.chevron.right", tint: Color(red: 0.22, green: 0.45, blue: 0.70))
     static let git = DevTool(id: "git", displayName: "Git", symbol: "arrow.triangle.branch", tint: Color(red: 0.94, green: 0.33, blue: 0.20))
-    static let packageManager = DevTool(id: "packages", displayName: "Packages", symbol: "shippingbox.fill", tint: Color(red: 0.85, green: 0.30, blue: 0.30))
+    static let packageManager = DevTool(id: "packages", displayName: "Packages".local, symbol: "shippingbox.fill", tint: Color(red: 0.85, green: 0.30, blue: 0.30))
 
     // MARK: - Terminals
 

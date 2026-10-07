@@ -56,12 +56,12 @@ struct FocusSessionDetailView: View {
             timerRing
 
             if focusManager.isSessionActive, let endDate = focusManager.currentBlockEndDate {
-                Text("ENDS \(endDate.formatted(date: .omitted, time: .shortened))")
+                Text("ENDS \(endDate.formatted(.dateTime.locale(AppLocalization.locale).hour().minute()))")
                     .font(.system(size: 9, weight: .bold))
                     .tracking(1.2)
                     .foregroundColor(accent.opacity(0.8))
             } else {
-                Text("ETA \(Date().addingTimeInterval(customMinutes * 60).formatted(date: .omitted, time: .shortened))")
+                Text("ETA \(Date().addingTimeInterval(customMinutes * 60).formatted(.dateTime.locale(AppLocalization.locale).hour().minute()))")
                     .font(.system(size: 9, weight: .bold))
                     .tracking(1.2)
                     .foregroundColor(.white.opacity(0.35))
@@ -118,7 +118,7 @@ struct FocusSessionDetailView: View {
                             .onDisappear {
                                 if durationFieldFocused { durationFieldFocused = false }
                             }
-                        Text("min")
+                        Text("min".local)
                             .font(.system(size: 10))
                             .foregroundColor(.white.opacity(0.4))
                     }
@@ -156,7 +156,7 @@ struct FocusSessionDetailView: View {
                     } label: {
                         HStack(spacing: 6) {
                             Image(systemName: focusManager.isPaused ? "play.fill" : "pause.fill")
-                            Text(focusManager.isPaused ? "Resume" : "Pause")
+                            Text(focusManager.isPaused ? "Resume".local : "Pause".local)
                         }
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.white)
@@ -208,7 +208,7 @@ struct FocusSessionDetailView: View {
                     }
                     .buttonStyle(.plain)
                     .disabled(!focusManager.canEndSessionEarly)
-                    .help(focusManager.canEndSessionEarly ? "End session early" : "Locked: strict mode active")
+                    .help(focusManager.canEndSessionEarly ? "End session early".local : "Locked: strict mode active".local)
                 }
             }
         }
@@ -218,11 +218,11 @@ struct FocusSessionDetailView: View {
     private var statusText: String {
         switch focusManager.phase {
         case .idle, .finished:
-            return focusManager.phase == .finished ? "Session finished" : "Ready"
+            return focusManager.phase == .finished ? "Session finished".local : "Ready".local
         case .focusing:
-            return focusManager.isPaused ? "Paused" : "Block \(focusManager.currentBlockIndex + 1)"
+            return focusManager.isPaused ? "Paused".local : String(localized: "Block \(focusManager.currentBlockIndex + 1)")
         case .onBreak:
-            return focusManager.isPaused ? "Paused" : "Rest & recharge"
+            return focusManager.isPaused ? "Paused".local : "Rest & recharge".local
         }
     }
 
@@ -234,7 +234,7 @@ struct FocusSessionDetailView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
                 StreakFlame(size: 18, isActive: snapshot.streak > 0)
-                Text(snapshot.streak == 1 ? "1 day streak" : "\(snapshot.streak) day streak")
+                Text(snapshot.streak == 1 ? "1 day streak".local : String(localized: "\(snapshot.streak) day streak"))
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(.white)
                     .lineLimit(1)
@@ -288,11 +288,11 @@ struct FocusSessionDetailView: View {
 
     private var statsStrip: some View {
         HStack(spacing: 8) {
-            statItem(label: "Focused", value: FocusSessionManager.format(focusManager.completedToday))
+            statItem(label: "Focused".local, value: FocusSessionManager.format(focusManager.completedToday))
             Divider().frame(height: 20).opacity(0.15)
-            statItem(label: "Blocks", value: "\(focusManager.blocksCompletedThisSession)")
+            statItem(label: "Blocks".local, value: "\(focusManager.blocksCompletedThisSession)")
             Divider().frame(height: 20).opacity(0.15)
-            statItem(label: "Total", value: "\(focusManager.history.count)")
+            statItem(label: "Total".local, value: "\(focusManager.history.count)")
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 2)
@@ -409,22 +409,22 @@ struct FocusSessionDetailView: View {
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
                 quickToggleChip(
-                    title: "Dim Apps",
+                    title: "Dim Apps".local,
                     icon: "moon.fill",
                     isOn: $settings.settings.focusDimInactiveApps
                 )
                 quickToggleChip(
-                    title: "Mission Ctl",
+                    title: "Mission Ctl".local,
                     icon: "rectangle.inset.filled",
                     isOn: $settings.settings.focusDisableDimInMissionControl
                 )
                 quickToggleChip(
-                    title: "Hide Wall",
+                    title: "Hide Wall".local,
                     icon: "photo.fill",
                     isOn: $settings.settings.focusHideWallpaper
                 )
                 quickToggleChip(
-                    title: "App Limit",
+                    title: "App Limit".local,
                     icon: "shield.fill",
                     isOn: $settings.settings.focusAppLimitEnabled
                 )

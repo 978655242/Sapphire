@@ -190,7 +190,7 @@ class DisplayManager {
   }
 
   static func getDisplayRawNameByID(displayID: CGDirectDisplayID) -> String {
-    let defaultName = "Unknown"
+    let defaultName = "Unknown".local
     if #available(macOS 11.0, *) {
       if let dictionary = (CoreDisplay_DisplayCreateInfoDictionary(displayID)?.takeRetainedValue() as NSDictionary?),
          let nameList = dictionary["DisplayProductName"] as? [String: String],

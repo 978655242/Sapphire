@@ -26,15 +26,15 @@ enum SpotAPIError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .authenticationFailed(let message): return "Authentication Failed: \(message)"
-        case .invalidResponse: return "Invalid response from Spotify server."
-        case .decodingError(let error): return "Failed to decode data: \(error.localizedDescription)"
-        case .missingData(let field): return "Missing required data: \(field)"
-        case .urlConstructionFailed(let url): return "Failed to construct URL: \(url)"
-        case .loginCancelled: return "Login was cancelled by the user."
-        case .connectionClosedUnexpectedly: return "The server closed the connection unexpectedly."
-        case .apiError(let message): return "Spotify API Error: \(message)"
-        case .rateLimited(let message): return "Spotify is rate limiting requests: \(message)"
+        case .authenticationFailed(let message): return String(localized: "Authentication Failed: \(message)")
+        case .invalidResponse: return "Invalid response from Spotify server.".local
+        case .decodingError(let error): return String(localized: "Failed to decode data: \(error.localizedDescription)")
+        case .missingData(let field): return String(localized: "Missing required data: \(field)")
+        case .urlConstructionFailed(let url): return String(localized: "Failed to construct URL: \(url)")
+        case .loginCancelled: return "Login was cancelled by the user.".local
+        case .connectionClosedUnexpectedly: return "The server closed the connection unexpectedly.".local
+        case .apiError(let message): return String(localized: "Spotify API Error: \(message)")
+        case .rateLimited(let message): return String(localized: "Spotify is rate limiting requests: \(message)")
         }
     }
 }
@@ -614,7 +614,7 @@ class SpotifyPrivateAPIManager: ObservableObject {
 
         } catch let error {
             guard activeSessionAttemptID == attemptID else { return }
-            let message = error.localizedDescription
+            let message = String(describing: error)
             let isHardCookieDeath: Bool = {
                 if case SpotAPIError.authenticationFailed(let detail) = error {
                     let d = detail.lowercased()
@@ -1117,9 +1117,9 @@ class SpotifyPrivateAPIManager: ObservableObject {
                     guard let itemData = item.item?.data else { return nil }
                     switch itemData {
                     case .playlist(let data):
-                        return SpotifyPlaylist(id: data.uri?.components(separatedBy: ":").last ?? "", name: data.name ?? "Playlist", uri: data.uri ?? "", images: [SpotifyImage(url: data.images?.items?.first?.sources?.first?.url ?? "")], owner: SpotifyUserSimple(id: "", displayName: data.ownerV2?.data?.name ?? "Unknown", images: nil), collaborators: nil)
+                        return SpotifyPlaylist(id: data.uri?.components(separatedBy: ":").last ?? "", name: data.name ?? "Playlist".local, uri: data.uri ?? "", images: [SpotifyImage(url: data.images?.items?.first?.sources?.first?.url ?? "")], owner: SpotifyUserSimple(id: "", displayName: data.ownerV2?.data?.name ?? "Unknown".local, images: nil), collaborators: nil)
                     case .pseudoPlaylist(let data):
-                        return SpotifyPlaylist(id: data.uri?.components(separatedBy: ":").last ?? "", name: data.name ?? "Liked Songs", uri: data.uri ?? "", images: [SpotifyImage(url: data.image?.sources?.first?.url ?? "")], owner: SpotifyUserSimple(id: "spotify", displayName: "Spotify", images: nil), collaborators: nil)
+                        return SpotifyPlaylist(id: data.uri?.components(separatedBy: ":").last ?? "", name: data.name ?? "Liked Songs".local, uri: data.uri ?? "", images: [SpotifyImage(url: data.image?.sources?.first?.url ?? "")], owner: SpotifyUserSimple(id: "spotify", displayName: "Spotify", images: nil), collaborators: nil)
                     default: return nil
                     }
                 } ?? []
@@ -1523,7 +1523,7 @@ class SpotifyPrivateAPIManager: ObservableObject {
     func transferPlayback(to toDeviceId: String) async -> Bool {
         if toDeviceId == controllerDeviceID {
             await MainActor.run {
-                self.deviceTransferNotice = "Sapphire is not a Spotify speaker. Choose the desktop app or another device."
+                self.deviceTransferNotice = "Sapphire is not a Spotify speaker. Choose the desktop app or another device.".local
                 self.scheduleDeviceTransferNoticeClear()
             }
             return false
@@ -1540,7 +1540,7 @@ class SpotifyPrivateAPIManager: ObservableObject {
         } catch {
             print("[SpotifyPrivateAPIManager] Error transferring playback: \(error.localizedDescription)")
             await MainActor.run {
-                self.deviceTransferNotice = "Couldn’t switch device: \(error.localizedDescription)"
+                self.deviceTransferNotice = String(localized: "Couldn’t switch device: \(error.localizedDescription)")
                 self.scheduleDeviceTransferNoticeClear()
             }
             return false
@@ -2641,7 +2641,7 @@ class SpotifyPrivateAPIManager: ObservableObject {
         Task {
             guard let external = preferredExternalPlaybackDeviceID(excluding: selfId) else {
                 await MainActor.run {
-                    self.deviceTransferNotice = "Open the Spotify app or another speaker to play audio."
+                    self.deviceTransferNotice = "Open the Spotify app or another speaker to play audio.".local
                     self.scheduleDeviceTransferNoticeClear()
                 }
                 return
@@ -2651,7 +2651,7 @@ class SpotifyPrivateAPIManager: ObservableObject {
                 await MainActor.run {
                     self.isConnectStreamingSession = true
                     self.deviceTransferNotice =
-                        "Playback moved to \(self.devices.first(where: { $0.deviceId == external })?.name ?? "your speaker")."
+                        String(localized: "Playback moved to \(self.devices.first(where: { $0.deviceId == external })?.name ?? "your speaker".local).")
                     self.scheduleDeviceTransferNoticeClear()
                 }
             } catch {
@@ -2843,7 +2843,7 @@ extension SpotifyPrivateAPIManager {
         trackIndex: Int? = nil
     ) async -> PlaybackResult {
         guard isLoggedIn, let deviceId = controllerDeviceID else {
-            return .failure(reason: "Spotify private API is not logged in.")
+            return .failure(reason: "Spotify private API is not logged in.".local)
         }
 
         do {
@@ -2852,7 +2852,7 @@ extension SpotifyPrivateAPIManager {
                 try? await refreshPlayerAndDeviceState()
             }
             guard let playbackDevice = preferredExternalPlaybackDeviceID(excluding: deviceId) else {
-                let reason = "Open the Spotify desktop app or another speaker to play audio."
+                let reason = "Open the Spotify desktop app or another speaker to play audio.".local
                 await MainActor.run {
                     self.isConnectStreamingSession = false
                     self.deviceTransferNotice = reason
@@ -2877,10 +2877,10 @@ extension SpotifyPrivateAPIManager {
                 trackIndex: trackIndex,
                 targetDeviceID: playbackDevice
             )
-            let deviceName = devices.first(where: { $0.deviceId == playbackDevice })?.name ?? "another device"
+            let deviceName = devices.first(where: { $0.deviceId == playbackDevice })?.name ?? "another device".local
             await MainActor.run {
                 self.isConnectStreamingSession = true
-                self.deviceTransferNotice = "Playing on \(deviceName)."
+                self.deviceTransferNotice = String(localized: "Playing on \(deviceName).")
                 self.scheduleDeviceTransferNoticeClear()
             }
             print("[SpotifyConnect] Playback on \(deviceName) (\(playbackDevice.prefix(8))…)")
@@ -2889,7 +2889,7 @@ extension SpotifyPrivateAPIManager {
             print("[SpotifyConnect] play failed: \(error.localizedDescription)")
             await MainActor.run {
                 self.isConnectStreamingSession = false
-                self.deviceTransferNotice = "Couldn’t start playback: \(error.localizedDescription)"
+                self.deviceTransferNotice = String(localized: "Couldn’t start playback: \(error.localizedDescription)")
                 self.scheduleDeviceTransferNoticeClear()
             }
             return .failure(reason: error.localizedDescription)
@@ -4032,6 +4032,13 @@ struct SpotifyArtistConcert: Decodable, Identifiable, Hashable {
 
     var id: String { uri }
 
+    var displayDate: String {
+        let date = (try? Date.ISO8601FormatStyle(includingFractionalSeconds: true).parse(startDateIsoString))
+            ?? (try? Date.ISO8601FormatStyle().parse(startDateIsoString))
+        guard let date else { return startDateIsoString }
+        return date.formatted(.dateTime.year().month().day().locale(AppLocalization.locale))
+    }
+
     init(uri: String, title: String, startDateIsoString: String, city: String, venue: String) {
         self.uri = uri
         self.title = title
@@ -4087,7 +4094,7 @@ struct SpotifyHomeSection: Identifiable, Hashable {
             let content = item.content?.data
             let entityURI = content?.uri ?? item.uri
             guard let entityURI, !entityURI.isEmpty else { return nil }
-            let name = content?.name ?? "Untitled"
+            let name = content?.name ?? "Untitled".local
             let owner = content?.ownerV2?.data?.name
             let imageURL = content?.resolvedImageURL
             return SpotifyHomeItem(
@@ -4622,7 +4629,7 @@ extension SpotifyPrivateAPIManager {
                     id: data.uri,
                     name: data.name,
                     uri: data.uri,
-                    artistName: data.artists?.items.first?.profile.name ?? "Unknown",
+                    artistName: data.artists?.items.first?.profile.name ?? "Unknown".local,
                     imageURL: image.flatMap(URL.init(string:)),
                     year: data.date?.year
                 )
@@ -4654,14 +4661,14 @@ extension SpotifyPrivateAPIManager {
                 guard !uri.isEmpty else { return nil }
                 return SpotifyRecommendedTrack(
                     id: SpotifyIDConverter.rawID(from: uri),
-                    name: track.name ?? "Track",
+                    name: track.name ?? "Track".local,
                     uri: uri,
                     duration: track.duration?.totalMilliseconds ?? 0,
                     popularity: nil,
                     artists: track.artists?.items.map {
-                        .init(id: SpotifyIDConverter.rawID(from: $0.uri ?? ""), name: $0.profile?.name ?? $0.profileName ?? "Artist")
+                        .init(id: SpotifyIDConverter.rawID(from: $0.uri ?? ""), name: $0.profile?.name ?? $0.profileName ?? "Artist".local)
                     } ?? [],
-                    album: .init(id: SpotifyIDConverter.rawID(from: albumURI), name: "Album", imageUrl: nil)
+                    album: .init(id: SpotifyIDConverter.rawID(from: albumURI), name: "Album".local, imageUrl: nil)
                 )
             } ?? []
         } catch {
@@ -4678,7 +4685,7 @@ extension SpotifyPrivateAPIManager {
             )
             let credits = response.data.trackUnion?.artists?.items.compactMap { item -> SpotifyTrackArtistCredit? in
                 guard let uri = item.uri ?? item.data?.uri else { return nil }
-                let name = item.profile?.name ?? item.data?.profile?.name ?? "Artist"
+                let name = item.profile?.name ?? item.data?.profile?.name ?? "Artist".local
                 return SpotifyTrackArtistCredit(
                     id: uri,
                     uri: uri,
@@ -4942,7 +4949,7 @@ extension SpotifyPrivateAPIManager {
                 let imageURL = playlist.images?.items.first?.sources.first.flatMap { URL(string: $0.url) }
                 return SpotifyRecentlyPlayedItem(
                     id: uri,
-                    name: playlist.name ?? "Playlist",
+                    name: playlist.name ?? "Playlist".local,
                     uri: uri,
                     imageURL: imageURL,
                     ownerName: playlist.ownerV2?.data?.name ?? "Spotify"
@@ -5027,7 +5034,7 @@ extension SpotifyPrivateAPIManager {
             let avatar = union.visuals?.avatarImage?.sources?.first?.url
             let profile = SpotifyArtistProfile(
                 uri: union.uri ?? artistURI,
-                name: union.profile?.name ?? "Artist",
+                name: union.profile?.name ?? "Artist".local,
                 biography: union.profile?.biography?.text ?? "",
                 monthlyListeners: union.stats?.monthlyListeners,
                 followers: union.stats?.followers,
@@ -5083,7 +5090,7 @@ extension SpotifyPrivateAPIManager {
                 guard let data = item.data ?? item.concert else { return nil }
                 return SpotifyArtistConcert(
                     uri: data.uri ?? UUID().uuidString,
-                    title: data.title ?? data.name ?? "Concert",
+                    title: data.title ?? data.name ?? "Concert".local,
                     startDateIsoString: data.startDateIsoString ?? data.date ?? "",
                     city: data.location?.city ?? data.venue?.city ?? "",
                     venue: data.location?.name ?? data.venue?.name ?? ""
@@ -6156,7 +6163,7 @@ struct SpotifySearchTopResultsResponse: Decodable {
                 tracks.append(
                     SpotifySearchTrack(
                         id: uri,
-                        name: d.name ?? "Track",
+                        name: d.name ?? "Track".local,
                         uri: uri,
                         artists: (d.artists?.items ?? []).compactMap { $0.profile?.name }.joined(separator: ", "),
                         imageURL: URL(string: d.albumOfTrack?.coverArt?.sources?.first?.url ?? d.coverArt?.sources?.first?.url ?? "")
@@ -6166,7 +6173,7 @@ struct SpotifySearchTopResultsResponse: Decodable {
                 artists.append(
                     SpotifySearchArtist(
                         id: uri,
-                        name: d.profile?.name ?? d.name ?? "Artist",
+                        name: d.profile?.name ?? d.name ?? "Artist".local,
                         uri: uri,
                         imageURL: URL(string: d.visuals?.avatarImage?.sources?.first?.url ?? "")
                     )
@@ -6175,7 +6182,7 @@ struct SpotifySearchTopResultsResponse: Decodable {
                 albums.append(
                     SpotifySearchAlbum(
                         id: uri,
-                        name: d.name ?? "Album",
+                        name: d.name ?? "Album".local,
                         uri: uri,
                         artistName: (d.artists?.items ?? []).compactMap { $0.profile?.name }.joined(separator: ", "),
                         imageURL: URL(string: d.coverArt?.sources?.first?.url ?? "")
@@ -6185,7 +6192,7 @@ struct SpotifySearchTopResultsResponse: Decodable {
                 playlists.append(
                     SpotifySearchPlaylistHit(
                         id: uri,
-                        name: d.name ?? "Playlist",
+                        name: d.name ?? "Playlist".local,
                         uri: uri,
                         ownerName: d.ownerV2?.data?.name,
                         imageURL: d.images?.url
@@ -6337,7 +6344,7 @@ struct ArtistOverviewResponse: Decodable {
     var overview: SpotifyArtistOverview? {
         guard let union = data?.artistUnion else { return nil }
         let uri = union.uri ?? ""
-        let name = union.profile?.name ?? "Artist"
+        let name = union.profile?.name ?? "Artist".local
         let bio = union.profile?.biography?.text ?? ""
         let avatar = union.visuals?.avatarImage?.sources?.first?.url.flatMap(URL.init(string:))
         let header = union.visuals?.headerImage?.sources?.first?.url.flatMap(URL.init(string:))
@@ -6415,7 +6422,7 @@ struct ArtistOverviewResponse: Decodable {
             guard let data = item.data else { return nil }
             return SpotifyArtistConcert(
                 uri: data.uri ?? UUID().uuidString,
-                title: data.title ?? "Concert",
+                title: data.title ?? "Concert".local,
                 startDateIsoString: data.startDateIsoString ?? "",
                 city: data.location?.city ?? "",
                 venue: data.location?.name ?? ""

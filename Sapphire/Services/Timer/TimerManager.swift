@@ -31,6 +31,8 @@ struct SapphireTimer: Equatable, Identifiable {
     }
 
     var isRunning: Bool { state == .system }
+
+    var displayLabel: String { label.isEmpty ? "Timer".local : label }
 }
 
 private struct StoredSapphireTimer: Codable {
@@ -168,7 +170,7 @@ class TimerManager: ObservableObject {
         guard duration > 0 else { return nil }
         let timer = SapphireTimer(
             id: UUID().uuidString,
-            label: label ?? "Timer",
+            label: label ?? "",
             state: .system,
             remainingTimeOnLastUpdate: duration,
             fireDate: Date().addingTimeInterval(duration)
@@ -620,8 +622,8 @@ class TimerManager: ObservableObject {
                 switch settings.authorizationStatus {
                 case .authorized, .provisional:
                     let content = UNMutableNotificationContent()
-                    content.title = "Timer Done"
-                    content.body = "\(currentTimer.label) finished."
+                    content.title = "Timer Done".local
+                    content.body = String(localized: "\(currentTimer.displayLabel) finished.")
                     content.sound = .default
                     let delay = max(fireDate.timeIntervalSinceNow, 1)
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: delay, repeats: false)

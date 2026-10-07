@@ -20,11 +20,11 @@ enum TimeRange: Hashable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .last24Hours: return "24h"
-        case .last7Days: return "7d"
-        case .lastMonth: return "Month"
-        case .lastYear: return "Year"
-        case .custom: return "Custom"
+        case .last24Hours: return "24h".local
+        case .last7Days: return "7d".local
+        case .lastMonth: return "Month".local
+        case .lastYear: return "Year".local
+        case .custom: return "Custom".local
         }
     }
 

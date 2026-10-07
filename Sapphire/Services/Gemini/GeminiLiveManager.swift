@@ -67,7 +67,7 @@ final class GeminiLiveManager: NSObject, ObservableObject, AVCaptureAudioDataOut
             throw NSError(
                 domain: "GeminiLive",
                 code: -10875,
-                userInfo: [NSLocalizedDescriptionKey: "No microphone is available."]
+                userInfo: [NSLocalizedDescriptionKey: "No microphone is available.".local]
             )
         }
 
@@ -86,7 +86,7 @@ final class GeminiLiveManager: NSObject, ObservableObject, AVCaptureAudioDataOut
             throw NSError(
                 domain: "GeminiLive",
                 code: -10875,
-                userInfo: [NSLocalizedDescriptionKey: "Could not open the built-in microphone."]
+                userInfo: [NSLocalizedDescriptionKey: "Could not open the built-in microphone.".local]
             )
         }
         captureSession.addInput(input)
@@ -161,7 +161,7 @@ final class GeminiLiveManager: NSObject, ObservableObject, AVCaptureAudioDataOut
             channels: 1
         )
         guard let playerFormat else {
-            throw NSError(domain: "GeminiLive", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not create playback format."])
+            throw NSError(domain: "GeminiLive", code: 1, userInfo: [NSLocalizedDescriptionKey: "Could not create playback format.".local])
         }
         hardwarePlaybackFormat = playerFormat
 
@@ -226,7 +226,7 @@ final class GeminiLiveManager: NSObject, ObservableObject, AVCaptureAudioDataOut
             .sink { [weak self] error in
                 guard let self else { return }
                 let message = self.sanitizedConnectionError(error)
-                print("[GeminiLiveManager] Connection error: \(message)")
+                print("[GeminiLiveManager] Connection error: \(error)")
                 self.lastError = message
                 self.cleanupSession()
             }
@@ -597,9 +597,9 @@ final class GeminiLiveManager: NSObject, ObservableObject, AVCaptureAudioDataOut
             if !rawGeminiKey.isEmpty {
                 lastError = misplacedGeminiKeyMessage(for: rawGeminiKey)
             } else {
-                lastError = "Add a Google Gemini API key in Settings → Intelligence (keys start with AIza)."
+                lastError = "Add a Google Gemini API key in Settings → Intelligence (keys start with AIza).".local
             }
-            print("[GeminiLiveManager] \(lastError ?? "API key not configured")")
+            print("[GeminiLiveManager] API key not configured")
             return
         }
 
@@ -615,7 +615,7 @@ final class GeminiLiveManager: NSObject, ObservableObject, AVCaptureAudioDataOut
 
             let granted = await self.requestMicrophoneAccess()
             guard granted else {
-                self.lastError = "Microphone access is required for Gemini Live."
+                self.lastError = "Microphone access is required for Gemini Live.".local
                 return
             }
 
@@ -702,21 +702,21 @@ final class GeminiLiveManager: NSObject, ObservableObject, AVCaptureAudioDataOut
             if !rawKey.isEmpty, !APIKeyManager.isValidGoogleGeminiAPIKey(rawKey) {
                 return misplacedGeminiKeyMessage(for: rawKey)
             }
-            return "Could not connect to Gemini Live. Check your Google API key and network."
+            return "Could not connect to Gemini Live. Check your Google API key and network.".local
         }
         return error.localizedDescription
     }
 
     private func misplacedGeminiKeyMessage(for key: String) -> String {
         if key.hasPrefix("sk-hc-") {
-            return "Gemini Live needs a Google API key (AIza…). Your Hack Club key belongs under Hack Club in Settings."
+            return "Gemini Live needs a Google API key (AIza…). Your Hack Club key belongs under Hack Club in Settings.".local
         }
         if key.hasPrefix("sk-or-") {
-            return "Gemini Live needs a Google API key (AIza…). OpenRouter keys won't work here."
+            return "Gemini Live needs a Google API key (AIza…). OpenRouter keys won't work here.".local
         }
         if key.hasPrefix("sk-") {
-            return "Gemini Live needs a Google API key from Google AI Studio (starts with AIza)."
+            return "Gemini Live needs a Google API key from Google AI Studio (starts with AIza).".local
         }
-        return "Gemini Live needs a valid Google Gemini API key (starts with AIza)."
+        return "Gemini Live needs a valid Google Gemini API key (starts with AIza).".local
     }
 }

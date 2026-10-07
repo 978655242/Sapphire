@@ -113,7 +113,7 @@ struct ProcessedWeatherData: Hashable, Sendable {
     var isValid: Bool { isAvailable }
 
     static func empty() -> ProcessedWeatherData {
-        .init(locationName: "N/A", temperature: 0, temperatureMetric: 0, highTemp: 0, highTempMetric: 0, lowTemp: 0, lowTempMetric: 0, conditionDescription: "N/A", iconCode: 44, feelsLike: 0, feelsLikeMetric: 0, windInfo: "N/A", windInfoMetric: "N/A", humidity: "N/A", precipChance: 0, uvIndex: "N/A", sunriseTime: "N/A", sunsetTime: "N/A", visibility: "N/A", visibilityMetric: "N/A", pressure: "N/A", pressureMetric: "N/A", dailyForecasts: [], hourlyForecasts: [], isAvailable: false)
+        .init(locationName: "N/A".local, temperature: 0, temperatureMetric: 0, highTemp: 0, highTempMetric: 0, lowTemp: 0, lowTempMetric: 0, conditionDescription: "N/A".local, iconCode: 44, feelsLike: 0, feelsLikeMetric: 0, windInfo: "N/A".local, windInfoMetric: "N/A".local, humidity: "N/A".local, precipChance: 0, uvIndex: "N/A".local, sunriseTime: "N/A".local, sunsetTime: "N/A".local, visibility: "N/A".local, visibilityMetric: "N/A".local, pressure: "N/A".local, pressureMetric: "N/A".local, dailyForecasts: [], hourlyForecasts: [], isAvailable: false)
     }
 }
 

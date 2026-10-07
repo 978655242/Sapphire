@@ -50,7 +50,7 @@ final class DMGInstallerManager: ObservableObject {
 
 struct DockLayout: Codable, Equatable, Identifiable {
     var id: UUID = UUID()
-    var name: String = "New Preset"
+    var name: String = "New Preset".local
 }
 
 struct SnippetEntry: Codable, Equatable, Identifiable {
@@ -67,12 +67,12 @@ enum EmojiSkinTone: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .none: "Default"
-        case .light: "Light"
-        case .mediumLight: "Medium Light"
-        case .medium: "Medium"
-        case .mediumDark: "Medium Dark"
-        case .dark: "Dark"
+        case .none: "Default".local
+        case .light: "Light".local
+        case .mediumLight: "Medium Light".local
+        case .medium: "Medium".local
+        case .mediumDark: "Medium Dark".local
+        case .dark: "Dark".local
         }
     }
 }
@@ -209,17 +209,17 @@ enum MenuBarRevealConditionKind: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .batteryBelow: "Battery Level Below"
-        case .batteryAbove: "Battery Level Above"
-        case .charging: "Charging"
-        case .onBatteryPower: "On Battery Power"
-        case .focusActive: "Any Focus Active"
-        case .focusIdentifier: "Focus Mode Is"
-        case .wifiEquals: "Wi-Fi Network Is"
-        case .wifiConnected: "Wi-Fi Connected"
-        case .scriptSucceeds: "Script Exits Successfully"
-        case .scriptFails: "Script Fails"
-        case .scriptExitCode: "Script Exit Code Is"
+        case .batteryBelow: "Battery Level Below".local
+        case .batteryAbove: "Battery Level Above".local
+        case .charging: "Charging".local
+        case .onBatteryPower: "On Battery Power".local
+        case .focusActive: "Any Focus Active".local
+        case .focusIdentifier: "Focus Mode Is".local
+        case .wifiEquals: "Wi-Fi Network Is".local
+        case .wifiConnected: "Wi-Fi Connected".local
+        case .scriptSucceeds: "Script Exits Successfully".local
+        case .scriptFails: "Script Fails".local
+        case .scriptExitCode: "Script Exit Code Is".local
         }
     }
 
@@ -265,7 +265,7 @@ struct MenuBarDisplayBinding: Codable, Equatable, Identifiable, Hashable {
 
 struct MenuBarProfile: Codable, Equatable, Identifiable {
     var id: UUID = UUID()
-    var name = "New Profile"
+    var name = "New Profile".local
     var symbolName = "menubar.rectangle"
     var revealConditions: [MenuBarRevealCondition] = []
     var isEnabled = true
@@ -284,7 +284,7 @@ struct MenuBarProfile: Codable, Equatable, Identifiable {
     }
 
     var summaryText: String {
-        revealConditions.isEmpty ? "No conditions" : "\(revealConditions.count) condition(s)"
+        revealConditions.isEmpty ? "No conditions".local : String(localized: "\(revealConditions.count) condition(s)")
     }
 }
 

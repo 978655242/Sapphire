@@ -62,29 +62,29 @@ final class AppleMusicPrivateAPIManager: ObservableObject {
             if let expiry = MusicKitTokenStore.developerTokenExpiry {
                 let remaining = Int(expiry.timeIntervalSinceNow)
                 if remaining > 0 {
-                    lines.append("Developer token: valid (expires in \(Self.daysString(remaining)))")
+                    lines.append(String(localized: "Developer token: valid (expires in \(Self.daysString(remaining)))"))
                 } else {
-                    lines.append("Developer token: EXPIRED \(expiry.formatted())")
+                    lines.append(String(localized: "Developer token: EXPIRED \(expiry.formatted(.dateTime.locale(AppLocalization.locale)))"))
                 }
             } else {
-                lines.append("Developer token: present (unparseable JWT)")
+                lines.append("Developer token: present (unparseable JWT)".local)
             }
         } else {
-            lines.append("Developer token: missing — set MUSICKIT_DEVELOPER_TOKEN or mint one")
+            lines.append("Developer token: missing — set MUSICKIT_DEVELOPER_TOKEN or mint one".local)
         }
         if isLoggedIn {
-            lines.append("User token: connected (source: \(MusicKitTokenStore.userTokenSource))")
+            lines.append(String(localized: "User token: connected (source: \(MusicKitTokenStore.userTokenSource))"))
         } else if MusicKitTokenStore.userTokenOverride != nil {
-            lines.append("User token: override present but not yet validated")
+            lines.append("User token: override present but not yet validated".local)
         } else {
-            lines.append("User token: none — personalized features (love, play counts, recently played, library) need MUSICKIT_USER_TOKEN or the MusicKit entitlement")
+            lines.append("User token: none — personalized features (love, play counts, recently played, library) need MUSICKIT_USER_TOKEN or the MusicKit entitlement".local)
         }
         return lines.joined(separator: "\n")
     }
 
     private static func daysString(_ seconds: Int) -> String {
         let days = max(1, seconds / 86400)
-        return days < 30 ? "\(days) day(s)" : "\(days / 30) month(s)"
+        return days < 30 ? String(localized: "\(days) day(s)") : String(localized: "\(days / 30) month(s)")
     }
 
     func testDeveloperToken() async -> Bool {
@@ -1424,7 +1424,7 @@ final class AppleMusicPrivateAPIManager: ObservableObject {
             return AppleMusicPlaylist(
                 id: item.id,
                 name: name,
-                curatorName: item.type == "playlists" ? "Apple Music" : "Your Library",
+                curatorName: item.type == "playlists" ? "Apple Music" : "Your Library".local,
                 artworkURL: a.artwork.flatMap { URL(string: Self.fixedArtworkURL($0.url ?? "", width: $0.width)) },
                 url: nil
             )
@@ -1462,10 +1462,10 @@ final class AppleMusicPrivateAPIManager: ObservableObject {
             let a = item.attributes
             return SpotifyPlaylist(
                 id: item.id,
-                name: a?.name ?? "Untitled Playlist",
+                name: a?.name ?? "Untitled Playlist".local,
                 uri: item.id,
                 images: a?.artwork?.url.map { [SpotifyImage(url: Self.fixedArtworkURL($0, width: a?.artwork?.width))] } ?? [],
-                owner: SpotifyUserSimple(id: "apple_music", displayName: "Me", images: nil),
+                owner: SpotifyUserSimple(id: "apple_music", displayName: "Me".local, images: nil),
                 collaborators: nil
             )
         }

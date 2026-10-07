@@ -16,7 +16,22 @@ struct ShopifyOrder: Codable, Identifiable, Hashable {
     let financialStatus: String?
     let fulfillmentStatus: String?
 
-    var customerDisplayName: String { customerName ?? "Guest customer" }
+    var customerDisplayName: String { customerName ?? "Guest customer".local }
+
+    var financialStatusDisplayName: String {
+        switch financialStatus {
+        case "pending": return "Pending".local
+        case "authorized": return "Authorized".local
+        case "partially_paid": return "Partially Paid".local
+        case "paid": return "Paid".local
+        case "partially_refunded": return "Partially Refunded".local
+        case "refunded": return "Refunded".local
+        case "voided": return "Voided".local
+        case "expired": return "Expired".local
+        case nil, "unknown": return "Unknown".local
+        case let status?: return status
+        }
+    }
 }
 
 private struct ShopifyOrdersResponse: Decodable {
@@ -67,7 +82,7 @@ final class ShopifyService: ObservableObject {
     func refresh() async {
         guard let url = ordersURL else {
             orders = []
-            errorMessage = isConfigured ? "Enter a valid Shopify store domain." : nil
+            errorMessage = isConfigured ? "Enter a valid Shopify store domain.".local : nil
             return
         }
         isLoading = true
@@ -84,7 +99,7 @@ final class ShopifyService: ObservableObject {
             orders = try decoder.decode(ShopifyOrdersResponse.self, from: data).orders
             errorMessage = nil
         } catch {
-            errorMessage = "Unable to load Shopify orders. Check the store domain and token."
+            errorMessage = "Unable to load Shopify orders. Check the store domain and token.".local
         }
     }
 

@@ -16,7 +16,7 @@ struct MicrophoneLiveActivityViewLeft: View {
                 .foregroundColor(mic.isMuted ? Color.red : Color.orange)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(mic.isMuted ? "Unmute microphone" : "Mute microphone")
+        .accessibilityLabel(mic.isMuted ? "Unmute microphone".local : "Mute microphone".local)
     }
 }
 
@@ -25,12 +25,12 @@ struct MicrophoneLiveActivityViewRight: View {
     let action: () -> Void
     var body: some View {
         Button(action: action) {
-            Text(mic.isMuted ? "Muted" : "Active")
+            Text(mic.isMuted ? "Muted".local : "Active".local)
                 .font(.system(size: 12, weight: .semibold, design: .rounded))
                 .foregroundColor(mic.isMuted ? Color.red : Color.orange)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(mic.isMuted ? "Unmute microphone" : "Mute microphone")
+        .accessibilityLabel(mic.isMuted ? "Unmute microphone".local : "Mute microphone".local)
     }
 }
 

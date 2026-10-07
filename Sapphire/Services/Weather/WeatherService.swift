@@ -60,13 +60,23 @@ final class WeatherService: NSObject, @MainActor CLLocationManagerDelegate {
 
     private static let displayTimeFormatter: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = AppLocalization.locale
         formatter.timeStyle = .short
         return formatter
     }()
 
     private static let hourlyTimeFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "ha"
+        formatter.locale = AppLocalization.locale
+        formatter.setLocalizedDateFormatFromTemplate("ha")
+        return formatter
+    }()
+
+    private static let providerWeekdays = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
+    private static let dayOfWeekFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = AppLocalization.locale
+        formatter.setLocalizedDateFormatFromTemplate("EEE")
         return formatter
     }()
 
@@ -254,7 +264,7 @@ final class WeatherService: NSObject, @MainActor CLLocationManagerDelegate {
 
         Task { @MainActor in
             let placemarks   = try? await CLGeocoder().reverseGeocodeLocation(location)
-            let locationName = placemarks?.first?.locality ?? placemarks?.first?.name ?? "Unknown Location"
+            let locationName = placemarks?.first?.locality ?? placemarks?.first?.name ?? "Unknown Location".local
 
             if !weatherAPIKey.isEmpty,
                let primaryData = await fetchPrimary(for: location, locationName: locationName) {
@@ -328,7 +338,7 @@ final class WeatherService: NSObject, @MainActor CLLocationManagerDelegate {
                 return nil
             }
             return DailyForecastUIData(
-                dayOfWeek: String(dow.prefix(3)).uppercased(),
+                dayOfWeek: weekdayName(for: forecast, fallback: dow),
                 iconName: WeatherIconMapper.map(from: forecast.day?.icon_cd ?? 44),
                 highTemp: maxTemp,
                 lowTemp: minTemp,
@@ -360,21 +370,21 @@ final class WeatherService: NSObject, @MainActor CLLocationManagerDelegate {
             highTempMetric: todayForecast?.metric?.max_temp ?? observation?.metric?.temp ?? 0,
             lowTemp: todayForecast?.imperial?.min_temp ?? observation?.imperial?.temp ?? 0,
             lowTempMetric: todayForecast?.metric?.min_temp ?? observation?.metric?.temp ?? 0,
-            conditionDescription: observation?.wx_phrase ?? "Unavailable",
+            conditionDescription: conditionDescription(icon: observation?.wx_icon, fallback: observation?.wx_phrase),
             iconCode: observation?.wx_icon ?? 44,
             feelsLike: observation?.imperial?.feels_like ?? observation?.imperial?.temp ?? 0,
             feelsLikeMetric: observation?.metric?.feels_like ?? observation?.metric?.temp ?? 0,
-            windInfo: "\(observation?.imperial?.wspd ?? 0) mph",
-            windInfoMetric: "\(observation?.metric?.wspd ?? 0) km/h",
+            windInfo: String(localized: "\(observation?.imperial?.wspd ?? 0) mph"),
+            windInfoMetric: String(localized: "\(observation?.metric?.wspd ?? 0) km/h"),
             humidity: "\(observation?.rh ?? 0)%",
             precipChance: todayForecast?.day?.pop ?? 0,
-            uvIndex: "\(observation?.uv_index ?? 0) (\(observation?.uv_desc ?? "N/A"))",
+            uvIndex: "\(observation?.uv_index ?? 0) (\(OpenMeteoService.uvDescription(Double(observation?.uv_index ?? 0))))",
             sunriseTime: formatTime(from: todayForecast?.sunrise),
             sunsetTime: formatTime(from: todayForecast?.sunset),
-            visibility: observation?.vis != nil ? "\(Int(observation!.vis!)) mi" : "-- mi",
-            visibilityMetric: observation?.vis != nil ? "\(Int((observation!.vis! * 1.609344).rounded())) km" : "-- km",
-            pressure: observation?.pressure != nil ? "\(String(format: "%.2f", observation!.pressure! * 0.02953)) in" : "-- in",
-            pressureMetric: observation?.pressure != nil ? "\(Int(observation!.pressure!)) hPa" : "-- hPa",
+            visibility: observation?.vis != nil ? String(localized: "\(Int(observation!.vis!)) mi") : "-- mi".local,
+            visibilityMetric: observation?.vis != nil ? String(localized: "\(Int((observation!.vis! * 1.609344).rounded())) km") : "-- km".local,
+            pressure: observation?.pressure != nil ? String(localized: "\(String(format: "%.2f", observation!.pressure! * 0.02953)) in") : "-- in".local,
+            pressureMetric: observation?.pressure != nil ? String(localized: "\(Int(observation!.pressure!)) hPa") : "-- hPa".local,
             dailyForecasts: uiDailyForecasts,
             hourlyForecasts: uiHourlyForecasts,
             isAvailable: true
@@ -385,6 +395,64 @@ final class WeatherService: NSObject, @MainActor CLLocationManagerDelegate {
         guard let dateString = dateString, let date = Self.apiDateFormatter.date(from: dateString) else { return "--:--" }
         return Self.displayTimeFormatter.string(from: date)
     }
+
+    private func weekdayName(for forecast: DailyForecast, fallback: String) -> String {
+        if let sunrise = forecast.sunrise, let date = Self.apiDateFormatter.date(from: sunrise) {
+            return Self.dayOfWeekFormatter.string(from: date)
+        }
+        // Provider weekday tokens are protocol data, not localized display strings.
+        guard let index = Self.providerWeekdays.firstIndex(of: fallback.lowercased()) else { return fallback }
+        return Self.dayOfWeekFormatter.shortWeekdaySymbols[index]
+    }
+
+    private func conditionDescription(icon: Int?, fallback: String?) -> String {
+        switch icon {
+        case 0: return "Tornado".local
+        case 1: return "Tropical Storm".local
+        case 2: return "Hurricane".local
+        case 3: return "Severe Thunderstorm".local
+        case 4: return "Thunderstorm".local
+        case 5: return "Rain and Snow".local
+        case 6: return "Rain and Sleet".local
+        case 7: return "Snow and Sleet".local
+        case 8: return "Freezing Drizzle".local
+        case 9: return "Drizzle".local
+        case 10: return "Freezing Rain".local
+        case 11, 12: return "Rain".local
+        case 13: return "Snow Flurries".local
+        case 14: return "Light Snow Showers".local
+        case 15: return "Blowing Snow".local
+        case 16: return "Snow".local
+        case 17: return "Hail".local
+        case 18: return "Sleet".local
+        case 19: return "Dust".local
+        case 20: return "Foggy".local
+        case 21: return "Haze".local
+        case 22: return "Smoke".local
+        case 23: return "Blustery".local
+        case 24: return "Windy".local
+        case 25: return "Frigid".local
+        case 26: return "Cloudy".local
+        case 27, 28: return "Mostly Cloudy".local
+        case 29, 30: return "Partly Cloudy".local
+        case 31: return "Clear".local
+        case 32: return "Sunny".local
+        case 33, 34: return "Fair Weather".local
+        case 35: return "Rain and Hail".local
+        case 36: return "Hot".local
+        case 37: return "Isolated Thunderstorms".local
+        case 38, 47: return "Scattered Thunderstorms".local
+        case 39, 45: return "Scattered Showers".local
+        case 40: return "Heavy Rain".local
+        case 41: return "Scattered Snow Showers".local
+        case 42: return "Heavy Snow".local
+        case 43: return "Blizzard".local
+        case 44: return "Unavailable".local
+        case 46: return "Snow Showers".local
+        default: return fallback ?? "Unavailable".local
+        }
+    }
+
 }
 
 extension Notification.Name {
@@ -403,14 +471,14 @@ enum WeatherServiceError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .missingAPIKey: return "Weather API key is not configured."
-        case .locationDisabled: return "Location services are disabled system-wide."
-        case .locationDenied: return "Location access was denied. Please enable it in System Settings."
-        case .locationNotDetermined: return "Grant Location access in Sapphire's Permissions settings to show weather."
-        case .locationUnavailable: return "Could not determine your location."
-        case .unknownAuthorization: return "Unknown location authorization status."
-        case .invalidURL: return "Invalid weather API URL."
-        case .unavailableData: return "Weather data is temporarily unavailable."
+        case .missingAPIKey: return "Weather API key is not configured.".local
+        case .locationDisabled: return "Location services are disabled system-wide.".local
+        case .locationDenied: return "Location access was denied. Please enable it in System Settings.".local
+        case .locationNotDetermined: return "Grant Location access in Sapphire's Permissions settings to show weather.".local
+        case .locationUnavailable: return "Could not determine your location.".local
+        case .unknownAuthorization: return "Unknown location authorization status.".local
+        case .invalidURL: return "Invalid weather API URL.".local
+        case .unavailableData: return "Weather data is temporarily unavailable.".local
         }
     }
 }

@@ -31,20 +31,20 @@ enum HelperIssue: Equatable {
 
     var title: String {
         switch self {
-        case .spawnFailed: return "Helper cannot start"
-        case .needsApproval: return "Login Items approval required"
-        case .notFound: return "Helper registration missing"
+        case .spawnFailed: return "Helper cannot start".local
+        case .needsApproval: return "Login Items approval required".local
+        case .notFound: return "Helper registration missing".local
         }
     }
 
     var shortSummary: String {
         switch self {
         case .spawnFailed:
-            return "Permission is granted, but macOS still will not launch the helper."
+            return "Permission is granted, but macOS still will not launch the helper.".local
         case .needsApproval:
-            return "Turn on Sapphire and Sapphire Helper in Login Items."
+            return "Turn on Sapphire and Sapphire Helper in Login Items.".local
         case .notFound:
-            return "macOS lost the helper (status 3). Reset the helper; Sapphire will relaunch if it stays stuck."
+            return "macOS lost the helper (status 3). Reset the helper; Sapphire will relaunch if it stays stuck.".local
         }
     }
 
@@ -63,7 +63,7 @@ enum HelperIssue: Equatable {
             4. In System Settings → General → Login Items, enable Sapphire Helper under Allow in the Background.
 
             Try Reset Helper first. Only relaunch the app if the helper is still stuck after that.
-            """
+            """.local
         case .needsApproval:
             return """
             Error code: SAP-H2
@@ -75,7 +75,7 @@ enum HelperIssue: Equatable {
             2. Under Allow in the Background, turn on Sapphire.
             3. Authenticate if macOS asks for your password.
             4. Return to Sapphire and click Install / Activate.
-            """
+            """.local
         case .spawnFailed:
             return """
             Error code: SAP-H1
@@ -83,7 +83,7 @@ enum HelperIssue: Equatable {
             Login Items permission is already granted (status 1), but macOS still will not start the helper. This usually means Sapphire’s own helper registration is stuck.
 
             Click “Reset Helper” below. Sapphire will unregister the helper and register it again, then relaunch if the helper is still having issues.
-            """
+            """.local
         }
     }
 }
@@ -129,14 +129,14 @@ struct HelperStatusBanner: View {
 
                 if !helperManager.isRunning {
                     if helperManager.status == .enabled {
-                        Button(helperManager.isResettingHelper ? "Resetting…" : "Reset Helper") {
+                        Button(helperManager.isResettingHelper ? "Resetting…".local : "Reset Helper".local) {
                             helperManager.resetOwnBackgroundActivity()
                         }
                         .disabled(helperManager.isResettingHelper)
                         .buttonStyle(.borderedProminent)
                         .tint(.orange)
                     } else if helperManager.status == .notFound {
-                        Button(helperManager.isResettingHelper ? "Resetting…" : "Reset Helper") {
+                        Button(helperManager.isResettingHelper ? "Resetting…".local : "Reset Helper".local) {
                             helperManager.resetOwnBackgroundActivity()
                         }
                         .disabled(helperManager.isResettingHelper)
@@ -194,15 +194,15 @@ class HelperManager: ObservableObject {
     }
 
     var bannerTitle: String {
-        if isRunning { return "Helper Active" }
-        return lastIssue?.title ?? "Helper Not Installed"
+        if isRunning { return "Helper Active".local }
+        return lastIssue?.title ?? "Helper Not Installed".local
     }
 
     var bannerSubtitle: String {
         if isRunning {
-            return "Privileged helper is running."
+            return "Privileged helper is running.".local
         }
-        return lastIssue?.shortSummary ?? "Install the helper to enable battery management and system integrations."
+        return lastIssue?.shortSummary ?? "Install the helper to enable battery management and system integrations.".local
     }
 
     var bannerSymbol: String {
@@ -631,11 +631,11 @@ class HelperManager: ObservableObject {
 extension SMAppService.Status: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .notRegistered: return "Not Registered"
-        case .enabled: return "Enabled"
-        case .requiresApproval: return "Requires Approval"
-        case .notFound: return "Not Found"
-        @unknown default: return "Unknown"
+        case .notRegistered: return "Not Registered".local
+        case .enabled: return "Enabled".local
+        case .requiresApproval: return "Requires Approval".local
+        case .notFound: return "Not Found".local
+        @unknown default: return "Unknown".local
         }
     }
 }

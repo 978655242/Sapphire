@@ -590,7 +590,7 @@ private enum StorageScannerError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case let .cannotRead(url, message): return "Could not scan \(url.path): \(message)"
+        case let .cannotRead(url, message): return String(localized: "Could not scan \(url.path): \(message)")
         }
     }
 }
@@ -637,10 +637,10 @@ private enum StorageScanner {
         do {
             rootValues = try root.resourceValues(forKeys: childResourceKeys)
         } catch {
-            throw StorageScannerError.cannotRead(root, error.localizedDescription)
+            throw StorageScannerError.cannotRead(root, AppLocalization.description(for: error))
         }
         guard rootValues.isDirectory == true else {
-            throw StorageScannerError.cannotRead(root, "The selected location is not a folder.")
+            throw StorageScannerError.cannotRead(root, "The selected location is not a folder.".local)
         }
 
         let children: [URL]
@@ -651,7 +651,7 @@ private enum StorageScanner {
                 options: []
             )
         } catch {
-            throw StorageScannerError.cannotRead(root, error.localizedDescription)
+            throw StorageScannerError.cannotRead(root, AppLocalization.description(for: error))
         }
 
         let rootVolume = StorageFileIdentity.volumeIdentifier(from: rootValues)
@@ -678,10 +678,10 @@ private enum StorageScanner {
             state: .scanning,
             fraction: children.isEmpty ? 0.78 : 0,
             label: children.isEmpty
-                ? "No items to inspect"
+                ? "No items to inspect".local
                 : (request.deepScan
-                    ? "Deep scanning \(children.count) items…"
-                    : "Surface scanning \(children.count) items…")
+                    ? String(localized: "Deep scanning \(children.count) items…")
+                    : String(localized: "Surface scanning \(children.count) items…"))
         ))
 
         let targetFileUnitCount = min(maximumConcurrentDirectories, max(1, children.count))
@@ -779,7 +779,9 @@ private enum StorageScanner {
                     await progress(StorageScanProgress(
                         state: .scanning,
                         fraction: children.isEmpty ? 0.78 : 0.78 * Double(completed) / Double(children.count),
-                        label: "\(request.deepScan ? "Deep scanned" : "Surface scanned") \(completed) of \(children.count) items"
+                        label: request.deepScan
+                            ? String(localized: "Deep scanned \(completed) of \(children.count) items")
+                            : String(localized: "Surface scanned \(completed) of \(children.count) items")
                     ))
                 }
             }
@@ -994,7 +996,7 @@ private enum StorageScanner {
                 logicalSize = 0
                 failures.append(DirectoryScanFailure(
                     url: child,
-                    message: "Skipped a mounted volume. Scan that volume directly to include it."
+                    message: "Skipped a mounted volume. Scan that volume directly to include it.".local
                 ))
             } else if collectCandidates,
                       !isSymbolicLink,
@@ -1033,11 +1035,11 @@ private enum StorageScanner {
                 entry.isOldFile = facets.isOldFile
             }
             entry.isSystemProtected = StorageViewModel.isSystemProtected(url: child)
-            if isOtherVolume { entry.scanWarning = "Mounted volume not included" }
-            if isSymbolicLink { entry.scanWarning = "Symbolic link target not followed" }
-            if isRepeatedHardLink { entry.scanWarning = "Hard-linked data already accounted elsewhere" }
+            if isOtherVolume { entry.scanWarning = "Mounted volume not included".local }
+            if isSymbolicLink { entry.scanWarning = "Symbolic link target not followed".local }
+            if isRepeatedHardLink { entry.scanWarning = "Hard-linked data already accounted elsewhere".local }
             if isDirectory, !isSymbolicLink, !isOtherVolume, !recursive {
-                entry.scanWarning = "Folder contents not measured in Surface Scan"
+                entry.scanWarning = "Folder contents not measured in Surface Scan".local
             }
             if let firstFailure = failures.first { entry.scanWarning = firstFailure.message }
 
@@ -1073,7 +1075,7 @@ private enum StorageScanner {
                 candidates: [],
                 categorySizes: [:],
                 insightEntries: [],
-                failures: [DirectoryScanFailure(url: child, message: error.localizedDescription)],
+                failures: [DirectoryScanFailure(url: child, message: AppLocalization.description(for: error))],
                 filesVisited: 0,
                 directoriesVisited: 0,
                 logicalBytesVisited: 0,
@@ -1114,14 +1116,14 @@ private enum StorageScanner {
         }
         sizeBuckets.removeAll(keepingCapacity: false)
         guard !sampleCandidates.isEmpty else {
-            await progress(StorageScanProgress(state: .hashingDuplicates, fraction: 0.99, label: "No duplicate candidates"))
+            await progress(StorageScanProgress(state: .hashingDuplicates, fraction: 0.99, label: "No duplicate candidates".local))
             return ([], [])
         }
 
         await progress(StorageScanProgress(
             state: .hashingDuplicates,
             fraction: 0.78,
-            label: "Screening \(sampleCandidates.count) duplicate candidates…"
+            label: String(localized: "Screening \(sampleCandidates.count) duplicate candidates…")
         ))
 
         var sampleBatch = try await hashCandidates(
@@ -1129,7 +1131,7 @@ private enum StorageScanner {
             mode: .sample,
             fractionStart: 0.78,
             fractionEnd: 0.86,
-            progressVerb: "Screened",
+            progressVerb: "Screened".local,
             progress: progress
         )
         var issues = sampleBatch.issues
@@ -1152,7 +1154,7 @@ private enum StorageScanner {
                 mode: .full,
                 fractionStart: 0.86,
                 fractionEnd: 0.99,
-                progressVerb: "Verified",
+                progressVerb: "Verified".local,
                 progress: progress
             )
             issues.append(contentsOf: fullBatch.issues.prefix(maximumIssues - issues.count))
@@ -1164,7 +1166,7 @@ private enum StorageScanner {
             await progress(StorageScanProgress(
                 state: .hashingDuplicates,
                 fraction: 0.99,
-                label: "Duplicate verification complete"
+                label: "Duplicate verification complete".local
             ))
         }
 
@@ -1277,7 +1279,7 @@ private enum StorageScanner {
                     await progress(StorageScanProgress(
                         state: .hashingDuplicates,
                         fraction: fraction,
-                        label: "\(progressVerb) \(completed) of \(totalCount) files"
+                        label: String(localized: "\(progressVerb) \(completed) of \(totalCount) files")
                     ))
                 }
             }
@@ -1307,7 +1309,7 @@ private enum StorageScanner {
             var openedMetadata = stat()
             guard fstat(handle.fileDescriptor, &openedMetadata) == 0,
                   StoragePOSIXFileIdentity(openedMetadata) == candidate.identity else {
-                throw fileChangedError("The file was replaced before it could be verified.")
+                throw fileChangedError("The file was replaced before it could be verified.".local)
             }
             var hasher = SHA256()
             let bytesRead: Int64
@@ -1332,7 +1334,7 @@ private enum StorageScanner {
                     bytesRead = prefixBytes + suffixBytes
                     guard bytesRead == Int64(hashSampleSize * 2) else {
                         throw CocoaError(.fileReadUnknown, userInfo: [
-                            NSLocalizedDescriptionKey: "The file changed while it was being screened."
+                            NSLocalizedDescriptionKey: "The file changed while it was being screened.".local
                         ])
                     }
                 }
@@ -1341,7 +1343,7 @@ private enum StorageScanner {
             if mode == .full || candidate.logicalSize <= Int64(hashSampleSize * 2),
                bytesRead != candidate.logicalSize {
                 throw CocoaError(.fileReadUnknown, userInfo: [
-                    NSLocalizedDescriptionKey: "The file changed while it was being verified."
+                    NSLocalizedDescriptionKey: "The file changed while it was being verified.".local
                 ])
             }
             let finalValues = try candidate.url.resourceValues(forKeys: [
@@ -1358,13 +1360,13 @@ private enum StorageScanner {
                 return StorageHashOutcome(candidate: candidate, digest: nil, issue: nil)
             }
             if StoragePOSIXFileIdentity.read(at: candidate.url) != candidate.identity {
-                throw fileChangedError("The file was replaced while it was being verified.")
+                throw fileChangedError("The file was replaced while it was being verified.".local)
             }
             if finalValues.isSymbolicLink == true
                 || Int64(finalValues.fileSize ?? -1) != candidate.logicalSize
                 || (candidate.lastModified != nil && finalValues.contentModificationDate != candidate.lastModified) {
                 throw CocoaError(.fileReadUnknown, userInfo: [
-                    NSLocalizedDescriptionKey: "The file changed while it was being verified."
+                    NSLocalizedDescriptionKey: "The file changed while it was being verified.".local
                 ])
             }
             return StorageHashOutcome(candidate: candidate, digest: Data(hasher.finalize()), issue: nil)
@@ -1374,7 +1376,7 @@ private enum StorageScanner {
             return StorageHashOutcome(
                 candidate: candidate,
                 digest: nil,
-                issue: StorageScanIssue(url: candidate.url, message: error.localizedDescription)
+                issue: StorageScanIssue(url: candidate.url, message: AppLocalization.description(for: error))
             )
         }
     }
@@ -1527,21 +1529,21 @@ private enum StorageDeletionPolicy {
 
     static func rejectionReason(for entry: StorageEntry, within scope: URL) -> String? {
         if isTrashLocation(entry.url) {
-            return "Sapphire does not permanently delete items that are already in Trash. Review or empty Trash in Finder."
+            return "Sapphire does not permanently delete items that are already in Trash. Review or empty Trash in Finder.".local
         }
         if entry.isSystemProtected || isProtectedLocation(entry.url) {
-            return "This is a protected location and can only be inspected."
+            return "This is a protected location and can only be inspected.".local
         }
         let target = canonical(entry.url)
         let canonicalScope = canonical(scope)
         guard contains(canonicalScope, target) else {
-            return "The item is outside the folder that was scanned."
+            return "The item is outside the folder that was scanned.".local
         }
         guard FileManager.default.fileExists(atPath: target.path) else {
-            return "The item no longer exists."
+            return "The item no longer exists.".local
         }
         guard FileManager.default.isDeletableFile(atPath: target.path) else {
-            return "macOS reports that this item cannot be moved to Trash."
+            return "macOS reports that this item cannot be moved to Trash.".local
         }
         return nil
     }
@@ -1561,12 +1563,12 @@ private enum StorageDeletionPolicy {
         do {
             values = try entry.url.resourceValues(forKeys: keys)
         } catch {
-            return "The item could not be revalidated: \(error.localizedDescription)"
+            return String(localized: "The item could not be revalidated: \(AppLocalization.description(for: error))")
         }
 
         guard values.isDirectory == entry.isDirectory,
               values.isSymbolicLink == entry.isSymbolicLink else {
-            return "The item type changed after the scan and it was not removed."
+            return "The item type changed after the scan and it was not removed.".local
         }
         if let expectedIdentifier = entry.resourceIdentifier {
             let identityMatches: Bool
@@ -1578,12 +1580,12 @@ private enum StorageDeletionPolicy {
                     == expectedIdentifier
             }
             if !identityMatches {
-                return "The item identity changed after the scan and it was not removed."
+                return "The item identity changed after the scan and it was not removed.".local
             }
         }
         guard let expectedModificationDate = entry.lastModified,
               values.contentModificationDate == expectedModificationDate else {
-            return "The item was modified after the scan and it was not removed."
+            return "The item was modified after the scan and it was not removed.".local
         }
         if entry.isDirectory, !entry.isSymbolicLink {
             let measurement = DirectorySize.measure(
@@ -1597,18 +1599,18 @@ private enum StorageDeletionPolicy {
                 insightLimitPerCategory: 0,
                 isCancelled: { Task.isCancelled }
             )
-            if measurement.wasCancelled { return "Removal was cancelled before the folder could be revalidated." }
+            if measurement.wasCancelled { return "Removal was cancelled before the folder could be revalidated.".local }
             if let failure = measurement.failures.first {
-                return "The folder could not be fully revalidated: \(failure.message)"
+                return String(localized: "The folder could not be fully revalidated: \(failure.message)")
             }
             guard measurement.bytes == entry.size else {
-                return "The folder contents changed after the scan and it was not removed."
+                return "The folder contents changed after the scan and it was not removed.".local
             }
         } else {
             let logicalSize = Int64(max(0, values.fileSize ?? 0))
             let allocatedSize = Int64(max(0, values.totalFileAllocatedSize ?? values.fileSize ?? 0))
             guard logicalSize == entry.logicalSize, allocatedSize == entry.size else {
-                return "The item size changed after the scan and it was not removed."
+                return "The item size changed after the scan and it was not removed.".local
             }
         }
         return nil
@@ -1707,7 +1709,7 @@ private enum StorageDeletionWorker {
                 let (sum, overflow) = bytesMoved.addingReportingOverflow(entry.size)
                 bytesMoved = overflow ? Int64.max : sum
             } catch {
-                failures.append(StorageScanIssue(url: entry.url, message: error.localizedDescription))
+                failures.append(StorageScanIssue(url: entry.url, message: AppLocalization.description(for: error)))
             }
         }
 
@@ -1806,7 +1808,7 @@ enum DirectorySize {
         }) else {
             measurement.failures.append(DirectoryScanFailure(
                 url: url,
-                message: "The folder path could not be represented by the file system."
+                message: "The folder path could not be represented by the file system.".local
             ))
             return measurement
         }
@@ -2129,7 +2131,7 @@ enum DirectorySize {
 
     private static func posixErrorMessage(_ code: Int32) -> String {
         let resolvedCode = code == 0 ? errno : code
-        guard let message = strerror(resolvedCode) else { return "The folder could not be read." }
+        guard let message = strerror(resolvedCode) else { return "The folder could not be read.".local }
         return String(cString: message)
     }
 
@@ -2340,7 +2342,7 @@ struct InstalledApp: Identifiable, Sendable {
     let version: String
     var sizeMeasuredAt: Date = .distantPast
     var formattedSize: String {
-        size > 0 ? size.formatted(.byteCount(style: .file)) : "Size calculated during review"
+        size > 0 ? size.formatted(.byteCount(style: .file)) : "Size calculated during review".local
     }
 }
 
@@ -2416,11 +2418,11 @@ private enum InstalledAppScanner {
                 includingPropertiesForKeys: Array(discoveryKeys),
                 options: [.skipsHiddenFiles, .skipsPackageDescendants],
                 errorHandler: { url, error in
-                    if scanErrors.count < 20 { scanErrors.append("\(url.path): \(error.localizedDescription)") }
+                    if scanErrors.count < 20 { scanErrors.append("\(url.path): \(AppLocalization.description(for: error))") }
                     return !Task.isCancelled
                 }
             ) else {
-                scanErrors.append("Could not scan \(root.path).")
+                scanErrors.append(String(localized: "Could not scan \(root.path)."))
                 continue
             }
 
@@ -2563,7 +2565,9 @@ private enum InstalledAppScanner {
     private var pendingRemoval: InstalledApp?
     var removalMessage: String {
         guard let pendingRemoval else { return "" }
-        return "\(selectedArtifacts.count) item\(selectedArtifacts.count == 1 ? "" : "s") for \(pendingRemoval.name) will be moved to the Trash, freeing approximately \(selectedSize.formatted(.byteCount(style: .file)))."
+        return selectedArtifacts.count == 1
+            ? String(localized: "\(selectedArtifacts.count) item for \(pendingRemoval.name) will be moved to the Trash, freeing approximately \(selectedSize.formatted(.byteCount(style: .file))).")
+            : String(localized: "\(selectedArtifacts.count) items for \(pendingRemoval.name) will be moved to the Trash, freeing approximately \(selectedSize.formatted(.byteCount(style: .file))).")
     }
 
     private var scanTask: Task<Void, Never>?
@@ -2805,6 +2809,8 @@ enum StorageCategory: String, Codable, CaseIterable, Sendable {
     case duplicates = "Duplicates"
     case appSupport = "App Support"
     case other = "Other"
+
+    var displayName: String { rawValue.local }
 
     var icon: String {
         switch self {
@@ -3126,6 +3132,8 @@ private struct StoragePresentedScan {
         case name = "Name (A to Z)"
         case modified = "Recently Modified"
         case type = "File Type"
+
+        var displayName: String { rawValue.local }
     }
 
     var volumeName: String {
@@ -3220,7 +3228,7 @@ private struct StoragePresentedScan {
         updateScanPresentation(
             state: .loadingCache,
             progress: 0,
-            label: "Looking for a recent storage index…"
+            label: "Looking for a recent storage index…".local
         )
 
         let key = StorageCacheKey(url: target, deepScan: deepScanEnabled)
@@ -3240,7 +3248,7 @@ private struct StoragePresentedScan {
             await MainActor.run {
                 guard let self = owner.value, self.scanGeneration == generation else { return }
                 self.isLoading = false
-                self.updateScanPresentation(state: .idle, label: "Ready to scan")
+                self.updateScanPresentation(state: .idle, label: "Ready to scan".local)
             }
         }
     }
@@ -3251,7 +3259,7 @@ private struct StoragePresentedScan {
         loadTask?.cancel()
         loadTask = nil
         isLoading = false
-        updateScanPresentation(state: .cancelled, label: "Scan cancelled")
+        updateScanPresentation(state: .cancelled, label: "Scan cancelled".local)
     }
 
     func refreshCapacity() {
@@ -3266,7 +3274,7 @@ private struct StoragePresentedScan {
                   let free = values.volumeAvailableCapacity,
                   capacity > 0 else {
                 resetCapacityState(
-                    message: "Storage capacity is unavailable for this location.",
+                    message: "Storage capacity is unavailable for this location.".local,
                     volumeURL: values.volume ?? currentURL
                 )
                 return
@@ -3293,7 +3301,7 @@ private struct StoragePresentedScan {
             )
             normalizeCurrentScopeHistoryIfNeeded()
         } catch {
-            resetCapacityState(message: error.localizedDescription)
+            resetCapacityState(message: AppLocalization.description(for: error))
         }
     }
 
@@ -3408,9 +3416,9 @@ private struct StoragePresentedScan {
             return overflow ? Int64.max : sum
         }
         if pendingRemovalEntries.count == 1, let entry = pendingRemovalEntries.first {
-            return "\(entry.name) (\(bytes.formatted(.byteCount(style: .file)))) will be moved to the Trash."
+            return String(localized: "\(entry.name) (\(bytes.formatted(.byteCount(style: .file)))) will be moved to the Trash.")
         }
-        return "\(pendingRemovalEntries.count) items (\(bytes.formatted(.byteCount(style: .file)))) will be moved to the Trash."
+        return String(localized: "\(pendingRemovalEntries.count) items (\(bytes.formatted(.byteCount(style: .file)))) will be moved to the Trash.")
     }
 
     func goUp() {
@@ -3451,7 +3459,7 @@ private struct StoragePresentedScan {
         updateScanPresentation(
             state: .loadingCache,
             progress: 0,
-            label: "Preparing \(target.lastPathComponent.isEmpty ? volumeName : target.lastPathComponent)…"
+            label: String(localized: "Preparing \(target.lastPathComponent.isEmpty ? volumeName : target.lastPathComponent)…")
         )
 
         let deepScan = deepScanEnabled
@@ -3509,11 +3517,11 @@ private struct StoragePresentedScan {
                     guard let self = owner.value, self.scanGeneration == generation else { return }
                     self.isLoading = false
                     var failedScan = self.presentedScan
-                    failedScan.errors = [StorageScanIssue(url: target, message: error.localizedDescription)]
+                    failedScan.errors = [StorageScanIssue(url: target, message: AppLocalization.description(for: error))]
                     self.presentedScan = failedScan
                     self.updateScanPresentation(
-                        state: .failed(error.localizedDescription),
-                        label: "Scan failed"
+                        state: .failed(AppLocalization.description(for: error)),
+                        label: "Scan failed".local
                     )
                 }
             }
@@ -3548,13 +3556,13 @@ private struct StoragePresentedScan {
             metrics: presentedMetrics
         )
         isLoading = false
-        let modeName = deepScanEnabled ? "Deep" : "Surface"
+        let modeName = deepScanEnabled ? "Deep".local : "Surface".local
         updateScanPresentation(
             state: .completed,
             progress: 1,
             label: snapshot.metrics.cacheHit
-                ? "Loaded cached \(modeName) scan"
-                : "\(modeName) scan complete"
+                ? String(localized: "Loaded cached \(modeName) scan")
+                : String(localized: "\(modeName) scan complete")
         )
         if !snapshot.metrics.cacheHit {
             recordScanResult(duration: snapshot.metrics.duration)
@@ -3585,9 +3593,9 @@ private struct StoragePresentedScan {
             let size = cacheEntries.reduce(Int64(0)) { saturatingAdd($0, $1.size) }
             recommendations.append(CleanupRecommendation(
                 category: .caches,
-                description: "System and app caches can safely be removed",
+                description: "System and app caches can safely be removed".local,
                 potentialSpaceFreed: size,
-                actionDescription: "Clear \(cacheEntries.count) cache files",
+                actionDescription: String(localized: "Clear \(cacheEntries.count) cache files"),
                 isAutomatic: true,
                 entries: cacheEntries
             ))
@@ -3597,9 +3605,9 @@ private struct StoragePresentedScan {
             let size = trashEntries.reduce(Int64(0)) { saturatingAdd($0, $1.size) }
             recommendations.append(CleanupRecommendation(
                 category: .trash,
-                description: "Sapphire never permanently deletes Trash contents; review and empty Trash in Finder when ready",
+                description: "Sapphire never permanently deletes Trash contents; review and empty Trash in Finder when ready".local,
                 potentialSpaceFreed: size,
-                actionDescription: "Review Trash in Finder",
+                actionDescription: "Review Trash in Finder".local,
                 isAutomatic: false,
                 entries: trashEntries
             ))
@@ -3610,9 +3618,9 @@ private struct StoragePresentedScan {
             let size = largeFiles.reduce(Int64(0)) { saturatingAdd($0, $1.size) }
             recommendations.append(CleanupRecommendation(
                 category: .largeFiles,
-                description: "Large files that could be moved or compressed",
+                description: "Large files that could be moved or compressed".local,
                 potentialSpaceFreed: size,
-                actionDescription: "Review \(largeFiles.count) large files",
+                actionDescription: String(localized: "Review \(largeFiles.count) large files"),
                 isAutomatic: false,
                 entries: largeFiles
             ))
@@ -3623,9 +3631,11 @@ private struct StoragePresentedScan {
             let size = oldFiles.reduce(Int64(0)) { saturatingAdd($0, $1.size) }
             recommendations.append(CleanupRecommendation(
                 category: .oldFiles,
-                description: "Older files that may no longer be needed",
+                description: "Older files that may no longer be needed".local,
                 potentialSpaceFreed: size,
-                actionDescription: "Review \(oldFiles.count) older file\(oldFiles.count == 1 ? "" : "s")",
+                actionDescription: oldFiles.count == 1
+                    ? String(localized: "Review \(oldFiles.count) older file")
+                    : String(localized: "Review \(oldFiles.count) older files"),
                 isAutomatic: false,
                 entries: oldFiles
             ))
@@ -3635,9 +3645,11 @@ private struct StoragePresentedScan {
             let size = downloads.reduce(Int64(0)) { saturatingAdd($0, $1.size) }
             recommendations.append(CleanupRecommendation(
                 category: .downloads,
-                description: "Downloaded files worth reviewing before removal",
+                description: "Downloaded files worth reviewing before removal".local,
                 potentialSpaceFreed: size,
-                actionDescription: "Review \(downloads.count) download\(downloads.count == 1 ? "" : "s")",
+                actionDescription: downloads.count == 1
+                    ? String(localized: "Review \(downloads.count) download")
+                    : String(localized: "Review \(downloads.count) downloads"),
                 isAutomatic: false,
                 entries: downloads
             ))
@@ -3650,9 +3662,11 @@ private struct StoragePresentedScan {
             }
             recommendations.append(CleanupRecommendation(
                 category: .duplicates,
-                description: "Byte-for-byte identical files that can be reviewed safely",
+                description: "Byte-for-byte identical files that can be reviewed safely".local,
                 potentialSpaceFreed: size,
-                actionDescription: "Review \(duplicateGroups.count) duplicate group\(duplicateGroups.count == 1 ? "" : "s")",
+                actionDescription: duplicateGroups.count == 1
+                    ? String(localized: "Review \(duplicateGroups.count) duplicate group")
+                    : String(localized: "Review \(duplicateGroups.count) duplicate groups"),
                 isAutomatic: false,
                 entries: []
             ))

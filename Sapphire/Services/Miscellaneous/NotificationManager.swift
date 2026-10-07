@@ -36,10 +36,10 @@ struct NotificationPayload: Identifiable, Equatable {
 
     var appName: String {
         switch appIdentifier {
-        case "com.apple.iChat", "com.apple.MobileSMS": return "Messages"
+        case "com.apple.iChat", "com.apple.MobileSMS": return "Messages".local
         case "com.apple.facetime": return "FaceTime"
-        case "com.apple.sharingd": return "AirDrop"
-        default: return appIdentifier.split(separator: ".").last.map(String.init) ?? "Notification"
+        case "com.apple.sharingd": return "AirDrop".local
+        default: return appIdentifier.split(separator: ".").last.map(String.init) ?? "Notification".local
         }
     }
 

@@ -59,23 +59,23 @@
 
 +(KBPProfile *)yawnProfile {
     KBPProfile * slowFadeProfile = [KBPProfile new];
-    slowFadeProfile.name = @"Yawn (default)";
+    slowFadeProfile.name = NSLocalizedString(@"Yawn (default)", @"");
     slowFadeProfile.versionNumber = @"1.0.0";
-    slowFadeProfile.comment = @"A calm, breath-like animation that somewhat resembles the sleep indicator on older MacBooks.";
+    slowFadeProfile.comment = NSLocalizedString(@"A calm, breath-like animation that somewhat resembles the sleep indicator on older MacBooks.", @"");
     slowFadeProfile.author = @"EthanRDoesMC";
     slowFadeProfile.homepage = @"https://ethanrdoesmc.com/";
     slowFadeProfile.previewImageURL = @" ";
 
     KBPAnimation * fadeInAnimation = [KBPAnimation new];
-    fadeInAnimation.name = @"Fade In";
-    fadeInAnimation.comment = @"Fades the keyboard to full brightness";
+    fadeInAnimation.name = NSLocalizedString(@"Fade In", @"");
+    fadeInAnimation.comment = NSLocalizedString(@"Fades the keyboard to full brightness", @"");
     fadeInAnimation.brightness = [NSNumber numberWithInteger:1];
     fadeInAnimation.fadeDuration = [NSNumber numberWithInteger:2500];
     fadeInAnimation.delay = [NSNumber numberWithInteger:0];
 
     KBPAnimation * fadeOutAnimation = [KBPAnimation new];
-    fadeOutAnimation.name = @"Fade Out";
-    fadeOutAnimation.comment = @"Fades the keyboard to off";
+    fadeOutAnimation.name = NSLocalizedString(@"Fade Out", @"");
+    fadeOutAnimation.comment = NSLocalizedString(@"Fades the keyboard to off", @"");
     fadeOutAnimation.brightness = [NSNumber numberWithInteger:0];
     fadeOutAnimation.fadeDuration = [NSNumber numberWithInteger:2500];
     fadeOutAnimation.delay = [NSNumber numberWithInteger:0];

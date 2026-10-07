@@ -29,7 +29,10 @@ class Device: NSObject, Identifiable {
     private var resolvedName: String?
     private var resolvedMacAddress: String?
 
-    var displayName: String {
+    var identityName: String { name(localized: false) }
+    var displayName: String { name(localized: true) }
+
+    private func name(localized: Bool) -> String {
         if let name = resolvedName, !name.isEmpty { return name }
 
         if let advertisedName = peripheral?.name, !advertisedName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -37,16 +40,18 @@ class Device: NSObject, Identifiable {
         }
 
         if let manu = manufacture, let mod = model {
-            if manu == "Apple Inc.", let appleName = appleDeviceNames[mod] { return appleName }
+            if manu == "Apple Inc.", let appleName = appleDeviceNames[mod] {
+                return localized ? appleName.local : appleName
+            }
             if !manu.isEmpty && !mod.isEmpty { return "\(manu) \(mod)" }
             if !mod.isEmpty { return mod }
         }
 
         if let mac = resolvedMacAddress {
-            return "Device (\(mac))"
+            return localized ? String(localized: "Device (\(mac))") : "Device (\(mac))"
         }
 
-        return "Unnamed Device"
+        return localized ? "Unnamed Device".local : "Unnamed Device"
     }
 
     override var description: String {
@@ -179,7 +184,7 @@ class BLE: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             self.delegate?.updateDevice(device: existingDevice)
         } else {
             let newDevice = Device(uuid: uuid, peripheral: peripheral, rssi: rssiInt)
-            let hasGoodName = newDevice.displayName != "Unnamed Device"
+            let hasGoodName = newDevice.identityName != "Unnamed Device"
 
             if hasGoodName || self.includeUnnamedDevices {
                 self.devices[uuid] = newDevice

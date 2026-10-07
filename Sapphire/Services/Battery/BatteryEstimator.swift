@@ -53,7 +53,7 @@ class BatteryEstimator: ObservableObject {
         let isCharged = info[kIOPSIsChargedKey] as? Bool ?? false
 
         if isCharged {
-            self.estimatedTimeRemaining = "Charged"
+            self.estimatedTimeRemaining = "Charged".local
         } else if state.isCharging, timeToFull > 0 {
             self.estimatedTimeRemaining = "\(formatTime(minutes: timeToFull))"
         } else if !state.isCharging, timeToEmpty > 0 {
@@ -65,14 +65,14 @@ class BatteryEstimator: ObservableObject {
 
     private func formatTime(minutes: Int) -> String {
         if minutes < 60 {
-            return "\(minutes)m"
+            return String(localized: "\(minutes)m")
         } else {
             let hours = minutes / 60
             let remainingMinutes = minutes % 60
             if remainingMinutes == 0 {
-                return "\(hours)h"
+                return String(localized: "\(hours)h")
             }
-            return "\(hours)h \(remainingMinutes)m"
+            return String(localized: "\(hours)h \(remainingMinutes)m")
         }
     }
 }

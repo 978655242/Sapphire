@@ -24,7 +24,8 @@ struct EyeBreakSession: Identifiable, Codable {
 struct EyeBreakDailySummary: Identifiable {
     private static let weekdayFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "EEE"
+        formatter.locale = AppLocalization.locale
+        formatter.setLocalizedDateFormatFromTemplate("EEE")
         return formatter
     }()
 
@@ -66,9 +67,9 @@ struct EyeBreakDailySummary: Identifiable {
         let minutes = (Int(duration) % 3600) / 60
 
         if hours > 0 {
-            return "\(hours)h \(minutes)m"
+            return String(localized: "\(hours)h \(minutes)m")
         } else {
-            return "\(minutes)m"
+            return String(localized: "\(minutes)m")
         }
     }
 }

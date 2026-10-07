@@ -45,14 +45,22 @@ public struct SubscriptionEntitlements: Codable, Equatable {
 public enum SubscriptionFeatureCatalog {
     public static func features(for tier: SubscriptionTier) -> Set<AppFeature> { [] }
     public static func minimumTier(for feature: AppFeature) -> SubscriptionTier { .free }
-    public static func tierDisplayName(_ tier: SubscriptionTier) -> String { tier.rawValue.capitalized }
-    public static func marketingSubtitle(for tier: SubscriptionTier) -> String { "Includes the core Sapphire experience." }
+    public static func tierDisplayName(_ tier: SubscriptionTier) -> String {
+        switch tier {
+        case .free: "Free".local
+        case .basic: "Basic".local
+        case .pro: "Pro".local
+        case .ultra: "Ultra".local
+        case .core: "Core".local
+        }
+    }
+    public static func marketingSubtitle(for tier: SubscriptionTier) -> String { "Includes the core Sapphire experience.".local }
     public static func marketingTierHighlights() -> [(tier: SubscriptionTier, features: [String])] {
         [
-            (tier: .free, features: ["Core notch experience"]),
-            (tier: .basic, features: ["Unlimited live activities"]),
-            (tier: .pro, features: ["All widgets and automations"]),
-            (tier: .ultra, features: ["Everything, plus beta builds"])
+            (tier: .free, features: ["Core notch experience".local]),
+            (tier: .basic, features: ["Unlimited live activities".local]),
+            (tier: .pro, features: ["All widgets and automations".local]),
+            (tier: .ultra, features: ["Everything, plus beta builds".local])
         ]
     }
 }
@@ -67,8 +75,8 @@ public final class SubscriptionManager: ObservableObject {
     public static let shared = SubscriptionManager()
 
     public var tierGradientColors: [Color] { [.gray, .gray.opacity(0.6)] }
-    public var userInitials: String { "G" }
-    public var tierLabel: String { "Free" }
+    public var userInitials: String { String(userDisplayName.prefix(1)) }
+    public var tierLabel: String { "Free".local }
 
     @Published public private(set) var entitlements: SubscriptionEntitlements = .free
     @Published public private(set) var accessibleFeatures: Set<AppFeature> = []
@@ -78,7 +86,7 @@ public final class SubscriptionManager: ObservableObject {
     public var activeTier: SubscriptionTier { entitlements.tier }
     public var hasCorePlan: Bool { activeTier == .core }
     public var isSignedIn: Bool { false }
-    public var userDisplayName: String { "Guest" }
+    public var userDisplayName: String { "Guest".local }
     public var hasBetaSoftwareAccess: Bool { false }
 
     public func hasAccess(to feature: AppFeature) -> Bool { SubscriptionAccess.hasAccess(to: feature) }

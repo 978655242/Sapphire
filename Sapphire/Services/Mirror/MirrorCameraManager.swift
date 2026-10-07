@@ -251,7 +251,7 @@ final class MirrorCameraManager: ObservableObject {
 
                 guard let device = self.preferredDevice() else {
                     Task { @MainActor in
-                        self.status = .error("No camera available.")
+                        self.status = .error("No camera available.".local)
                         continuation.resume(returning: false)
                     }
                     return
@@ -261,7 +261,7 @@ final class MirrorCameraManager: ObservableObject {
                     let input = try AVCaptureDeviceInput(device: device)
                     guard self.session.canAddInput(input) else {
                         Task { @MainActor in
-                            self.status = .error("Unable to add camera input.")
+                            self.status = .error("Unable to add camera input.".local)
                             continuation.resume(returning: false)
                         }
                         return

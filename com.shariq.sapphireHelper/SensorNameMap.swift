@@ -12,11 +12,12 @@ struct SensorNameMap {
         if key.hasPrefix("TC") && (key.hasSuffix("c") || key.hasSuffix("C")) && key.count == 4 {
             let coreNumStr = String(key[key.index(key.startIndex, offsetBy: 2)])
             if let coreNum = Int(coreNumStr, radix: 16) {
-                return "CPU Core \(coreNum + 1)"
+                return String(localized: "CPU Core \(coreNum + 1)")
             }
         }
 
-        return knownSensors[key] ?? key
+        guard let name = knownSensors[key] else { return key }
+        return NSLocalizedString(name, comment: "SMC temperature sensor name")
     }
 
     static let knownSensors: [String: String] = [

@@ -30,6 +30,14 @@ Sapphire is a sleek notch app that displays current activities neatly around the
 2.  **Install:** Open the downloaded package and follow the installation process.
 3.  **Permissions:** On first launch, you may need to grant accessibility and other permissions in `System Settings` for all features to work correctly.
 
+## Language
+
+Open **Settings → General → Language** (**设置 → 通用 → 语言**) and choose **Follow System**, **English**, or **简体中文**. Click **Restart Sapphire** (**重新启动 Sapphire**) to apply the choice; pending settings are saved before restarting.
+
+The choice is saved for Sapphire only and does not change the Mac's system language. Simplified Chinese covers app-owned feature labels, menus, descriptions, alerts, permission explanations, and desktop widget text. App names, device names, filenames, media titles, and other user or provider content keep their original names.
+
+Translations use Apple's `Localizable.xcstrings` and `InfoPlist.xcstrings` catalogs in the app and widget targets. Keep English and `zh-Hans` translations and their format placeholders in sync when adding interface text.
+
 ## Features
 
 <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;">

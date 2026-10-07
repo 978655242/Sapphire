@@ -33,7 +33,7 @@ class InteractiveCalendarViewModel: ObservableObject {
     private(set) var calendarStartOfWeek: Day
 
     var selectedMonthAbbreviated: String {
-        selectedDate.format(as: "MMM")
+        selectedDate.formatted(.dateTime.month(.abbreviated).locale(AppLocalization.locale))
     }
 
     init(

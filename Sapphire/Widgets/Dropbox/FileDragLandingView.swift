@@ -50,7 +50,7 @@ struct FileDragLandingView: View {
                 standardCard(
                     zone: .shelf,
                     icon: "tray.and.arrow.down.fill",
-                    text: "Add to Shelf"
+                    text: "Add to Shelf".local
                 )
             }
 
@@ -58,7 +58,7 @@ struct FileDragLandingView: View {
                 standardCard(
                     zone: .airdrop,
                     icon: "airplayaudio",
-                    text: "AirDrop"
+                    text: "AirDrop".local
                 )
             }
 
@@ -303,7 +303,7 @@ private struct DeviceDropCell: View {
         }
         .scaleEffect(isTargeted ? 1.04 : 1.0)
         .animation(.spring(response: 0.2, dampingFraction: 0.65), value: isTargeted)
-        .help(isEnabled ? "Send to \(peer.displayName)" : "\(peer.displayName) is offline")
+        .help(isEnabled ? String(localized: "Send to \(peer.displayName)") : String(localized: "\(peer.displayName) is offline"))
     }
 }
 
@@ -372,9 +372,9 @@ enum FileProviderError: Error, LocalizedError {
     case loadingFailed, noValidURLFound, duplicationFailed(Error)
     var errorDescription: String? {
         switch self {
-        case .loadingFailed: return "Failed to load data from the item provider."
-        case .noValidURLFound: return "Could not retrieve a valid file URL from the dropped item."
-        case .duplicationFailed(let e): return "Failed to copy the file: \(e.localizedDescription)"
+        case .loadingFailed: return "Failed to load data from the item provider.".local
+        case .noValidURLFound: return "Could not retrieve a valid file URL from the dropped item.".local
+        case .duplicationFailed(let e): return String(localized: "Failed to copy the file: \(e.localizedDescription)")
         }
     }
 }

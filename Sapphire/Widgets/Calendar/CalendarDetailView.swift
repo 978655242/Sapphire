@@ -30,8 +30,12 @@ struct CalendarDetailView: View {
     }
 
     private var weekdayHeaders: [Weekday] {
-        settings.settings.calendarStartOfWeek.weekdayHeaders.enumerated().map {
-            Weekday(id: $0.offset, symbol: String($0.element.prefix(1)))
+        var calendar = settings.settings.calendarStartOfWeek.configuredCalendar
+        calendar.locale = AppLocalization.locale
+        let symbols = calendar.veryShortStandaloneWeekdaySymbols
+        let offset = calendar.firstWeekday - 1
+        return Array(symbols[offset...] + symbols[..<offset]).enumerated().map {
+            Weekday(id: $0.offset, symbol: $0.element)
         }
     }
 
@@ -274,7 +278,7 @@ struct DetailedScheduleItemRow: View {
                 Text(item.title).font(.system(size: 14, weight: .bold, design: .rounded))
                 HStack(spacing: 5) {
                     Image(systemName: item.type == .event ? "calendar" : "checklist")
-                    Text(item.type == .event ? "Event" : "Reminder")
+                    Text(item.type == .event ? "Event".local : "Reminder".local)
                 }.font(.system(size: 11, weight: .medium)).opacity(0.6)
             }
             Spacer()

@@ -114,7 +114,7 @@ private struct WelcomeStepView: View {
 
             Spacer()
 
-            OnboardingButton(title: "Get Started", action: onGetStarted)
+            OnboardingButton(title: "Get Started".local, action: onGetStarted)
         }
     }
 }
@@ -138,15 +138,15 @@ private struct PermissionsStepView: View {
 
             ScrollView {
                 VStack(spacing: 25) {
-                    PermissionSectionView(title: "Required", permissions: permissionsManager.requiredPermissions, manager: permissionsManager)
-                    PermissionSectionView(title: "Recommended", permissions: permissionsManager.recommendedPermissions, description: "These permissions enable major features like widgets and live activities.", manager: permissionsManager)
-                    PermissionSectionView(title: "Optional", permissions: permissionsManager.optionalPermissions, description: "These permissions enable minor or cosmetic features.", manager: permissionsManager)
+                    PermissionSectionView(title: "Required".local, permissions: permissionsManager.requiredPermissions, manager: permissionsManager)
+                    PermissionSectionView(title: "Recommended".local, permissions: permissionsManager.recommendedPermissions, description: "These permissions enable major features like widgets and live activities.".local, manager: permissionsManager)
+                    PermissionSectionView(title: "Optional".local, permissions: permissionsManager.optionalPermissions, description: "These permissions enable minor or cosmetic features.".local, manager: permissionsManager)
                 }.padding(.horizontal, 50)
             }
 
             Spacer()
 
-            OnboardingButton(title: "Continue", action: onContinue)
+            OnboardingButton(title: "Continue".local, action: onContinue)
                 .disabled(!permissionsManager.areAllRequiredPermissionsGranted)
                 .animation(.easeInOut, value: permissionsManager.areAllRequiredPermissionsGranted)
         }
@@ -202,7 +202,7 @@ private struct HelperInstallationStepView: View {
                         helperManager.beginInstallation()
                     }
                 } label: {
-                    Text(helperManager.isResettingHelper ? "Resetting…" : primaryActionTitle)
+                    Text(helperManager.isResettingHelper ? "Resetting…".local : primaryActionTitle)
                         .font(.headline)
                         .frame(maxWidth: 280)
                         .padding(.vertical, 12)
@@ -215,7 +215,7 @@ private struct HelperInstallationStepView: View {
 
             Spacer()
 
-            OnboardingButton(title: helperReady ? "Continue" : "Waiting for Helper…", action: onContinue)
+            OnboardingButton(title: helperReady ? "Continue".local : "Waiting for Helper…".local, action: onContinue)
                 .disabled(!helperReady)
                 .animation(.easeInOut, value: helperManager.status)
                 .animation(.easeInOut, value: helperManager.isRunning)
@@ -244,26 +244,26 @@ private struct HelperInstallationStepView: View {
     private var primaryActionTitle: String {
         switch helperManager.status {
         case .requiresApproval:
-            return "Open Login Items"
+            return "Open Login Items".local
         case .enabled, .notFound:
-            return "Reset Helper"
+            return "Reset Helper".local
         default:
-            return "Install Helper"
+            return "Install Helper".local
         }
     }
 
     private var stepGuidance: String {
         switch helperManager.status {
         case .requiresApproval:
-            return "System Settings should be open. Under Allow in the Background, turn on both Sapphire and Sapphire Helper, then return here."
+            return "System Settings should be open. Under Allow in the Background, turn on both Sapphire and Sapphire Helper, then return here.".local
         case .enabled where !helperManager.isRunning:
-            return "The helper is approved but not responding. Tap Reset Helper so Sapphire can unregister its own background items and reinstall the helper."
+            return "The helper is approved but not responding. Tap Reset Helper so Sapphire can unregister its own background items and reinstall the helper.".local
         case .enabled:
-            return "Helper is ready. You can continue."
+            return "Helper is ready. You can continue.".local
         case .notFound:
-            return "macOS lost the helper registration (SAP-H3). Tap Reset Helper to rebuild it; Sapphire relaunches itself if the helper stays stuck."
+            return "macOS lost the helper registration (SAP-H3). Tap Reset Helper to rebuild it; Sapphire relaunches itself if the helper stays stuck.".local
         default:
-            return "Tap Install Helper. Approve the macOS prompt, then enable Sapphire under System Settings → General → Login Items → Background Activity."
+            return "Tap Install Helper. Approve the macOS prompt, then enable Sapphire under System Settings → General → Login Items → Background Activity.".local
         }
     }
 
@@ -294,23 +294,23 @@ private struct PrivacyStepView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     PrivacySection(
-                        title: "Data We Collect (Analytics)",
-                        content: "To improve Sapphire, we collect completely anonymous, aggregated usage data. This helps us understand which features are popular, identify bugs, and make the app better for everyone."
+                        title: "Data We Collect (Analytics)".local,
+                        content: "To improve Sapphire, we collect completely anonymous, aggregated usage data. This helps us understand which features are popular, identify bugs, and make the app better for everyone.".local
                     )
 
                     PrivacySection(
-                        title: "What This Includes:",
-                        content: "• Feature usage frequency (e.g., how often a widget is used)\n• App version and macOS version\n• Anonymous crash reports"
+                        title: "What This Includes:".local,
+                        content: "• Feature usage frequency (e.g., how often a widget is used)\n• App version and macOS version\n• Anonymous crash reports".local
                     )
 
                     PrivacySection(
-                        title: "Data We NEVER Collect",
-                        content: "We are committed to your privacy. We DO NOT automatically collect, store, or transmit any personal or sensitive information. This includes, but is not limited to:\n• Your name, email, or other personal identifiers\n• Screen contents or keyboard input\n• Application data from other apps"
+                        title: "Data We NEVER Collect".local,
+                        content: "We are committed to your privacy. We DO NOT automatically collect, store, or transmit any personal or sensitive information. This includes, but is not limited to:\n• Your name, email, or other personal identifiers\n• Screen contents or keyboard input\n• Application data from other apps".local
                     )
 
                     PrivacySection(
-                        title: "Data Storage & Third Parties",
-                        content: "Anonymous data is processed by google for analytics. This data is always aggregated and cannot be used to identify you."
+                        title: "Data Storage & Third Parties".local,
+                        content: "Anonymous data is processed by google for analytics. This data is always aggregated and cannot be used to identify you.".local
                     )
                 }
                 .padding(20)
@@ -332,7 +332,7 @@ private struct PrivacyStepView: View {
 
             Spacer(minLength: 20)
 
-            OnboardingButton(title: "Continue", action: onContinue)
+            OnboardingButton(title: "Continue".local, action: onContinue)
         }
     }
 
@@ -360,16 +360,16 @@ private struct MusicChoiceStepView: View {
                 .padding(.horizontal)
 
             VStack(spacing: 15) {
-                MusicServiceButton(title: "Apple Music", icon: "apple_logo", isSelected: selection == .appleMusic) {
+                MusicServiceButton(title: "Apple Music".local, icon: "apple_logo", isSelected: selection == .appleMusic) {
                     selection = .appleMusic
                 }
-                MusicServiceButton(title: "Spotify", icon: "spotify_logo", isSelected: selection == .spotify) {
+                MusicServiceButton(title: "Spotify".local, icon: "spotify_logo", isSelected: selection == .spotify) {
                     selection = .spotify
                 }
-                MusicServiceButton(title: "Tidal", icon: "sf:waveform", isSelected: selection == .tidal) {
+                MusicServiceButton(title: "Tidal".local, icon: "sf:waveform", isSelected: selection == .tidal) {
                     selection = .tidal
                 }
-                MusicServiceButton(title: "YouTube Music", icon: "sf:play.rectangle.fill", isSelected: selection == .youtubeMusic) {
+                MusicServiceButton(title: "YouTube Music".local, icon: "sf:play.rectangle.fill", isSelected: selection == .youtubeMusic) {
                     selection = .youtubeMusic
                 }
             }
@@ -377,7 +377,7 @@ private struct MusicChoiceStepView: View {
 
             Spacer()
 
-            OnboardingButton(title: "Next", action: {
+            OnboardingButton(title: "Next".local, action: {
                 if let finalSelection = selection {
                     settings.settings.defaultMusicPlayer = finalSelection
                     onNext()
@@ -419,7 +419,7 @@ private struct SpotifySetupStepView: View {
                 }
             }.padding(25).background(.black.opacity(0.15)).clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous)).overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).stroke(Color.white.opacity(0.1), lineWidth: 1)).padding(50)
             Spacer()
-            if musicManager.isPrivateAPIAuthenticated { OnboardingButton(title: "Continue", action: onNext) } else if !isLoading { Button("Skip for Now", action: onNext).buttonStyle(.plain).foregroundColor(.secondary).padding(.bottom, 50) } else { OnboardingButton(title: "Continue", action: {}).hidden().padding(.bottom, 50) }
+            if musicManager.isPrivateAPIAuthenticated { OnboardingButton(title: "Continue".local, action: onNext) } else if !isLoading { Button("Skip for Now", action: onNext).buttonStyle(.plain).foregroundColor(.secondary).padding(.bottom, 50) } else { OnboardingButton(title: "Continue".local, action: {}).hidden().padding(.bottom, 50) }
         }
         .sheet(item: $spotifyPrivateAPI.loginChallenge) { _ in
             SpotifyLoginWebView(
@@ -463,7 +463,7 @@ private struct BatterySetupStepView: View {
                 .padding(.horizontal, 50)
 
             VStack(spacing: 15) {
-                ModernOnboardingRow(iconName: "battery.100.bolt", iconColor: .green, title: "Set Charge Limit", description: "Prevent wear by stopping charging at a lower level. 80% is recommended.") {
+                ModernOnboardingRow(iconName: "battery.100.bolt", iconColor: .green, title: "Set Charge Limit".local, description: "Prevent wear by stopping charging at a lower level. 80% is recommended.".local) {
                     Picker("", selection: chargeLimitBinding) {
                         Text("80%").tag(80)
                         Text("90%").tag(90)
@@ -474,18 +474,18 @@ private struct BatterySetupStepView: View {
                     .frame(width: 150)
                 }
 
-                ModernOnboardingRow(iconName: "sailboat.fill", iconColor: .blue, title: "Enable Sailing Mode", description: "Reduces micro-charging cycles when the limit is reached.") {
+                ModernOnboardingRow(iconName: "sailboat.fill", iconColor: .blue, title: "Enable Sailing Mode".local, description: "Reduces micro-charging cycles when the limit is reached.".local) {
                     SettingsSwitch(isOn: $settings.settings.sailingModeEnabled)
                 }
 
-                ModernOnboardingRow(iconName: "thermometer.medium", iconColor: .red, title: "Enable Heat Protection", description: "Pauses charging if the battery gets too hot.") {
+                ModernOnboardingRow(iconName: "thermometer.medium", iconColor: .red, title: "Enable Heat Protection".local, description: "Pauses charging if the battery gets too hot.".local) {
                     SettingsSwitch(isOn: $settings.settings.heatProtectionEnabled)
                 }
             }
             .padding(50)
 
             Spacer()
-            OnboardingButton(title: "Continue", action: onNext)
+            OnboardingButton(title: "Continue".local, action: onNext)
         }
     }
 }
@@ -500,15 +500,15 @@ private struct CorePreferencesStepView: View {
             Text("Quick Setup").font(.system(size: 32, weight: .bold, design: .rounded))
             Text("Personalize your experience. You can change these any time in Settings.").font(.title3).multilineTextAlignment(.center).foregroundColor(.secondary).padding(.horizontal, 50)
             VStack(spacing: 15) {
-                ModernOnboardingRow(iconName: "sparkles.tv", iconColor: .cyan, title: "Show Custom HUDs", description: "Replace default volume & brightness indicators.") { SettingsSwitch(isOn: showHudsBinding) }
-                ModernOnboardingRow(iconName: "eye.fill", iconColor: .cyan, title: "Enable Eye Break Reminders", description: "Get reminded to look away from your screen periodically.") {
+                ModernOnboardingRow(iconName: "sparkles.tv", iconColor: .cyan, title: "Show Custom HUDs".local, description: "Replace default volume & brightness indicators.".local) { SettingsSwitch(isOn: showHudsBinding) }
+                ModernOnboardingRow(iconName: "eye.fill", iconColor: .cyan, title: "Enable Eye Break Reminders".local, description: "Get reminded to look away from your screen periodically.".local) {
                     SettingsSwitch(isOn: $settings.settings.eyeBreakLiveActivityEnabled)
                 }
-                ModernOnboardingRow(iconName: "thermometer.sun.fill", iconColor: .orange, title: "Temperature Unit", description: "Preferred unit for weather forecasts.") { Picker("", selection: $settings.settings.weatherUseCelsius) { Text("°C").tag(true); Text("°F").tag(false) }.pickerStyle(.segmented).labelsHidden().frame(width: 100) }
-                ModernOnboardingRow(iconName: "bolt.horizontal.circle.fill", iconColor: .purple, title: "Launch at Login", description: "Start Sapphire automatically with your Mac.") { SettingsSwitch(isOn: $settings.settings.launchAtLogin) }
+                ModernOnboardingRow(iconName: "thermometer.sun.fill", iconColor: .orange, title: "Temperature Unit".local, description: "Preferred unit for weather forecasts.".local) { Picker("", selection: $settings.settings.weatherUseCelsius) { Text("°C").tag(true); Text("°F").tag(false) }.pickerStyle(.segmented).labelsHidden().frame(width: 100) }
+                ModernOnboardingRow(iconName: "bolt.horizontal.circle.fill", iconColor: .purple, title: "Launch at Login".local, description: "Start Sapphire automatically with your Mac.".local) { SettingsSwitch(isOn: $settings.settings.launchAtLogin) }
             }.padding(50)
             Spacer()
-            OnboardingButton(title: "Continue", action: onNext)
+            OnboardingButton(title: "Continue".local, action: onNext)
         }
     }
 }
@@ -530,16 +530,16 @@ private struct LockScreenSetupStepView: View {
                 .padding(.horizontal, 50)
 
             VStack(spacing: 15) {
-                ModernOnboardingRow(iconName: "lock.display", iconColor: .red, title: "Enable on Lock Screen", description: "Show Sapphire's notch and features when your Mac is locked.") {
+                ModernOnboardingRow(iconName: "lock.display", iconColor: .red, title: "Enable on Lock Screen".local, description: "Show Sapphire's notch and features when your Mac is locked.".local) {
                     SettingsSwitch(isOn: $settings.settings.lockScreenShowNotch)
                 }
 
                 VStack(spacing: 15) {
-                    ModernOnboardingRow(iconName: "timer", iconColor: .cyan, title: "Show Live Activities", description: "Display timers, music, and more.") {
+                    ModernOnboardingRow(iconName: "timer", iconColor: .cyan, title: "Show Live Activities".local, description: "Display timers, music, and more.".local) {
                         SettingsSwitch(isOn: $settings.settings.lockScreenLiveActivityEnabled)
                     }
 
-                    ModernOnboardingRow(iconName: "info.circle.fill", iconColor: .blue, title: "Show Info Widgets", description: "Display static info like weather or battery.") {
+                    ModernOnboardingRow(iconName: "info.circle.fill", iconColor: .blue, title: "Show Info Widgets".local, description: "Display static info like weather or battery.".local) {
                         SettingsSwitch(isOn: $settings.settings.lockScreenShowInfoWidget)
                     }
                 }
@@ -550,7 +550,7 @@ private struct LockScreenSetupStepView: View {
             .padding(50)
 
             Spacer()
-            OnboardingButton(title: "Continue", action: onNext)
+            OnboardingButton(title: "Continue".local, action: onNext)
         }
     }
 }
@@ -593,7 +593,7 @@ private struct SubscriptionOverviewStepView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(subscriptionManager.isSignedIn ? subscriptionManager.userDisplayName : "Guest Mode")
+                    Text(subscriptionManager.isSignedIn ? subscriptionManager.userDisplayName : "Guest Mode".local)
                         .font(.system(size: 16, weight: .semibold, design: .rounded))
                     Text("Current plan: \(SubscriptionFeatureCatalog.tierDisplayName(currentTier))")
                         .font(.system(size: 12, weight: .medium))
@@ -646,7 +646,7 @@ private struct SubscriptionOverviewStepView: View {
 
             Spacer()
 
-            OnboardingButton(title: "Skip", action: onNext)
+            OnboardingButton(title: "Skip".local, action: onNext)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
@@ -869,7 +869,7 @@ private struct FinishStepView: View {
                 .padding(.top)
 
             Spacer()
-            OnboardingButton(title: "Explore Sapphire", action: onComplete)
+            OnboardingButton(title: "Explore Sapphire".local, action: onComplete)
 
             Text("© 2025 Shariq Charolia. All rights reserved.")
                 .font(.caption).foregroundStyle(.tertiary).padding(.bottom, 20)

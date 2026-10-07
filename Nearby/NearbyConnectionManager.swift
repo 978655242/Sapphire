@@ -36,7 +36,7 @@ public struct RemoteDeviceInfo{
     }
 
     init(info:EndpointInfo, id: String? = nil){
-        self.name=info.name ?? "Unknown Device"
+        self.name=info.name ?? NSLocalizedString("Unknown Device", comment: "")
         self.type=info.deviceType
         self.qrCodeData=info.qrCodeData
         self.id=id
@@ -65,7 +65,7 @@ public struct RemoteDeviceInfo{
     }
 }
 
-public enum NearbyError: Error, Equatable {
+public enum NearbyError: LocalizedError, Equatable {
     case protocolError(_ message: String)
     case requiredFieldMissing(_ message: String)
     case ukey2
@@ -74,6 +74,27 @@ public enum NearbyError: Error, Equatable {
 
     public enum CancellationReason: Equatable {
         case userRejected, userCanceled, notEnoughSpace, unsupportedType, timedOut
+    }
+
+    public var errorDescription: String? {
+        switch self {
+        case .protocolError(let message):
+            return String(localized: "Nearby transfer failed: \(message)")
+        case .requiredFieldMissing(let message):
+            return String(localized: "Nearby transfer is missing required data: \(message)")
+        case .ukey2:
+            return NSLocalizedString("Could not establish a secure Nearby connection.", comment: "")
+        case .inputOutput:
+            return NSLocalizedString("Could not read or write the Nearby transfer.", comment: "")
+        case .canceled(let reason):
+            switch reason {
+            case .userRejected: return NSLocalizedString("TransferDeclined", value: "Declined", comment: "")
+            case .userCanceled: return NSLocalizedString("TransferCanceled", value: "Canceled", comment: "")
+            case .notEnoughSpace: return NSLocalizedString("NotEnoughSpace", value: "Not enough disk space", comment: "")
+            case .unsupportedType: return NSLocalizedString("UnsupportedType", value: "Attachment type not supported", comment: "")
+            case .timedOut: return NSLocalizedString("TransferTimedOut", value: "Timed out", comment: "")
+            }
+        }
     }
 
     public static func == (lhs: NearbyError, rhs: NearbyError) -> Bool {
@@ -577,12 +598,12 @@ public class NearbyConnectionManager: NSObject, ObservableObject, NetServiceDele
             return
         }
         guard outgoingTransfers[deviceID] == nil else {
-            delegate.connectionFailed(with: NearbyError.protocolError("A transfer to this device is already active"))
+            delegate.connectionFailed(with: NearbyError.protocolError(NSLocalizedString("A transfer to this device is already active", comment: "")))
             return
         }
         guard let info = foundServices[deviceID], let device = info.device else {
             print("[NCM] Error: Attempted to start transfer to unknown device ID \(deviceID)")
-            delegate.connectionFailed(with: NearbyError.protocolError("The selected device is no longer available"))
+            delegate.connectionFailed(with: NearbyError.protocolError(NSLocalizedString("The selected device is no longer available", comment: "")))
             return
         }
         print("[NCM] Starting outgoing transfer to \(info.device?.name ?? "Unknown") (\(deviceID))")
@@ -593,7 +614,7 @@ public class NearbyConnectionManager: NSObject, ObservableObject, NetServiceDele
         conn.qrCodePrivateKey=qrCodePrivateKey
         outgoingTransfers[deviceID] = OutgoingTransferInfo(service: info.service, device: device, connection: conn, delegate: delegate)
 
-        let transferInfo = TransferProgressInfo(id: deviceID, deviceName: device.name, fileDescription: urls.count == 1 ? urls[0].lastPathComponent : "\(urls.count) files", direction: .outgoing, iconName: "arrow.up.doc")
+        let transferInfo = TransferProgressInfo(id: deviceID, deviceName: device.name, fileDescription: urls.count == 1 ? urls[0].lastPathComponent : String(localized: "\(urls.count) files"), direction: .outgoing, iconName: "arrow.up.doc")
         transfers.removeAll { $0.id == deviceID }
         transfers.insert(transferInfo, at: 0)
         conn.start()
@@ -656,7 +677,7 @@ public class NearbyConnectionManager: NSObject, ObservableObject, NetServiceDele
     private func fileDescription(for transfer: TransferMetadata) -> String {
         if let text = transfer.textDescription { return text }
         if transfer.files.count == 1 { return transfer.files[0].name }
-        return "\(transfer.files.count) files"
+        return String(localized: "\(transfer.files.count) files")
     }
 
     private func iconName(for transfer: TransferMetadata) -> String {

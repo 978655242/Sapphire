@@ -295,7 +295,7 @@ public class LockScreenManager {
                 self.handleWidgetSizeChange(newSize, id: id, window: win, screen: screen, positioner: positioner)
             }
 
-            let hostingController = NSHostingController(rootView: sizeObservingView)
+            let hostingController = NSHostingController(rootView: sizeObservingView.environment(\.locale, AppLocalization.locale))
             hostingController.view.wantsLayer = true
             hostingController.view.layer?.backgroundColor = NSColor.clear.cgColor
 
@@ -345,7 +345,7 @@ public class LockScreenManager {
             self.handleWidgetSizeChange(newSize, id: id, window: window, screen: screen, positioner: positioner)
         }
 
-        let hostingController = NSHostingController(rootView: sizeObservingView)
+        let hostingController = NSHostingController(rootView: sizeObservingView.environment(\.locale, AppLocalization.locale))
         hostingController.view.wantsLayer = true
         hostingController.view.layer?.backgroundColor = NSColor.clear.cgColor
 

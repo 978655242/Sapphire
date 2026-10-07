@@ -117,10 +117,10 @@ private struct FocusSessionActivityClockView: View {
 
     private var subLabel: String {
         if mode.isActive {
-            if displayMode == .compact { return "On" }
+            if displayMode == .compact { return "On".local }
             return mode.name
         }
-        return focusManager.isFocusBlock ? "Focus" : "Break"
+        return focusManager.isFocusBlock ? "Focus".local : "Break".local
     }
 
     private var subLabelColor: Color {

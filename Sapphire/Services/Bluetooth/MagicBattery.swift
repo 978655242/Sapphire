@@ -246,13 +246,13 @@ class MagicBattery {
                         }
 
                         if caseLevel > 0 && caseLevel <= 100 {
-                            AirBatteryModel.updateDevice(BatteryDevice(deviceID: address + "_case", deviceType: "ap_case", deviceName: name + " (Case)".local, batteryLevel: Int(caseLevel), isCharging: 0, lastUpdate: now))
+                            AirBatteryModel.updateDevice(BatteryDevice(deviceID: address + "_case", deviceType: "ap_case", deviceName: name + " (Case)", batteryLevel: Int(caseLevel), isCharging: 0, lastUpdate: now))
                         }
                         if leftLevel > 0 && leftLevel <= 100 {
-                            AirBatteryModel.updateDevice(BatteryDevice(deviceID: address + "_left", deviceType: "ap_pod_left", deviceName: name + " 🄻", batteryLevel: Int(leftLevel), isCharging: 0, parentName: name + " (Case)".local, lastUpdate: now))
+                            AirBatteryModel.updateDevice(BatteryDevice(deviceID: address + "_left", deviceType: "ap_pod_left", deviceName: name + " 🄻", batteryLevel: Int(leftLevel), isCharging: 0, parentName: name + " (Case)", lastUpdate: now))
                         }
                         if rightLevel > 0 && rightLevel <= 100 {
-                            AirBatteryModel.updateDevice(BatteryDevice(deviceID: address + "_right", deviceType: "ap_pod_right", deviceName: name + " 🅁", batteryLevel: Int(rightLevel), isCharging: 0, parentName: name + " (Case)".local, lastUpdate: now))
+                            AirBatteryModel.updateDevice(BatteryDevice(deviceID: address + "_right", deviceType: "ap_pod_right", deviceName: name + " 🅁", batteryLevel: Int(rightLevel), isCharging: 0, parentName: name + " (Case)", lastUpdate: now))
                         }
 
                         let validLevels = [leftLevel, rightLevel].filter { $0 > 0 && $0 <= 100 }

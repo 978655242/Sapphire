@@ -57,7 +57,7 @@ class SpotifyAppleScriptManager {
         }
         let script = "tell application \"Spotify\" to play track \"\(uri)\""
         let success = await runAppleScriptInBackground(script)
-        return success ? .success : .failure(reason: "AppleScript command failed.")
+        return success ? .success : .failure(reason: "AppleScript command failed.".local)
     }
 
     func launchAndPlay() async {
@@ -180,7 +180,7 @@ class SpotifyAppleScriptManager {
         if isAppRunning() {
             let script = "tell application \"Spotify\" to set sound volume to \(percent)"
             let success = await runAppleScriptInBackground(script)
-            return success ? .success : .failure(reason: "AppleScript failed")
+            return success ? .success : .failure(reason: "AppleScript failed".local)
         } else {
             return .requiresSpotifyAppOpen
         }

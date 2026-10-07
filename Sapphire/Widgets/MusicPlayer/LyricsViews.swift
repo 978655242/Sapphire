@@ -501,7 +501,7 @@ struct LyricsView: View {
         if let title = musicManager.title, !title.isEmpty {
             return title
         }
-        return "Not Playing"
+        return "Not Playing".local
     }
 
     private func openLyricsWindow() {
@@ -688,12 +688,12 @@ private struct LyricsDetachedLeftPane: View {
 
     private var displayTitle: String {
         if let title = musicManager.title, !title.isEmpty { return title }
-        return "Not Playing"
+        return "Not Playing".local
     }
 
     private var displayArtist: String {
         if let artist = musicManager.artist, !artist.isEmpty { return artist }
-        return "Unknown Artist"
+        return "Unknown Artist".local
     }
 }
 
@@ -846,7 +846,7 @@ private struct LyricsDetachedBottomBar: View {
                 )
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(holdFeedbackButtonID == "previous" ? holdFeedbackColor : .white.opacity(0.8))
-                .help(MusicLongPressUI.skipHelp(primary: "Previous", target: .previous, settings: settings.settings))
+                .help(MusicLongPressUI.skipHelp(primary: "Previous".local, target: .previous, settings: settings.settings))
 
                 LongPressControlButton(
                     onTap: {
@@ -874,7 +874,7 @@ private struct LyricsDetachedBottomBar: View {
                 .buttonStyle(.plain)
                 .scaleEffect(musicManager.isPlaying ? 1.0 : 0.95)
                 .animation(.easeInOut(duration: 0.15), value: holdFeedbackIcon)
-                .help(MusicLongPressUI.accessoryHelp(primary: "Play / Pause", target: .playPause, settings: settings.settings))
+                .help(MusicLongPressUI.accessoryHelp(primary: "Play / Pause".local, target: .playPause, settings: settings.settings))
 
                 SeekButton(
                     systemName: "forward.fill",
@@ -888,7 +888,7 @@ private struct LyricsDetachedBottomBar: View {
                 )
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(holdFeedbackButtonID == "next" ? holdFeedbackColor : .white.opacity(0.8))
-                .help(MusicLongPressUI.skipHelp(primary: "Next", target: .next, settings: settings.settings))
+                .help(MusicLongPressUI.skipHelp(primary: "Next".local, target: .next, settings: settings.settings))
             }
         }
         .onAppear {

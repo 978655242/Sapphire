@@ -342,13 +342,13 @@ nonisolated final class DevActivityScanEngine: @unchecked Sendable {
         let arguments = process.arguments.dropFirst().map { $0.lowercased() }
 
         if arguments.contains("test") || process.executableName.lowercased().contains("test") {
-            return "\(rule.tool.displayName) Tests"
+            return String(localized: "\(rule.tool.displayName) Tests")
         }
         if arguments.contains(where: { $0 == "install" || $0 == "ci" || $0 == "sync" || $0 == "resolve" }) {
-            return "Installing Packages"
+            return "Installing Packages".local
         }
-        if arguments.contains("clean") { return "Cleaning" }
-        return "\(rule.tool.displayName) Build"
+        if arguments.contains("clean") { return "Cleaning".local }
+        return String(localized: "\(rule.tool.displayName) Build")
     }
 
     private func commandTitle(for process: DevProcess) -> String {

@@ -324,10 +324,10 @@ class AppleMusicManager {
     func play(contextUri: String) async -> PlaybackResult {
         await ensureAuthorized()
         if let session = parseAppleMusicSongURL(contextUri) {
-            return await musicKit.play(songIDs: [session]) ? .success : .failure(reason: "Could not play in Apple Music.")
+            return await musicKit.play(songIDs: [session]) ? .success : .failure(reason: "Could not play in Apple Music.".local)
         }
         let ok = await musicKit.playBySearch(term: contextUri)
-        return ok ? .success : .failure(reason: "Could not play in Apple Music.")
+        return ok ? .success : .failure(reason: "Could not play in Apple Music.".local)
     }
 
     func parseAppleMusicSongURL(_ urlString: String) -> String? {

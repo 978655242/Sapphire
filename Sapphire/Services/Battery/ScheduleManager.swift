@@ -18,13 +18,13 @@ enum TaskAction: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .setChargeLimit: "Set Charge Limit"
-        case .topUp: "Top Up (Charge to 100%)"
-        case .dischargeTo: "Discharge To"
-        case .startCalibration: "Start Calibration"
-        case .setFanAuto: "Set Fans to Automatic"
-        case .setFanConstant: "Set Fans to Constant RPM"
-        case .setFanSensorBased: "Set Fans to Sensor-based"
+        case .setChargeLimit: "Set Charge Limit".local
+        case .topUp: "Top Up (Charge to 100%)".local
+        case .dischargeTo: "Discharge To".local
+        case .startCalibration: "Start Calibration".local
+        case .setFanAuto: "Set Fans to Automatic".local
+        case .setFanConstant: "Set Fans to Constant RPM".local
+        case .setFanSensorBased: "Set Fans to Sensor-based".local
         }
     }
 }
@@ -45,7 +45,7 @@ struct ScheduledTask: Codable, Equatable, Identifiable {
 enum RepeatInterval: String, Codable, CaseIterable, Identifiable {
     case never, daily, weekdays, weekly, biweekly, monthly
     var id: String { self.rawValue }
-    var displayName: String { self.rawValue.capitalized }
+    var displayName: String { rawValue.capitalized.local }
 }
 struct TaskHistoryEvent: Identifiable, Codable {
     var id = UUID()
@@ -261,7 +261,7 @@ class ScheduleManager: ObservableObject {
     }
 
     private func logTaskExecution(_ task: ScheduledTask) {
-        let event = TaskHistoryEvent(timestamp: Date(), taskDescription: "Executed: \(task.action.displayName)")
+        let event = TaskHistoryEvent(timestamp: Date(), taskDescription: String(localized: "Executed: \(task.action.displayName)"))
         DispatchQueue.main.async {
             self.taskHistory.insert(event, at: 0)
         }

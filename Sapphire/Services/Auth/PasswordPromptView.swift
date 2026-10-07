@@ -10,8 +10,8 @@ import SwiftUI
 struct PasswordPromptView: View {
     @Binding var isPresented: Bool
     var validate: ((String) -> Bool)?
-    var title: String = "Authentication Required"
-    var message: String = "To enable Bluetooth Unlock, Sapphire needs your Mac's login password. It will be stored securely in your system's Keychain and used only to unlock your device."
+    var title: String = "Authentication Required".local
+    var message: String = "To enable Bluetooth Unlock, Sapphire needs your Mac's login password. It will be stored securely in your system's Keychain and used only to unlock your device.".local
     var onSubmit: (String) -> Void
 
     @State private var password = ""
@@ -50,9 +50,9 @@ struct PasswordPromptView: View {
 
                 Button("OK") {
                     if password.isEmpty {
-                        errorMessage = "Password cannot be empty."
+                        errorMessage = "Password cannot be empty.".local
                     } else if let validate = validate, !validate(password) {
-                        errorMessage = "Incorrect password. Please try again."
+                        errorMessage = "Incorrect password. Please try again.".local
                         password = ""
                     } else {
                         onSubmit(password)

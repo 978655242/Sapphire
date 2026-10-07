@@ -95,8 +95,8 @@ final class SapphireBrowserIntegration {
         MainActor.assumeIsolated {
             FileShelfManager.shared.addFiles(from: [url])
             postLocalNotification(
-                title: "Saved to File Shelf",
-                body: "\(url.lastPathComponent) from Sapphire Browser",
+                title: "Saved to File Shelf".local,
+                body: String(localized: "\(url.lastPathComponent) from Sapphire Browser"),
                 category: nil,
                 userInfo: nil
             )
@@ -120,14 +120,14 @@ final class SapphireBrowserIntegration {
                     .prefix(60)
                 FileShelfManager.shared.addText(url.absoluteString, named: String(safeName))
                 postLocalNotification(
-                    title: "Saved to File Shelf",
+                    title: "Saved to File Shelf".local,
                     body: title,
                     category: nil,
                     userInfo: nil
                 )
             } else {
                 postLocalNotification(
-                    title: "Link from Sapphire Browser",
+                    title: "Link from Sapphire Browser".local,
                     body: title,
                     category: Self.linkNotificationCategory,
                     userInfo: ["url": url.absoluteString]
@@ -163,8 +163,8 @@ final class SapphireBrowserIntegration {
                 options: [.deliverImmediately]
             )
             postLocalNotification(
-                title: "Sapphire Browser isn't installed",
-                body: "Install it to open \(url.host ?? "this link").",
+                title: "Sapphire Browser isn't installed".local,
+                body: String(localized: "Install it to open \(url.host ?? "this link".local)."),
                 category: nil,
                 userInfo: nil
             )
@@ -176,7 +176,7 @@ final class SapphireBrowserIntegration {
     private func registerNotificationCategory() {
         let openAction = UNNotificationAction(
             identifier: "OPEN_IN_BROWSER",
-            title: "Open in Browser",
+            title: "Open in Browser".local,
             options: [.foreground]
         )
         let category = UNNotificationCategory(

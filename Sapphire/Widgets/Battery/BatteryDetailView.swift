@@ -29,10 +29,10 @@ struct BatteryDetailView: View {
         return "battery.100percent"
     }
     private var statusText: String {
-        if statusIsPaused { return "Paused" }
-        if stats.isCharging { return "Charging" }
-        if stats.powerAdapterInfo != nil { return "Plugged in" }
-        return "Battery"
+        if statusIsPaused { return "Paused".local }
+        if stats.isCharging { return "Charging".local }
+        if stats.powerAdapterInfo != nil { return "Plugged in".local }
+        return "Battery".local
     }
     private var statusColor: Color {
         if statusIsPaused { return .orange }
@@ -67,8 +67,8 @@ struct BatteryDetailView: View {
             HStack(alignment: .top, spacing: 10) {
                 powerHero
                 VStack(spacing: 10) {
-                    compactMetric(title: "Battery Health", value: "\(stats.maxCapacityPercentage)%", icon: "heart.fill", color: .pink)
-                    compactMetric(title: "Cycle Count", value: "\(stats.cycleCount)", icon: "arrow.triangle.2.circlepath", color: .purple)
+                    compactMetric(title: "Battery Health".local, value: "\(stats.maxCapacityPercentage)%", icon: "heart.fill", color: .pink)
+                    compactMetric(title: "Cycle Count".local, value: "\(stats.cycleCount)", icon: "arrow.triangle.2.circlepath", color: .purple)
                 }
                 .frame(width: 160)
             }
@@ -118,7 +118,7 @@ struct BatteryDetailView: View {
                         .transition(.opacity)
                 }
                 Spacer()
-                Text(stats.timeRemaining == "--" ? "No estimate" : stats.timeRemaining)
+                Text(stats.timeRemaining == "--" ? "No estimate".local : stats.timeRemaining)
                     .font(.system(size: 11, weight: .medium, design: .rounded))
                     .foregroundColor(.white.opacity(0.6))
             }
@@ -213,7 +213,7 @@ struct BatteryDetailView: View {
     private func showChargeLimitMessage(_ limit: Int) {
         chargeLimitMessageTask?.cancel()
         withAnimation(.easeOut(duration: 0.25)) {
-            chargeLimitMessage = "Charge limit changed to \(limit)%"
+            chargeLimitMessage = String(localized: "Charge limit changed to \(limit)%")
         }
         chargeLimitMessageTask = Task { @MainActor in
             try? await Task.sleep(for: .seconds(2.5))
@@ -226,7 +226,7 @@ struct BatteryDetailView: View {
     private var powerHero: some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline) {
-                Text("System Power")
+                Text("System Power".local)
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
                     .foregroundColor(.white.opacity(0.72))
                 Spacer()
@@ -260,9 +260,9 @@ struct BatteryDetailView: View {
 
             HStack(spacing: 12) {
                 if power.adapterConnected {
-                    powerMetaChip(icon: "bolt.horizontal.fill", text: String(format: "Adapter %.0f W", power.adapterDisplayWatts))
+                    powerMetaChip(icon: "bolt.horizontal.fill", text: String(format: "Adapter %.0f W".local, power.adapterDisplayWatts))
                 }
-                powerMetaChip(icon: "laptopcomputer", text: String(format: "Draw %.2f W", power.systemLoad))
+                powerMetaChip(icon: "laptopcomputer", text: String(format: "Draw %.2f W".local, power.systemLoad))
                 Spacer(minLength: 0)
             }
         }

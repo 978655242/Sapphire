@@ -37,6 +37,27 @@ struct BatteryDevice: Hashable, Codable {
     var lastUpdate: Double
     var realUpdate: Double = 0.0
 
+    var localizedDisplayName: String {
+        if deviceType == "Pencil", deviceName == "Pencil" { return "Pencil".local }
+        let side: String?
+        if (deviceType == "ap_case" && deviceID.hasSuffix("_case")) || deviceID.hasSuffix(" (Case)") {
+            side = " (Case)"
+        } else if deviceID.hasSuffix(" (Left)") {
+            side = " (Left)"
+        } else if deviceID.hasSuffix(" (Right)") {
+            side = " (Right)"
+        } else {
+            side = nil
+        }
+        guard let side, deviceName.hasSuffix(side) else { return deviceName }
+        let name = String(deviceName.dropLast(side.count))
+        switch side {
+        case " (Case)": return String(localized: "\(name) (Case)")
+        case " (Left)": return String(localized: "\(name) (Left)")
+        default: return String(localized: "\(name) (Right)")
+        }
+    }
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(hasBattery)
         hasher.combine(deviceID)

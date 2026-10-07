@@ -48,40 +48,40 @@ struct DevActivitySettingsView: View {
     private var detectionSection: some View {
         VStack(alignment: .leading, spacing: 0) {
             ToggleRow(
-                title: "Show Running Work in the Notch",
-                description: "Surface a live activity while an AI agent, a build, or a terminal command is running.",
+                title: "Show Running Work in the Notch".local,
+                description: "Surface a live activity while an AI agent, a build, or a terminal command is running.".local,
                 isOn: $settings.settings.devActivityEnabled
             )
 
             Divider().padding(.leading, 20)
 
             ToggleRow(
-                title: "AI Agents",
-                description: "Claude, Codex, Cursor, Antigravity, GitHub Copilot, Devin/Windsurf, Gemini, Aider, and other coding agents.",
+                title: "AI Agents".local,
+                description: "Claude, Codex, Cursor, Antigravity, GitHub Copilot, Devin/Windsurf, Gemini, Aider, and other coding agents.".local,
                 isOn: kindBinding(.ai, keyPath: \.devActivityKinds)
             )
 
             Divider().padding(.leading, 20)
 
             ToggleRow(
-                title: "Builds & Tests",
-                description: "Xcode, Android Studio and Gradle, Swift, cargo, Go, npm and friends, make, Docker, and test runs.",
+                title: "Builds & Tests".local,
+                description: "Xcode, Android Studio and Gradle, Swift, cargo, Go, npm and friends, make, Docker, and test runs.".local,
                 isOn: kindBinding(.build, keyPath: \.devActivityKinds)
             )
 
             Divider().padding(.leading, 20)
 
             ToggleRow(
-                title: "Terminal Commands",
-                description: "Anything long-running you started in Terminal, iTerm, Warp, Ghostty, or an editor's built-in terminal. Watchers and dev servers are ignored, since they never finish.",
+                title: "Terminal Commands".local,
+                description: "Anything long-running you started in Terminal, iTerm, Warp, Ghostty, or an editor's built-in terminal. Watchers and dev servers are ignored, since they never finish.".local,
                 isOn: kindBinding(.command, keyPath: \.devActivityKinds)
             )
 
             Divider().padding(.leading, 20)
 
             ToggleRow(
-                title: "Prioritize Over Other Activities",
-                description: "Rank running work alongside notifications instead of with the ambient readouts, so it shows even while music is playing.",
+                title: "Prioritize Over Other Activities".local,
+                description: "Rank running work alongside notifications instead of with the ambient readouts, so it shows even while music is playing.".local,
                 isOn: $settings.settings.devActivityHighPriority
             )
         }
@@ -104,8 +104,8 @@ struct DevActivitySettingsView: View {
 
             if monitor.tasks.isEmpty {
                 Text(settings.settings.devActivityEnabled || settings.settings.caffeinateAutoDuringTasks
-                     ? "Nothing running. Start a build or send an agent a prompt and it will appear here."
-                     : "Detection is off. Turn on the notch activity or auto-caffeinate above to start watching.")
+                     ? "Nothing running. Start a build or send an agent a prompt and it will appear here.".local
+                     : "Detection is off. Turn on the notch activity or auto-caffeinate above to start watching.".local)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding()
@@ -124,8 +124,8 @@ struct DevActivitySettingsView: View {
     private var accuracySection: some View {
         VStack(alignment: .leading, spacing: 0) {
             ToggleRow(
-                title: "Detect Agents Inside Editors",
-                description: "Cursor, Antigravity, Devin, VS Code and Zed keep their agent in the editor process, so activity there is inferred from how hard it is working. Turn this off if idle typing registers as a running agent.",
+                title: "Detect Agents Inside Editors".local,
+                description: "Cursor, Antigravity, Devin, VS Code and Zed keep their agent in the editor process, so activity there is inferred from how hard it is working. Turn this off if idle typing registers as a running agent.".local,
                 isOn: $settings.settings.devActivityDetectIDEAgents
             )
 
@@ -133,7 +133,7 @@ struct DevActivitySettingsView: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 CustomSliderRowView(
-                    label: "Sensitivity",
+                    label: "Sensitivity".local,
                     value: $settings.settings.devActivitySensitivity,
                     range: 0.4...2.0,
                     specifier: "%.1f×"
@@ -233,9 +233,9 @@ struct CaffeineAutoTaskSettingsView: View {
     private var runningSummary: String {
         let kinds = settings.settings.caffeinateAutoTaskKinds
         let relevant = monitor.tasks.filter { kinds.contains($0.kind.rawValue) }
-        guard let first = relevant.first else { return "Nothing running" }
+        guard let first = relevant.first else { return "Nothing running".local }
         if relevant.count == 1 { return first.title }
-        return "\(first.title) + \(relevant.count - 1) more"
+        return String(localized: "\(first.title) + \(relevant.count - 1) more")
     }
 
     private func kindBinding(_ kind: DevTaskKind) -> Binding<Bool> {
@@ -254,8 +254,8 @@ struct CaffeineAutoTaskSettingsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ToggleRow(
-                title: "Keep Awake While a Task Runs",
-                description: "Automatically turn caffeinate on when an AI agent, build, or terminal command starts, and off again once everything finishes. Caffeinate you switched on yourself is never turned off by this.",
+                title: "Keep Awake While a Task Runs".local,
+                description: "Automatically turn caffeinate on when an AI agent, build, or terminal command starts, and off again once everything finishes. Caffeinate you switched on yourself is never turned off by this.".local,
                 isOn: $settings.settings.caffeinateAutoDuringTasks
             )
 
@@ -278,17 +278,17 @@ struct CaffeineAutoTaskSettingsView: View {
 
                 Divider().padding(.leading, 20)
 
-                ToggleRow(title: "AI Agents", description: "", isOn: kindBinding(.ai))
+                ToggleRow(title: "AI Agents".local, description: "", isOn: kindBinding(.ai))
 
                 Divider().padding(.leading, 20)
 
-                ToggleRow(title: "Builds & Tests", description: "", isOn: kindBinding(.build))
+                ToggleRow(title: "Builds & Tests".local, description: "", isOn: kindBinding(.build))
 
                 Divider().padding(.leading, 20)
 
                 ToggleRow(
-                    title: "Terminal Commands",
-                    description: "Off by default — not every long command is worth holding the display on for.",
+                    title: "Terminal Commands".local,
+                    description: "Off by default — not every long command is worth holding the display on for.".local,
                     isOn: kindBinding(.command)
                 )
 
@@ -296,7 +296,7 @@ struct CaffeineAutoTaskSettingsView: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     CustomSliderRowView(
-                        label: "Keep Awake After Finishing",
+                        label: "Keep Awake After Finishing".local,
                         value: $settings.settings.caffeinateAutoTaskGrace,
                         range: 0...600,
                         specifier: "%.0fs"
@@ -307,9 +307,9 @@ struct CaffeineAutoTaskSettingsView: View {
 
                     if !unmonitoredKinds.isEmpty {
                         Label(
-                            "\(unmonitoredKinds.map(\.displayName).formatted(.list(type: .and))) "
-                            + "\(unmonitoredKinds.count == 1 ? "is" : "are") switched off in Dev Activity, "
-                            + "so nothing of that kind will keep the Mac awake.",
+                            unmonitoredKinds.count == 1
+                                ? String(localized: "\(unmonitoredKinds.map(\.displayName).formatted(.list(type: .and).locale(AppLocalization.locale))) is switched off in Dev Activity, so nothing of that kind will keep the Mac awake.")
+                                : String(localized: "\(unmonitoredKinds.map(\.displayName).formatted(.list(type: .and).locale(AppLocalization.locale))) are switched off in Dev Activity, so nothing of that kind will keep the Mac awake."),
                             systemImage: "exclamationmark.triangle.fill"
                         )
                         .font(.caption)

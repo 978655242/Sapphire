@@ -20,7 +20,7 @@ public struct FocusStatus: Equatable, Sendable {
     public let tintColorNames: [String]?
 
     public static let notActive = FocusStatus(
-        name: "None",
+        name: "None".local,
         symbolName: "moon.zzz.fill",
         isActive: false,
         identifier: "com.apple.focus.none",

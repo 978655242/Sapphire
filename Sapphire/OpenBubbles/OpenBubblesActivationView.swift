@@ -40,10 +40,10 @@ struct OpenBubblesActivationView: View {
 
     private var buttonTitle: String {
         switch buttonState {
-        case .idle: return "Generate One-Time Activation Code"
-        case .processing: return "Generating..."
-        case .success: return "Succeeded!"
-        case .error: return "An Error Occurred"
+        case .idle: return "Generate One-Time Activation Code".local
+        case .processing: return "Generating...".local
+        case .success: return "Succeeded!".local
+        case .error: return "An Error Occurred".local
         }
     }
 

@@ -36,10 +36,10 @@ fileprivate enum MusicHubPane: Int, CaseIterable {
 
     var title: String {
         switch self {
-        case .now: return "Now"
-        case .library: return "Library"
-        case .discover: return "Discover"
-        case .audio: return "Audio"
+        case .now: return "Now".local
+        case .library: return "Library".local
+        case .discover: return "Discover".local
+        case .audio: return "Audio".local
         }
     }
 
@@ -295,7 +295,7 @@ struct QueueAndPlaylistsView: View {
         if let nativeUser = musicManager.spotifyPrivateAPI.userProfile {
             return nativeUser.profile.friendlyName
         }
-        return hubPane == .audio ? "Audio" : "Spotify"
+        return hubPane == .audio ? "Audio".local : "Spotify".local
     }
 
     private var hubFollowerCount: Int? {
@@ -358,9 +358,7 @@ struct QueueAndPlaylistsView: View {
     }
 
     private func formatCompactCount(_ value: Int) -> String {
-        if value >= 1_000_000 { return String(format: "%.1fM", Double(value) / 1_000_000) }
-        if value >= 1_000 { return String(format: "%.1fK", Double(value) / 1_000) }
-        return "\(value)"
+        Double(value).formatted(.number.notation(.compactName).precision(.fractionLength(0...1)).locale(AppLocalization.locale))
     }
 
     private var appleMusicHubPill: some View {
@@ -507,7 +505,7 @@ struct QueueAndPlaylistsView: View {
 
                     VStack(alignment: .leading, spacing: 6) {
                         VStack(alignment: .leading, spacing: 3) {
-                            Text(musicManager.title ?? "Not Playing")
+                            Text(musicManager.title ?? "Not Playing".local)
                                 .font(.system(size: 18, weight: .bold, design: .rounded))
                                 .lineLimit(2)
                             Text(musicManager.artist ?? "Apple Music")
@@ -545,7 +543,7 @@ struct QueueAndPlaylistsView: View {
                                     .foregroundStyle(musicManager.isLiked ? Color.pink : Color.secondary)
                             }
                             .buttonStyle(.plain)
-                            .help(musicManager.isLiked ? "Unlike" : "Love this song")
+                            .help(musicManager.isLiked ? "Unlike".local : "Love this song".local)
 
                             Button {
                                 Task {
@@ -595,7 +593,7 @@ struct QueueAndPlaylistsView: View {
                 ActionButtonsView(onAction: refreshData, longPressNavigation: hubLongPressNavigation)
 
                 if !musicManager.appleSuggestedTracks.isEmpty {
-                    materialExpressiveCard(title: "More Like This", systemImage: "sparkles", accent: MaterialChartPalette.secondary) {
+                    materialExpressiveCard(title: "More Like This".local, systemImage: "sparkles", accent: MaterialChartPalette.secondary) {
                         LazyVStack(spacing: 4) {
                             ForEach(musicManager.appleSuggestedTracks.prefix(5)) { track in
                                 SuggestedAppleTrackRow(track: track) {
@@ -609,7 +607,7 @@ struct QueueAndPlaylistsView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            materialExpressiveCard(title: "Up Next", systemImage: "list.bullet", accent: MaterialChartPalette.primary) {
+            materialExpressiveCard(title: "Up Next".local, systemImage: "list.bullet", accent: MaterialChartPalette.primary) {
                 if appleMusicQueue.isEmpty {
                     VStack(spacing: 8) {
                         Image(systemName: "music.note.list")
@@ -670,7 +668,7 @@ struct QueueAndPlaylistsView: View {
         } else if musicManager.title != nil {
             nativeQueueBootstrappingView
         } else {
-            CustomUnavailableView(title: "Nothing Playing", systemImage: "speaker.slash.fill", description: "Start playing music in Spotify to see artist picks, concerts, and your queue.")
+            CustomUnavailableView(title: "Nothing Playing".local, systemImage: "speaker.slash.fill", description: "Start playing music in Spotify to see artist picks, concerts, and your queue.".local)
         }
     }
 
@@ -678,7 +676,7 @@ struct QueueAndPlaylistsView: View {
         HStack(alignment: .top, spacing: 14) {
             VStack(alignment: .leading, spacing: 14) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(musicManager.title ?? "Now Playing")
+                    Text(musicManager.title ?? "Now Playing".local)
                         .font(.system(size: 22, weight: .bold, design: .rounded))
                         .lineLimit(2)
                     Text(musicManager.artist ?? "Spotify")
@@ -697,7 +695,7 @@ struct QueueAndPlaylistsView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
-            materialExpressiveCard(title: "Loading…", systemImage: "arrow.clockwise", accent: MaterialChartPalette.primary) {
+            materialExpressiveCard(title: "Loading…".local, systemImage: "arrow.clockwise", accent: MaterialChartPalette.primary) {
                 HStack(spacing: 8) {
                     ProgressView().controlSize(.small)
                     Text("Connecting to Spotify…")
@@ -729,7 +727,7 @@ struct QueueAndPlaylistsView: View {
                                 nowPlayingHeroCard(nowPlaying)
 
                                 if !musicManager.spotifyPrivateAPI.similarAlbums.isEmpty {
-                                    materialExpressiveCard(title: "Similar Albums", systemImage: "square.stack", accent: MaterialChartPalette.tertiary) {
+                                    materialExpressiveCard(title: "Similar Albums".local, systemImage: "square.stack", accent: MaterialChartPalette.tertiary) {
                                         ScrollView(.horizontal, showsIndicators: false) {
                                             LazyHStack(spacing: 12) {
                                                 ForEach(musicManager.spotifyPrivateAPI.similarAlbums.prefix(10)) { album in
@@ -743,7 +741,7 @@ struct QueueAndPlaylistsView: View {
                                 }
 
                                 if !musicManager.spotifyPrivateAPI.relatedTracks.isEmpty {
-                                    materialExpressiveCard(title: "More Like This", systemImage: "sparkles", accent: MaterialChartPalette.secondary) {
+                                    materialExpressiveCard(title: "More Like This".local, systemImage: "sparkles", accent: MaterialChartPalette.secondary) {
                                         LazyVStack(spacing: 4) {
                                             ForEach(musicManager.spotifyPrivateAPI.relatedTracks.prefix(6)) { track in
                                                 RecommendedTrackRow(track: track, onPlay: handlePlaybackResult)
@@ -753,7 +751,7 @@ struct QueueAndPlaylistsView: View {
                                 }
 
                                 if !musicManager.spotifyPrivateAPI.artistConcerts.isEmpty {
-                                    materialExpressiveCard(title: "Nearby Concerts", systemImage: "ticket.fill", accent: MaterialChartPalette.error) {
+                                    materialExpressiveCard(title: "Nearby Concerts".local, systemImage: "ticket.fill", accent: MaterialChartPalette.error) {
                                         ScrollView(.horizontal, showsIndicators: false) {
                                             LazyHStack(spacing: 12) {
                                                 ForEach(musicManager.spotifyPrivateAPI.artistConcerts.prefix(8)) { concert in
@@ -767,7 +765,7 @@ struct QueueAndPlaylistsView: View {
                                 }
 
                                 if !musicManager.spotifyPrivateAPI.trackArtistCredits.isEmpty {
-                                    materialExpressiveCard(title: "Credits", systemImage: "person.2.fill", accent: MaterialChartPalette.secondary) {
+                                    materialExpressiveCard(title: "Credits".local, systemImage: "person.2.fill", accent: MaterialChartPalette.secondary) {
                                         ScrollView(.horizontal, showsIndicators: false) {
                                             LazyHStack(spacing: 10) {
                                                 ForEach(musicManager.spotifyPrivateAPI.trackArtistCredits) { credit in
@@ -795,7 +793,7 @@ struct QueueAndPlaylistsView: View {
                                 }
 
                                 if let artist = musicManager.spotifyPrivateAPI.nowPlayingArtist, !artist.merch.isEmpty {
-                                    materialExpressiveCard(title: "Merch", systemImage: "bag.fill", accent: MaterialChartPalette.warning) {
+                                    materialExpressiveCard(title: "Merch".local, systemImage: "bag.fill", accent: MaterialChartPalette.warning) {
                                         ScrollView(.horizontal, showsIndicators: false) {
                                             LazyHStack(spacing: 12) {
                                                 ForEach(artist.merch.prefix(8)) { item in
@@ -825,7 +823,7 @@ struct QueueAndPlaylistsView: View {
                     }
                     .mask(fadeMask)
 
-                    materialExpressiveCard(title: "Up Next", systemImage: "list.bullet", accent: MaterialChartPalette.primary) {
+                    materialExpressiveCard(title: "Up Next".local, systemImage: "list.bullet", accent: MaterialChartPalette.primary) {
                         if musicManager.nativeQueue.isEmpty {
                             Text("Nothing queued — add tracks from Library or suggestions.")
                                 .font(.system(size: 11, weight: .medium, design: .rounded))
@@ -859,7 +857,7 @@ struct QueueAndPlaylistsView: View {
     private func nowPlayingHeroCard(_ nowPlaying: PlayerState.Track) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(nowPlaying.metadata?.title ?? "Unknown Track")
+                Text(nowPlaying.metadata?.title ?? "Unknown Track".local)
                     .font(.system(size: 22, weight: .bold, design: .rounded))
                     .lineLimit(2)
 
@@ -867,7 +865,7 @@ struct QueueAndPlaylistsView: View {
                     openArtistFromNowPlaying(fallbackName: nowPlaying.metadata?.artistName)
                 } label: {
                     HStack(spacing: 4) {
-                        Text(nowPlaying.metadata?.artistName ?? "Unknown Artist")
+                        Text(nowPlaying.metadata?.artistName ?? "Unknown Artist".local)
                             .font(.system(size: 13, weight: .semibold, design: .rounded))
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
@@ -954,7 +952,7 @@ struct QueueAndPlaylistsView: View {
             ?? musicManager.spotifyPrivateAPI.playerState?.track?.metadata?.artistUri,
            !uri.isEmpty {
             navigationStack.append(
-                .musicArtistDetail(uri: uri, name: fallbackName ?? musicManager.artist ?? "Artist")
+                .musicArtistDetail(uri: uri, name: fallbackName ?? musicManager.artist ?? "Artist".local)
             )
         }
     }
@@ -1040,7 +1038,7 @@ struct QueueAndPlaylistsView: View {
                 .transition(.opacity)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    SectionHeader(title: "Next Up").padding(.bottom, 5)
+                    SectionHeader(title: "Next Up".local).padding(.bottom, 5)
                     if !queue.queue.isEmpty {
                         ScrollView(showsIndicators: false) {
                             LazyVStack(alignment: .leading, spacing: 8) {
@@ -1049,14 +1047,24 @@ struct QueueAndPlaylistsView: View {
                             .padding(.bottom, 30)
                         }
                         .mask(LinearGradient(gradient: Gradient(stops: [.init(color: .black, location: 0), .init(color: .black, location: 0.95), .init(color: .clear, location: 1.0)]), startPoint: .top, endPoint: .bottom))
-                    } else { CustomUnavailableView(title: "No Songs Up Next", systemImage: "music.note.list", description: "Add songs to your queue to see them here.") }
+                    } else { CustomUnavailableView(title: "No Songs Up Next".local, systemImage: "music.note.list", description: "Add songs to your queue to see them here.".local) }
                 }
-            } else { CustomUnavailableView(title: "Queue Unavailable", systemImage: "speaker.slash.fill", description: "Start playing music with a Premium account to view your queue.") }
+            } else { CustomUnavailableView(title: "Queue Unavailable".local, systemImage: "speaker.slash.fill", description: "Start playing music with a Premium account to view your queue.".local) }
         }
 
     }
 
     private var playlistsView: some View { libraryView }
+
+    private func librarySortTitle(_ id: String, fallback: String? = nil) -> String {
+        switch id {
+        case "Recents": return "Recents".local
+        case "Recently Added": return "Recently Added".local
+        case "Alphabetical": return "Alphabetical".local
+        case "Creator": return "Creator".local
+        default: return fallback ?? id
+        }
+    }
 
     private var libraryView: some View {
         VStack(spacing: 12) {
@@ -1064,7 +1072,7 @@ struct QueueAndPlaylistsView: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Library")
                         .font(.system(size: 20, weight: .bold, design: .rounded))
-                    Text(isAppleMusic ? "Your Apple Music playlists" : "Playlists sorted by Spotify")
+                    Text(isAppleMusic ? "Your Apple Music playlists".local : "Playlists sorted by Spotify".local)
                         .font(.system(size: 11, weight: .medium, design: .rounded))
                         .foregroundStyle(.secondary)
                 }
@@ -1087,15 +1095,15 @@ struct QueueAndPlaylistsView: View {
                                 }
                             } label: {
                                 if musicManager.spotifyPrivateAPI.selectedLibrarySortOrderId == order.id {
-                                    Label(order.name, systemImage: "checkmark")
+                                    Label(librarySortTitle(order.id, fallback: order.name), systemImage: "checkmark")
                                 } else {
-                                    Text(order.name)
+                                    Text(librarySortTitle(order.id, fallback: order.name))
                                 }
                             }
                         }
                     } label: {
                         Label(
-                            musicManager.spotifyPrivateAPI.selectedLibrarySortOrderId,
+                            librarySortTitle(musicManager.spotifyPrivateAPI.selectedLibrarySortOrderId),
                             systemImage: "arrow.up.arrow.down.circle.fill"
                         )
                         .font(.system(size: 11, weight: .semibold, design: .rounded))
@@ -1127,9 +1135,9 @@ struct QueueAndPlaylistsView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     if currentPlaylists.isEmpty {
                         CustomUnavailableView(
-                            title: "No Playlists Found",
+                            title: "No Playlists Found".local,
                             systemImage: "music.mic",
-                            description: isAppleMusic ? "Add playlists in Apple Music to see them here." : nil
+                            description: isAppleMusic ? "Add playlists in Apple Music to see them here.".local : nil
                         )
                     } else {
                         LazyVGrid(columns: [GridItem(.adaptive(minimum: 230), spacing: 12)], spacing: 12) {
@@ -1204,7 +1212,7 @@ struct QueueAndPlaylistsView: View {
                     ForEach(Array(musicManager.spotifyPrivateAPI.homeSections.prefix(24).enumerated()), id: \.element.id) { index, section in
                         let accent = [MaterialChartPalette.primary, MaterialChartPalette.secondary, MaterialChartPalette.tertiary, MaterialChartPalette.warning][index % 4]
                         VStack(alignment: .leading, spacing: 10) {
-                            SectionHeader(title: section.title ?? "For You")
+                            SectionHeader(title: section.title ?? "For You".local)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack(spacing: 12) {
                                     ForEach(section.items.prefix(24)) { item in
@@ -1257,7 +1265,7 @@ struct QueueAndPlaylistsView: View {
                     }
                 } else {
                     if !musicManager.spotifyPrivateAPI.recentlyPlayedItems.isEmpty {
-                        SectionHeader(title: "Recently Played")
+                        SectionHeader(title: "Recently Played".local)
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack(spacing: 12) {
                                 ForEach(musicManager.spotifyPrivateAPI.recentlyPlayedItems) { item in
@@ -1273,7 +1281,7 @@ struct QueueAndPlaylistsView: View {
                     }
 
                     if !musicManager.spotifyPrivateAPI.popularReleases.isEmpty {
-                        SectionHeader(title: "Popular Releases")
+                        SectionHeader(title: "Popular Releases".local)
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack(spacing: 12) {
                                 ForEach(musicManager.spotifyPrivateAPI.popularReleases) { release in
@@ -1287,7 +1295,7 @@ struct QueueAndPlaylistsView: View {
                     }
 
                     if !musicManager.spotifyPrivateAPI.playlistRecommendations.isEmpty {
-                        SectionHeader(title: "Made For You")
+                        SectionHeader(title: "Made For You".local)
                         LazyVStack(spacing: 8) {
                             ForEach(musicManager.spotifyPrivateAPI.playlistRecommendations) { track in
                                 RecommendedTrackRow(track: track) { result in
@@ -1304,9 +1312,9 @@ struct QueueAndPlaylistsView: View {
                     && musicManager.spotifyPrivateAPI.popularReleases.isEmpty
                     && musicManager.spotifyPrivateAPI.playlistRecommendations.isEmpty {
                     CustomUnavailableView(
-                        title: "Your Home",
+                        title: "Your Home".local,
                         systemImage: "house.fill",
-                        description: "Home shelves from Spotify will appear here once loaded."
+                        description: "Home shelves from Spotify will appear here once loaded.".local
                     )
                 }
             }
@@ -1629,7 +1637,7 @@ struct TrackHoverActionsView: View {
                                 "artist_name": artistName
                             ]
                         )
-                        showFeedback("Added to queue")
+                        showFeedback("Added to queue".local)
                     }
                 }
             } label: {
@@ -1770,9 +1778,9 @@ struct AddToPlaylistMenuView: View {
                         await MainActor.run {
                             containedPlaylistURIs.remove(playlist.uri)
                         }
-                        showFeedback("Removed from \(playlist.name)")
+                        showFeedback(String(localized: "Removed from \(playlist.name)"))
                     } else {
-                        showFeedback("Could not remove from \(playlist.name)")
+                        showFeedback(String(localized: "Could not remove from \(playlist.name)"))
                     }
                 } else {
                     let ok = await musicManager.spotifyPrivateAPI.addTracksToPlaylist(
@@ -1783,9 +1791,9 @@ struct AddToPlaylistMenuView: View {
                         await MainActor.run {
                             containedPlaylistURIs.insert(playlist.uri)
                         }
-                        showFeedback("Added to \(playlist.name)")
+                        showFeedback(String(localized: "Added to \(playlist.name)"))
                     } else {
-                        showFeedback("Could not add to \(playlist.name)")
+                        showFeedback(String(localized: "Could not add to \(playlist.name)"))
                     }
                 }
             }
@@ -1857,11 +1865,11 @@ struct NativeQueueTrackRow: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(track.metadata?.title ?? "Unknown Track")
+                        Text(track.metadata?.title ?? "Unknown Track".local)
                             .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .lineLimit(1)
                             .foregroundStyle(.primary)
-                        Text(track.metadata?.artistName ?? "Unknown Artist")
+                        Text(track.metadata?.artistName ?? "Unknown Artist".local)
                             .font(.system(size: 10, weight: .medium, design: .rounded))
                             .foregroundStyle(.secondary)
                             .lineLimit(1)
@@ -2359,8 +2367,8 @@ enum MusicAudioHubSection: Int, CaseIterable {
         switch self {
         case .spotify: return "Spotify"
         case .airplay: return "AirPlay"
-        case .apps: return "Apps"
-        case .system: return "System"
+        case .apps: return "Apps".local
+        case .system: return "System".local
         }
     }
 
@@ -2593,7 +2601,7 @@ struct DevicesView: View {
             TabButton(title: "AirPlay", systemImage: "airplayaudio", isSelected: selectedTab == .airplay) {
                 selectedTab = .airplay
             }
-            TabButton(title: "System", systemImage: "hifispeaker.and.homepod.mini.fill", isSelected: selectedTab == .system) {
+            TabButton(title: "System".local, systemImage: "hifispeaker.and.homepod.mini.fill", isSelected: selectedTab == .system) {
                 selectedTab = .system
             }
         }
@@ -2876,7 +2884,7 @@ fileprivate struct AppleMusicDeviceRow: View {
                 if device.isSelected { Image(systemName: "checkmark.circle.fill").font(.title2).foregroundColor(.blue).transition(.opacity.combined(with: .scale(scale: 0.8))) }
             }
             if device.isSelected {
-                BoldPillSlider(label: "Volume", value: $volume, range: 0...100, specifier: "%.0f %%", style: .large, onCommit: sendVolumeUpdate)
+                BoldPillSlider(label: "Volume".local, value: $volume, range: 0...100, specifier: "%.0f %%", style: .large, onCommit: sendVolumeUpdate)
                     .padding(.leading, 45)
                     .transition(.opacity.combined(with: .offset(y: 5)))
             }
@@ -2908,7 +2916,7 @@ fileprivate struct SpotifyDeviceRow: View {
                 if device.isActive { Image(systemName: "checkmark.circle.fill").font(.title2).foregroundColor(.green).transition(.opacity.combined(with: .scale(scale: 0.8))) }
             }
             if device.isActive && device.volumePercent != nil {
-                BoldPillSlider(label: "Volume", value: $volume, range: 0...100, specifier: "%.0f %%", style: .large, onCommit: onCommit)
+                BoldPillSlider(label: "Volume".local, value: $volume, range: 0...100, specifier: "%.0f %%", style: .large, onCommit: onCommit)
                     .padding(.leading, 45)
                     .transition(.opacity.combined(with: .offset(y: 5)))
             }
@@ -2966,7 +2974,7 @@ fileprivate struct SpotifyNativeDeviceRow: View {
                 }
             }
             if isActive && (device.capabilities.volumeSteps ?? 0) > 0 {
-                BoldPillSlider(label: "Volume", value: $volume, range: 0...100, specifier: "%.0f %%", style: .large, onCommit: onCommit)
+                BoldPillSlider(label: "Volume".local, value: $volume, range: 0...100, specifier: "%.0f %%", style: .large, onCommit: onCommit)
                     .padding(.leading, 45)
                     .transition(.opacity.combined(with: .offset(y: 5)))
             }
@@ -3016,6 +3024,7 @@ fileprivate let isoDateFormatter: DateFormatter = {
 
 fileprivate let displayDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
+    formatter.locale = AppLocalization.locale
     formatter.dateStyle = .medium
     formatter.timeStyle = .none
     return formatter
@@ -3042,13 +3051,24 @@ class TrackViewModel: ObservableObject, Identifiable {
 
     private var hydrationTask: Task<Void, Never>?
     private let canHydrate: Bool
+    private let hasTrackName: Bool
+    private let hasArtistNames: Bool
+    private let hasAlbumName: Bool
+
+    var displayName: String { hasTrackName ? name : "Unknown Track".local }
+    var displayArtists: String { hasArtistNames ? artists : "Unknown Artist".local }
+    var displayAlbumName: String { hasAlbumName ? albumName : "Unknown Album".local }
 
     init(playlistItem: SpotifyPlaylistDetailsResponse.PlaylistItem) {
         let data = playlistItem.itemV2.data
+        self.hasTrackName = data.name != nil
+        self.hasAlbumName = data.albumOfTrack?.name != nil
         self.uid = playlistItem.uid
         self.name = data.name ?? "Unknown Track"
         let artistItems = data.artists?.items ?? []
-        self.artists = artistItems.map(\.profile.name).joined(separator: ", ").nilIfEmpty ?? "Unknown Artist"
+        let artistNames = artistItems.map(\.profile.name).joined(separator: ", ")
+        self.hasArtistNames = !artistNames.isEmpty
+        self.artists = artistNames.nilIfEmpty ?? "Unknown Artist"
         self.firstArtistName = artistItems.first?.profile.name ?? "Unknown Artist"
         self.firstArtistURI = artistItems.first?.uri
         self.albumName = data.albumOfTrack?.name ?? "Unknown Album"
@@ -3063,6 +3083,9 @@ class TrackViewModel: ObservableObject, Identifiable {
     }
 
     init(track: SpotifyTrack) {
+        self.hasTrackName = true
+        self.hasArtistNames = true
+        self.hasAlbumName = true
         self.uid = nil
         self.name = track.name
         self.artists = track.artists.map(\.name).joined(separator: ", ")
@@ -3141,6 +3164,16 @@ struct PlaylistView: View {
         case playCount = "Play count"
 
         var id: String { rawValue }
+        var displayName: String {
+            switch self {
+            case .customOrder: return "Custom order".local
+            case .title: return "Title".local
+            case .artist: return "Artist".local
+            case .album: return "Album".local
+            case .dateAdded: return "Date added".local
+            case .playCount: return "Play count".local
+            }
+        }
 
         static var playlistColumns: [SortOption] { [.title, .artist, .album, .dateAdded, .playCount] }
     }
@@ -3304,7 +3337,7 @@ struct PlaylistView: View {
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(.secondary)
                     if let perms = musicManager.spotifyPrivateAPI.currentPlaylistPermissions {
-                        Text(perms.canEditItems ? "Editable" : "View only")
+                        Text(perms.canEditItems ? "Editable".local : "View only".local)
                             .font(.system(size: 10, weight: .semibold, design: .rounded))
                             .padding(.horizontal, 7)
                             .padding(.vertical, 3)
@@ -3313,18 +3346,18 @@ struct PlaylistView: View {
                 }
 
                 HStack(spacing: 8) {
-                    tonalButton("Play", systemImage: "play.fill") {
+                    tonalButton("Play".local, systemImage: "play.fill") {
                         Task {
                             if !playlist.uri.hasPrefix("spotify:"),
                                musicManager.lastKnownBundleID == "com.apple.Music" {
                                 let ok = musicManager.appleMusic.playPlaylist(persistentID: playlist.id)
-                                handlePlaybackResult(ok ? .success : .failure(reason: "Couldn’t play playlist."))
+                                handlePlaybackResult(ok ? .success : .failure(reason: "Couldn’t play playlist.".local))
                             } else {
                                 handlePlaybackResult(await musicManager.play(contextUri: playlist.uri))
                             }
                         }
                     }
-                    tonalButton("Shuffle", systemImage: "shuffle") {
+                    tonalButton("Shuffle".local, systemImage: "shuffle") {
                         Task {
                             if !playlist.uri.hasPrefix("spotify:"),
                                musicManager.lastKnownBundleID == "com.apple.Music" {
@@ -3333,7 +3366,7 @@ struct PlaylistView: View {
                                     musicManager.appleMusic.setShuffle(enabled: true)
                                     handlePlaybackResult(.success)
                                 } else {
-                                    handlePlaybackResult(.failure(reason: "Couldn’t play playlist."))
+                                    handlePlaybackResult(.failure(reason: "Couldn’t play playlist.".local))
                                 }
                             } else {
                                 handlePlaybackResult(await musicManager.play(contextUri: playlist.uri))
@@ -3343,7 +3376,7 @@ struct PlaylistView: View {
                         }
                     }
                     if musicManager.spotifyPrivateAPI.smartShuffleAvailable && playlist.uri.hasPrefix("spotify:") {
-                        tonalButton("Smart", systemImage: "sparkles") {
+                        tonalButton("Smart".local, systemImage: "sparkles") {
                             Task {
                                 handlePlaybackResult(await musicManager.spotifyPrivateAPI.playSmartShuffle(playlistURI: playlist.uri))
                             }
@@ -3351,7 +3384,7 @@ struct PlaylistView: View {
                     }
                     if playlist.uri.hasPrefix("spotify:") {
                         tonalButton(
-                            musicManager.spotifyPrivateAPI.isEnhanceLoading ? "…" : "Enhance",
+                            musicManager.spotifyPrivateAPI.isEnhanceLoading ? "…" : "Enhance".local,
                             systemImage: "wand.and.stars"
                         ) {
                             Task {
@@ -3419,7 +3452,7 @@ struct PlaylistView: View {
             Task { await musicManager.spotifyPrivateAPI.logSortTelemetry() }
         } label: {
             HStack(spacing: 3) {
-                Text(option.rawValue)
+                Text(option.displayName)
                 if sortOption == option {
                     Image(systemName: sortDirection == .ascending ? "chevron.up" : "chevron.down")
                         .font(.system(size: 8, weight: .bold))
@@ -3532,8 +3565,8 @@ private struct PlaylistTrackRow: View {
 
     private static let exactDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "MMM d, yyyy"
+        formatter.locale = AppLocalization.locale
+        formatter.setLocalizedDateFormatFromTemplate("MMM d, yyyy")
         return formatter
     }()
 
@@ -3563,19 +3596,19 @@ private struct PlaylistTrackRow: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(viewModel.name)
+                    Text(viewModel.displayName)
                         .font(.system(size: 13, weight: .semibold, design: .rounded))
                         .lineLimit(1)
                     HStack(spacing: 4) {
                         Button(action: onArtist) {
-                            Text(viewModel.artists)
+                            Text(viewModel.displayArtists)
                                 .foregroundStyle(.secondary)
                         }
                         .buttonStyle(.plain)
                         .disabled(viewModel.firstArtistURI == nil)
                         Text("·").foregroundStyle(.quaternary)
                         Button(action: onAlbum) {
-                            Text(viewModel.albumName)
+                            Text(viewModel.displayAlbumName)
                                 .foregroundStyle(.secondary)
                         }
                         .buttonStyle(.plain)
@@ -3633,7 +3666,7 @@ private struct PlaylistTrackRow: View {
                         persistentID: viewModel.uri,
                         inPlaylistPersistentID: contextUri
                     )
-                    onPlay(ok ? .success : .failure(reason: "Couldn’t play this track in Apple Music."))
+                    onPlay(ok ? .success : .failure(reason: "Couldn’t play this track in Apple Music.".local))
                 } else {
                     onPlay(await musicManager.play(
                         trackUri: viewModel.uri,
@@ -3654,7 +3687,7 @@ private struct PlaylistTrackRow: View {
                             persistentID: viewModel.uri,
                             inPlaylistPersistentID: contextUri
                         )
-                        onPlay(ok ? .success : .failure(reason: "Couldn’t play this track in Apple Music."))
+                        onPlay(ok ? .success : .failure(reason: "Couldn’t play this track in Apple Music.".local))
                     } else {
                         onPlay(await musicManager.play(
                             trackUri: viewModel.uri,
@@ -3671,6 +3704,7 @@ private struct PlaylistTrackRow: View {
 
 fileprivate let musicRelativeDateFormatter: RelativeDateTimeFormatter = {
     let formatter = RelativeDateTimeFormatter()
+    formatter.locale = AppLocalization.locale
     formatter.unitsStyle = .abbreviated
     return formatter
 }()
@@ -3710,31 +3744,31 @@ struct SpotifyArtistDetailView: View {
                         }
 
                         if let tracks = overview?.topTracks, !tracks.isEmpty {
-                            sectionTitle("Popular")
+                            sectionTitle("Popular".local)
                             ForEach(Array(tracks.prefix(10).enumerated()), id: \.element.id) { index, track in
                                 artistTrackRow(track, rank: index + 1)
                             }
                         }
 
                         if let albums = overview?.albums, !albums.isEmpty {
-                            sectionTitle("Albums")
+                            sectionTitle("Albums".local)
                             horizontalAlbums(albums)
                         }
 
                         if let singles = overview?.singles, !singles.isEmpty {
-                            sectionTitle("Singles & EPs")
+                            sectionTitle("Singles & EPs".local)
                             horizontalAlbums(singles)
                         }
 
                         if let playlists = overview?.featuringPlaylists, !playlists.isEmpty {
-                            sectionTitle("Featuring")
+                            sectionTitle("Featuring".local)
                             ForEach(playlists.prefix(8)) { playlist in
                                 featuringPlaylistRow(playlist)
                             }
                         }
 
                         if let related = overview?.relatedArtists, !related.isEmpty {
-                            sectionTitle("Fans also like")
+                            sectionTitle("Fans also like".local)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack(spacing: 12) {
                                     ForEach(related.prefix(12)) { artist in
@@ -3761,7 +3795,7 @@ struct SpotifyArtistDetailView: View {
                         }
 
                         if let concerts = overview?.concerts, !concerts.isEmpty {
-                            sectionTitle("Concerts")
+                            sectionTitle("Concerts".local)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack(spacing: 10) {
                                     ForEach(concerts.prefix(8)) { ConcertCard(concert: $0) }
@@ -3770,7 +3804,7 @@ struct SpotifyArtistDetailView: View {
                         }
 
                         if let profile, !profile.merch.isEmpty {
-                            sectionTitle("Merch")
+                            sectionTitle("Merch".local)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack(spacing: 10) {
                                     ForEach(profile.merch.prefix(8)) { MerchCard(item: $0) }
@@ -3929,7 +3963,7 @@ struct SpotifyArtistDetailView: View {
                     Text(playlist.name)
                         .font(.system(size: 12, weight: .semibold, design: .rounded))
                         .lineLimit(1)
-                    Text(playlist.ownerName ?? "Playlist")
+                    Text(playlist.ownerName ?? "Playlist".local)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -4088,7 +4122,7 @@ struct SpotifyMusicSearchView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
                 NotchSearchField(
-                    placeholder: "Search songs, artists, albums…",
+                    placeholder: "Search songs, artists, albums…".local,
                     text: $query,
                     autofocus: autofocusSearch
                 )
@@ -4130,9 +4164,9 @@ struct SpotifyMusicSearchView: View {
                     emptyReplacement()
                 } else {
                     CustomUnavailableView(
-                        title: "Search Spotify",
+                        title: "Search Spotify".local,
                         systemImage: "magnifyingglass",
-                        description: "Find tracks, artists, albums, and playlists."
+                        description: "Find tracks, artists, albums, and playlists.".local
                     )
                 }
             } else {
@@ -4158,13 +4192,13 @@ struct SpotifyMusicSearchView: View {
                         }
 
                         if !results.tracks.isEmpty {
-                            sectionHeader("Songs")
+                            sectionHeader("Songs".local)
                             ForEach(results.tracks.prefix(8)) { track in
                                 searchTrackRow(track)
                             }
                         }
                         if !results.artists.isEmpty {
-                            sectionHeader("Artists")
+                            sectionHeader("Artists".local)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack(spacing: 12) {
                                     ForEach(results.artists.prefix(12)) { artist in
@@ -4190,7 +4224,7 @@ struct SpotifyMusicSearchView: View {
                             }
                         }
                         if !results.albums.isEmpty {
-                            sectionHeader("Albums")
+                            sectionHeader("Albums".local)
                             ScrollView(.horizontal, showsIndicators: false) {
                                 LazyHStack(spacing: 12) {
                                     ForEach(results.albums.prefix(12)) { album in
@@ -4214,7 +4248,7 @@ struct SpotifyMusicSearchView: View {
                             }
                         }
                         if !results.playlists.isEmpty {
-                            sectionHeader("Playlists")
+                            sectionHeader("Playlists".local)
                             ForEach(results.playlists.prefix(8)) { playlist in
                                 Button {
                                     let id = playlist.uri.components(separatedBy: ":").last ?? playlist.id
@@ -4238,7 +4272,7 @@ struct SpotifyMusicSearchView: View {
                                             .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                                         VStack(alignment: .leading, spacing: 2) {
                                             Text(playlist.name).font(.system(size: 12, weight: .semibold, design: .rounded)).lineLimit(1)
-                                            Text(playlist.ownerName ?? "Playlist")
+                                            Text(playlist.ownerName ?? "Playlist".local)
                                                 .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
                                         }
                                         Spacer()
@@ -4402,7 +4436,7 @@ struct SpotifyNowPlayingExtras: View {
                             }
                         }
                         if let listeners = artist.monthlyListeners {
-                            Text(formattedCount(listeners) + " monthly listeners")
+                            Text("\(formattedCount(listeners)) monthly listeners")
                                 .font(.system(size: 9))
                                 .foregroundColor(.secondary)
                         }
@@ -4460,9 +4494,7 @@ struct SpotifyNowPlayingExtras: View {
     }
 
     private func formattedCount(_ value: Int) -> String {
-        if value >= 1_000_000 { return String(format: "%.1fM", Double(value) / 1_000_000) }
-        if value >= 1_000 { return String(format: "%.1fK", Double(value) / 1_000) }
-        return "\(value)"
+        Double(value).formatted(.number.notation(.compactName).precision(.fractionLength(0...1)).locale(AppLocalization.locale))
     }
 }
 
@@ -4574,7 +4606,7 @@ struct ConcertCard: View {
                 .lineLimit(2)
                 .frame(width: 130, alignment: .leading)
             if !concert.startDateIsoString.isEmpty {
-                Text(concert.startDateIsoString.prefix(10))
+                Text(concert.displayDate)
                     .font(.caption2.monospacedDigit())
                     .foregroundColor(.secondary)
             }
@@ -4971,9 +5003,9 @@ struct AppleMusicSearchView: View {
                 if let error = vm.errorMessage {
                     centeredPlaceholder(systemImage: "wifi.exclamationmark", label: error)
                 } else if vm.isSearching && vm.results.isEmpty {
-                    centeredPlaceholder(systemImage: "magnifyingglass", label: "Searching…")
+                    centeredPlaceholder(systemImage: "magnifyingglass", label: "Searching…".local)
                 } else if vm.results.isEmpty && vm.hasSearched {
-                    centeredPlaceholder(systemImage: "music.note", label: "No results for \"\(vm.query)\"")
+                    centeredPlaceholder(systemImage: "music.note", label: String(localized: "No results for \"\(vm.query)\""))
                 } else if !vm.suggestions.isEmpty && vm.query.count >= 2 && vm.results.isEmpty && !vm.hasSearched {
                     suggestionsList
                 } else if vm.results.isEmpty {
@@ -4983,7 +5015,7 @@ struct AppleMusicSearchView: View {
                     } else {
                         centeredPlaceholder(
                             systemImage: "music.quarternote.3",
-                            label: seed.isEmpty ? "Search for songs, artists or albums" : "Discover more like \(seed)"
+                            label: seed.isEmpty ? "Search for songs, artists or albums".local : String(localized: "Discover more like \(seed)")
                         )
                         .onAppear {
                             if !seed.isEmpty && vm.query.isEmpty {
@@ -5033,7 +5065,7 @@ struct AppleMusicSearchView: View {
         ScrollView(showsIndicators: false) {
             LazyVStack(alignment: .leading, spacing: 8) {
                 if !vm.results.songs.isEmpty {
-                    resultSection("Songs", systemImage: "music.note") {
+                    resultSection("Songs".local, systemImage: "music.note") {
                         ForEach(vm.results.songs.prefix(8)) { song in
                             AppleMusicSongRow(song: song) {
                                 vm.play(song)
@@ -5046,7 +5078,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.results.albums.isEmpty {
-                    resultSection("Albums", systemImage: "square.stack") {
+                    resultSection("Albums".local, systemImage: "square.stack") {
                         ForEach(vm.results.albums.prefix(6)) { album in
                             AppleMusicAlbumRow(album: album) {
                                 vm.playAlbum(album)
@@ -5055,7 +5087,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.results.artists.isEmpty {
-                    resultSection("Artists", systemImage: "music.mic") {
+                    resultSection("Artists".local, systemImage: "music.mic") {
                         ForEach(vm.results.artists.prefix(6)) { artist in
                             AppleMusicArtistRow(artist: artist) {
                                 vm.playArtist(artist)
@@ -5064,7 +5096,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.results.playlists.isEmpty {
-                    resultSection("Playlists", systemImage: "music.note.list") {
+                    resultSection("Playlists".local, systemImage: "music.note.list") {
                         ForEach(vm.results.playlists.prefix(6)) { playlist in
                             AppleMusicPlaylistRow(playlist: playlist) {
                                 vm.playPlaylist(playlist)
@@ -5073,7 +5105,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if vm.results.isEmpty {
-                    centeredPlaceholder(systemImage: "music.note", label: "No results for \"\(vm.query)\"")
+                    centeredPlaceholder(systemImage: "music.note", label: String(localized: "No results for \"\(vm.query)\""))
                 }
             }
             .padding(.bottom, 20)
@@ -5098,7 +5130,7 @@ struct AppleMusicSearchView: View {
         ScrollView(showsIndicators: false) {
             LazyVStack(alignment: .leading, spacing: 14) {
                 if !vm.forYou.isEmpty {
-                    discoverSection(title: "Made for You", systemImage: "sparkles") {
+                    discoverSection(title: "Made for You".local, systemImage: "sparkles") {
                         ForEach(vm.forYou.prefix(5)) { playlist in
                             AppleMusicPlaylistRow(playlist: playlist) {
                                 Task { _ = await musicManager.appleMusic.playCatalogPlaylist(playlistID: playlist.id) }
@@ -5107,7 +5139,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.replay.topSongs.isEmpty {
-                    discoverSection(title: "Your Replay", systemImage: "arrow.clockwise.circle.fill") {
+                    discoverSection(title: "Your Replay".local, systemImage: "arrow.clockwise.circle.fill") {
                         ForEach(vm.replay.topSongs.prefix(6)) { track in
                             SuggestedAppleTrackRow(track: track) {
                                 Task { _ = musicManager.appleMusic.playTrack(persistentID: track.id) }
@@ -5116,7 +5148,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.charts.isEmpty {
-                    discoverSection(title: "Top Charts", systemImage: "chart.bar.fill") {
+                    discoverSection(title: "Top Charts".local, systemImage: "chart.bar.fill") {
                         ForEach(vm.charts.prefix(8)) { track in
                             SuggestedAppleTrackRow(track: track) {
                                 Task { _ = musicManager.appleMusic.playTrack(persistentID: track.id) }
@@ -5125,7 +5157,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.albumCharts.isEmpty {
-                    discoverSection(title: "Top Albums", systemImage: "square.stack.fill") {
+                    discoverSection(title: "Top Albums".local, systemImage: "square.stack.fill") {
                         ForEach(vm.albumCharts.prefix(6)) { album in
                             AppleMusicAlbumRow(album: album) {
                                 Task { _ = await musicManager.appleMusic.playAlbum(albumID: album.id) }
@@ -5134,7 +5166,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.recentlyPlayed.isEmpty {
-                    discoverSection(title: "Recently Played", systemImage: "clock.fill") {
+                    discoverSection(title: "Recently Played".local, systemImage: "clock.fill") {
                         ForEach(vm.recentlyPlayed.prefix(6)) { track in
                             SuggestedAppleTrackRow(track: track) {
                                 Task { _ = musicManager.appleMusic.playTrack(persistentID: track.id) }
@@ -5143,7 +5175,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.recentlyAdded.isEmpty {
-                    discoverSection(title: "Recently Added", systemImage: "plus.circle.fill") {
+                    discoverSection(title: "Recently Added".local, systemImage: "plus.circle.fill") {
                         ForEach(vm.recentlyAdded.prefix(6)) { track in
                             SuggestedAppleTrackRow(track: track) {
                                 Task { _ = musicManager.appleMusic.playTrack(persistentID: track.id) }
@@ -5152,7 +5184,7 @@ struct AppleMusicSearchView: View {
                     }
                 }
                 if !vm.heavyRotation.isEmpty {
-                    discoverSection(title: "Heavy Rotation", systemImage: "repeat") {
+                    discoverSection(title: "Heavy Rotation".local, systemImage: "repeat") {
                         ScrollView(.horizontal, showsIndicators: false) {
                             LazyHStack(spacing: 10) {
                                 ForEach(vm.heavyRotation.prefix(8)) { album in
@@ -5189,7 +5221,7 @@ struct AppleMusicSearchView: View {
                 if vm.discoverLoaded && vm.charts.isEmpty && vm.recentlyPlayed.isEmpty && vm.forYou.isEmpty && vm.replay.topSongs.isEmpty {
                     centeredPlaceholder(
                         systemImage: "music.quarternote.3",
-                        label: "Search for songs, artists or albums"
+                        label: "Search for songs, artists or albums".local
                     )
                 }
 

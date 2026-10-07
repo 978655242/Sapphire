@@ -231,7 +231,7 @@ final class AirPlayManager: NSObject, ObservableObject {
             Self.runOsascript(airPlaySwitchScript, arguments: [device.name])
         }.value
 
-        guard let output else { return .failed("osascript failed") }
+        guard let output else { return .failed("osascript failed".local) }
         let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
 
         switch trimmed {
@@ -242,7 +242,7 @@ final class AirPlayManager: NSObject, ObservableObject {
         case "ERROR_SOUND_MENU_NOT_FOUND":
             return .soundMenuNotAvailable
         default:
-            return .failed(trimmed.isEmpty ? "empty result" : trimmed)
+            return .failed(trimmed.isEmpty ? "empty result".local : trimmed)
         }
     }
 

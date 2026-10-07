@@ -65,6 +65,7 @@ struct QuickNote: Identifiable, Codable, Equatable {
 @MainActor
 final class NotesManager: ObservableObject {
     static let shared = NotesManager()
+    static var defaultTitle: String { "New Note".local }
 
     @Published private(set) var notes: [QuickNote] = []
 
@@ -73,7 +74,7 @@ final class NotesManager: ObservableObject {
     private init() {
         load()
         if notes.isEmpty {
-            notes = [QuickNote(title: "Welcome", body: "Tap to expand and edit your notes.")]
+            notes = [QuickNote(title: "Welcome".local, body: "Tap to expand and edit your notes.".local)]
         }
     }
 
@@ -82,8 +83,8 @@ final class NotesManager: ObservableObject {
     }
 
     @discardableResult
-    func addNote(title: String = "New Note", body: String = "") -> QuickNote {
-        let note = QuickNote(title: title, body: body)
+    func addNote(title: String? = nil, body: String = "") -> QuickNote {
+        let note = QuickNote(title: title ?? Self.defaultTitle, body: body)
         notes.insert(note, at: 0)
         save()
         return note

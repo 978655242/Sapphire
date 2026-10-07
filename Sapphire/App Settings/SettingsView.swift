@@ -43,6 +43,7 @@ struct SettingsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .environmentObject(settings)
         .environmentObject(editingSession)
+        .environment(\.locale, AppLocalization.locale)
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: NotchConfiguration.settingsWindowCornerRadius, style: .continuous))
         .ignoresSafeArea(.container, edges: .top)

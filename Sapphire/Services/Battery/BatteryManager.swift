@@ -15,9 +15,9 @@ import OSLog
 private let helperLogger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Sapphire", category: "BatteryManager")
 
 public struct PowerAdapterInfo: Equatable {
-    var name: String = "N/A"
-    var manufacturer: String = "N/A"
-    var serialNumber: String = "N/A"
+    var name: String = "N/A".local
+    var manufacturer: String = "N/A".local
+    var serialNumber: String = "N/A".local
     var current: Int = 0
     var maxCurrent: Int = 0
     var voltage: Int = 0
@@ -750,7 +750,7 @@ class BatteryManager {
             let error = NSError(
                 domain: "SapphireBattery",
                 code: -1,
-                userInfo: [NSLocalizedDescriptionKey: "The privileged helper is not reachable. Install or reset it (Settings → Battery → Helper) before calibrating."]
+                userInfo: [NSLocalizedDescriptionKey: "The privileged helper is not reachable. Install or reset it (Settings → Battery → Helper) before calibrating.".local]
             )
             print("[BatteryManager] beginCalibrationCycle failed: helper unreachable.")
             recordFailure()
@@ -796,9 +796,9 @@ class BatteryManager {
                 return
             }
 
-            let name = dict["Name"] as? String ?? "Power Adapter"
+            let name = dict["Name"] as? String ?? "Power Adapter".local
             let manufacturer = dict["Manufacturer"] as? String ?? "Apple Inc."
-            let serialNumber = dict["SerialString"] as? String ?? "N/A"
+            let serialNumber = dict["SerialString"] as? String ?? "N/A".local
             let current = dict["Current"] as? Int ?? 0
             let voltage = dict["AdapterVoltage"] as? Int ?? 0
             let maxCurrent = dict["PMUConfiguration"] as? Int ?? current
@@ -816,8 +816,8 @@ class BatteryManager {
     }
 
     func getBatteryHealth() async -> String {
-        guard let info = await getIOPSDictionary() else { return "Unknown" }
-        return info[kIOPSBatteryHealthKey] as? String ?? "Normal"
+        guard let info = await getIOPSDictionary() else { return "Unknown".local }
+        return (info[kIOPSBatteryHealthKey] as? String ?? "Normal").local
     }
 
     func getDesignCapacity() async -> Int {

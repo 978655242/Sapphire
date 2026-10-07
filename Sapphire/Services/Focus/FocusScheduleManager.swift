@@ -17,12 +17,12 @@ enum FocusScheduleRepeat: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .once: return "Once"
-        case .daily: return "Daily"
-        case .weekdays: return "Weekdays"
-        case .weekly: return "Weekly"
-        case .custom: return "Specific days"
-        case .monthly: return "Monthly"
+        case .once: return "Once".local
+        case .daily: return "Daily".local
+        case .weekdays: return "Weekdays".local
+        case .weekly: return "Weekly".local
+        case .custom: return "Specific days".local
+        case .monthly: return "Monthly".local
         }
     }
 }
@@ -37,7 +37,7 @@ struct ScheduledFocusSession: Codable, Equatable, Identifiable {
     var lastFiredDate: Date?
 
     private static let weekdayShort = [
-        "", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+        "", "Sun".local, "Mon".local, "Tue".local, "Wed".local, "Thu".local, "Fri".local, "Sat".local,
     ]
 
     var sortedDisplayWeekdays: [Int] {
@@ -54,7 +54,7 @@ struct ScheduledFocusSession: Codable, Equatable, Identifiable {
     var repeatDescription: String {
         guard repeatInterval == .custom else { return repeatInterval.displayName }
         let days = sortedDisplayWeekdays
-        guard !days.isEmpty else { return "Every day" }
+        guard !days.isEmpty else { return "Every day".local }
         return days.map { Self.weekdayShort[$0] }.joined(separator: ", ")
     }
 }
@@ -201,8 +201,8 @@ final class FocusScheduleManager: ObservableObject {
         center.getNotificationSettings { settings in
             guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else { return }
             let content = UNMutableNotificationContent()
-            content.title = "Focus session started "
-            content.body = "Your scheduled focus session is running for \(Int(duration / 60)) minutes. Stay focused!"
+            content.title = "Focus session started ".local
+            content.body = String(localized: "Your scheduled focus session is running for \(Int(duration / 60)) minutes. Stay focused!")
             content.sound = .default
             center.add(UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil))
         }

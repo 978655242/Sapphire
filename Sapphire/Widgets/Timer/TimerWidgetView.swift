@@ -78,7 +78,7 @@ struct TimerWidgetView: View {
                 Button {
                     _ = timerManager.startSapphireTimer(duration: TimeInterval(minutes * 60))
                 } label: {
-                    Text(minutes >= 60 ? "1h" : "\(minutes)m")
+                    Text(minutes >= 60 ? "1h".local : String(localized: "\(minutes)m"))
                         .font(.system(size: 11, weight: .semibold))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)

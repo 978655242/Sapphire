@@ -173,7 +173,7 @@ private actor NativeLockScreenWallpaperInstaller {
         if installation == nil {
             guard let slotURL = selectedAerialSlotURL() else {
                 throw CocoaError(.fileNoSuchFile, userInfo: [
-                    NSLocalizedDescriptionKey: "Select and download an Apple Aerial wallpaper in System Settings first."
+                    NSLocalizedDescriptionKey: "Select and download an Apple Aerial wallpaper in System Settings first.".local
                 ])
             }
             let backupURL = nativeDirectory.appendingPathComponent("\(slotURL.deletingPathExtension().lastPathComponent)-original.mov")
@@ -269,7 +269,7 @@ private actor NativeLockScreenWallpaperInstaller {
         )
         guard !originals.isEmpty else {
             throw CocoaError(.fileReadCorruptFile, userInfo: [
-                NSLocalizedDescriptionKey: "No native Aerial lock-screen configuration was found."
+                NSLocalizedDescriptionKey: "No native Aerial lock-screen configuration was found.".local
             ])
         }
 
@@ -412,7 +412,7 @@ private actor NativeLockScreenWallpaperInstaller {
         let compatiblePresets = await AVAssetExportSession.compatibility(ofExportPreset: AVAssetExportPresetHEVCHighestQuality, with: asset, outputFileType: .mov)
         guard compatiblePresets else {
             throw CocoaError(.fileWriteUnknown, userInfo: [
-                NSLocalizedDescriptionKey: "The selected video can't be converted to a native HEVC wallpaper."
+                NSLocalizedDescriptionKey: "The selected video can't be converted to a native HEVC wallpaper.".local
             ])
         }
         guard let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHEVCHighestQuality) else {

@@ -298,11 +298,11 @@ class SpotifyOfficialAPIManager: ObservableObject {
 
     func setVolume(percent: Int) async -> PlaybackResult {
         if isPremiumUser {
-            guard var components = URLComponents(string: "https://api.spotify.com/v1/me/player/volume") else { return .failure(reason: "Invalid URL") }
+            guard var components = URLComponents(string: "https://api.spotify.com/v1/me/player/volume") else { return .failure(reason: "Invalid URL".local) }
             components.queryItems = [URLQueryItem(name: "volume_percent", value: "\(percent)")]
-            guard let url = components.url else { return .failure(reason: "Invalid URL") }
+            guard let url = components.url else { return .failure(reason: "Invalid URL".local) }
             let success: Bool? = await makeAPIRequest(url: url, method: "PUT")
-            return success == true ? .success : .failure(reason: "API request failed")
+            return success == true ? .success : .failure(reason: "API request failed".local)
         }
         return .requiresPremium
     }
@@ -316,32 +316,32 @@ class SpotifyOfficialAPIManager: ObservableObject {
 
     func transferPlayback(to deviceId: String) async -> PlaybackResult {
         guard isPremiumUser else { return .requiresPremium }
-        guard let url = URL(string: "https://api.spotify.com/v1/me/player") else { return .failure(reason: "Invalid URL") }
+        guard let url = URL(string: "https://api.spotify.com/v1/me/player") else { return .failure(reason: "Invalid URL".local) }
         struct TransferPlaybackBody: Encodable { let device_ids: [String]; let play: Bool }
         let body = TransferPlaybackBody(device_ids: [deviceId], play: true)
-        guard let bodyData = try? JSONEncoder().encode(body) else { return .failure(reason: "Encoding failed") }
+        guard let bodyData = try? JSONEncoder().encode(body) else { return .failure(reason: "Encoding failed".local) }
         let success: Bool? = await makeAPIRequest(url: url, method: "PUT", body: bodyData)
-        return success == true ? .success : .failure(reason: "API request failed")
+        return success == true ? .success : .failure(reason: "API request failed".local)
     }
 
     func playTrack(uri: String) async -> PlaybackResult {
         guard isPremiumUser else { return .requiresPremium }
-        guard let url = URL(string: "https://api.spotify.com/v1/me/player/play") else { return .failure(reason: "Invalid URL") }
+        guard let url = URL(string: "https://api.spotify.com/v1/me/player/play") else { return .failure(reason: "Invalid URL".local) }
         struct PlayBody: Encodable { var uris: [String]? = nil }
         let body = PlayBody(uris: [uri])
-        guard let bodyData = try? JSONEncoder().encode(body) else { return .failure(reason: "Encoding failed") }
+        guard let bodyData = try? JSONEncoder().encode(body) else { return .failure(reason: "Encoding failed".local) }
         let success: Bool? = await makeAPIRequest(url: url, method: "PUT", body: bodyData)
-        return success == true ? .success : .failure(reason: "API request failed")
+        return success == true ? .success : .failure(reason: "API request failed".local)
     }
 
     func playPlaylist(contextUri: String) async -> PlaybackResult {
         guard isPremiumUser else { return .requiresPremium }
-        guard let url = URL(string: "https://api.spotify.com/v1/me/player/play") else { return .failure(reason: "Invalid URL") }
+        guard let url = URL(string: "https://api.spotify.com/v1/me/player/play") else { return .failure(reason: "Invalid URL".local) }
         struct PlayBody: Encodable { var context_uri: String? = nil }
         let body = PlayBody(context_uri: contextUri)
-        guard let bodyData = try? JSONEncoder().encode(body) else { return .failure(reason: "Encoding failed") }
+        guard let bodyData = try? JSONEncoder().encode(body) else { return .failure(reason: "Encoding failed".local) }
         let success: Bool? = await makeAPIRequest(url: url, method: "PUT", body: bodyData)
-        return success == true ? .success : .failure(reason: "API request failed")
+        return success == true ? .success : .failure(reason: "API request failed".local)
     }
 
     func fetchQueue() async -> SpotifyQueue? {

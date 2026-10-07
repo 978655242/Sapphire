@@ -23,10 +23,11 @@ private struct FileMetadata: Sendable {
             ByteFormatter.string(Int64($0))
         } ?? "—"
         let formatter = DateFormatter()
+        formatter.locale = AppLocalization.locale
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return FileMetadata(
-            type: contentType?.localizedDescription ?? "Unknown Type",
+            type: contentType?.localizedDescription ?? "Unknown Type".local,
             size: size,
             added: formatter.string(from: dateAdded),
             iconName: contentType?.sapphireFileSymbolName ?? "doc.fill"
@@ -54,6 +55,7 @@ struct FileActionView: View {
 
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.locale = AppLocalization.locale
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter
@@ -61,7 +63,7 @@ struct FileActionView: View {
 
     private var metadata: FileMetadata {
         fileMetadata ?? FileMetadata(
-            type: "Unknown Type",
+            type: "Unknown Type".local,
             size: "—",
             added: Self.dateFormatter.string(from: liveItem.dateAdded),
             iconName: "doc.fill"
@@ -184,10 +186,10 @@ struct FileActionView: View {
 
     private var primaryActions: some View {
         HStack(spacing: 8) {
-            DetailButton(title: "Open", systemImage: "play.fill", isProminent: true) {
+            DetailButton(title: "Open".local, systemImage: "play.fill", isProminent: true) {
                 NSWorkspace.shared.open(liveItem.storedAt)
             }
-            DetailButton(title: "In Finder", systemImage: "folder.fill", isProminent: false, tint: .primary) {
+            DetailButton(title: "In Finder".local, systemImage: "folder.fill", isProminent: false, tint: .primary) {
                 NSWorkspace.shared.activateFileViewerSelecting([liveItem.storedAt])
             }
         }
@@ -195,13 +197,13 @@ struct FileActionView: View {
 
     private var quickActions: some View {
         HStack(spacing: 8) {
-            QuickIconAction(systemImage: "square.and.arrow.up", title: "Share") {
+            QuickIconAction(systemImage: "square.and.arrow.up", title: "Share".local) {
                 presentSharePicker()
             }
-            QuickIconAction(systemImage: "plus.square.on.square", title: "Duplicate") {
+            QuickIconAction(systemImage: "plus.square.on.square", title: "Duplicate".local) {
                 manager.duplicateFile(item)
             }
-            QuickIconAction(systemImage: "doc.on.clipboard", title: "Copy Path") {
+            QuickIconAction(systemImage: "doc.on.clipboard", title: "Copy Path".local) {
                 copyPath()
             }
         }
@@ -209,13 +211,13 @@ struct FileActionView: View {
 
     private var metadataSection: some View {
         VStack(spacing: 0) {
-            MetadataRow(label: "Type", value: metadata.type, icon: "doc.text")
+            MetadataRow(label: "Type".local, value: metadata.type, icon: "doc.text")
             Divider().overlay(Color.white.opacity(0.08))
-            MetadataRow(label: "Size", value: metadata.size, icon: "internaldrive")
+            MetadataRow(label: "Size".local, value: metadata.size, icon: "internaldrive")
             Divider().overlay(Color.white.opacity(0.08))
-            MetadataRow(label: "Added", value: metadata.added, icon: "calendar")
+            MetadataRow(label: "Added".local, value: metadata.added, icon: "calendar")
             Divider().overlay(Color.white.opacity(0.08))
-            MetadataRow(label: "Location", value: liveItem.storedAt.path, icon: "folder")
+            MetadataRow(label: "Location".local, value: liveItem.storedAt.path, icon: "folder")
         }
         .padding(.vertical, 4)
         .background(Color.black.opacity(0.12), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
@@ -254,19 +256,19 @@ struct FileActionView: View {
                     .lineLimit(2)
                     .multilineTextAlignment(.center)
                 HStack(spacing: 8) {
-                    DetailButton(title: "Delete", systemImage: "trash", isProminent: true, tint: .red) {
+                    DetailButton(title: "Delete".local, systemImage: "trash", isProminent: true, tint: .red) {
                         performDelete()
                     }
-                    DetailButton(title: "Cancel", systemImage: nil, isProminent: false, tint: .primary) {
+                    DetailButton(title: "Cancel".local, systemImage: nil, isProminent: false, tint: .primary) {
                         isConfirmingDelete = false
                     }
                 }
             } else {
                 HStack(spacing: 8) {
-                    DetailButton(title: "Rename", systemImage: "pencil", isProminent: false, tint: .primary) {
+                    DetailButton(title: "Rename".local, systemImage: "pencil", isProminent: false, tint: .primary) {
                         beginRename()
                     }
-                    DetailButton(title: "Trash", systemImage: "trash", isProminent: false, tint: .red) {
+                    DetailButton(title: "Trash".local, systemImage: "trash", isProminent: false, tint: .red) {
                         isConfirmingDelete = true
                     }
                 }

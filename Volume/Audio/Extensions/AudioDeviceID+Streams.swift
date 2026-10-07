@@ -72,7 +72,7 @@ extension AudioDeviceID {
             return 0
         }
 
-        throw NSError(domain: "AudioDeviceID+Streams", code: -1, userInfo: [NSLocalizedDescriptionKey: "No output stream found"])
+        throw NSError(domain: "AudioDeviceID+Streams", code: -1, userInfo: [NSLocalizedDescriptionKey: NSLocalizedString("No output stream found", comment: "")])
     }
 
     func preferredStereoChannelIndices() -> (left: Int, right: Int) {

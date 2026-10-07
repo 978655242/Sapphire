@@ -26,7 +26,7 @@ struct DownloadTask: Identifiable, Equatable {
     var estimatedTimeRemaining: TimeInterval?
     var downloadSpeed: Double?
     var source: DownloadSource = .browser
-    var status: String = "Downloading..."
+    var status: String = "Downloading...".local
 }
 
 enum DownloadSource {

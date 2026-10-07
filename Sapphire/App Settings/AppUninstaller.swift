@@ -20,6 +20,7 @@ enum AppArtifactCategory: String, CaseIterable, Identifiable {
     case other = "Other"
 
     var id: String { rawValue }
+    var displayName: String { rawValue.local }
 
     var systemImage: String {
         switch self {
@@ -45,10 +46,10 @@ enum AppArtifactConfidence: String {
 
     var explanation: String {
         switch self {
-        case .exact: return "Exact app identifier match"
-        case .shared: return "Shared app-group container — review before removing"
-        case .ambiguous: return "This identifier may be shared or could not be verified — review before removing"
-        case .nameMatch: return "App-name match — review before removing"
+        case .exact: return "Exact app identifier match".local
+        case .shared: return "Shared app-group container — review before removing".local
+        case .ambiguous: return "This identifier may be shared or could not be verified — review before removing".local
+        case .nameMatch: return "App-name match — review before removing".local
         }
     }
 }
@@ -500,17 +501,17 @@ enum AppUninstaller {
         var errorDescription: String? {
             switch self {
             case .protectedApplication:
-                return "Sapphire and macOS system apps cannot be removed here."
+                return "Sapphire and macOS system apps cannot be removed here.".local
             case .applicationChanged:
-                return "The application changed after it was scanned. Scan it again before removing it."
+                return "The application changed after it was scanned. Scan it again before removing it.".local
             case .applicationDidNotQuit:
-                return "The application did not quit. Save your work, quit it manually, and try again."
+                return "The application did not quit. Save your work, quit it manually, and try again.".local
             case .artifactChanged(let url):
-                return "A related item changed after it was scanned and was left in place: \(url.path)"
+                return String(localized: "A related item changed after it was scanned and was left in place: \(url.path)")
             case .unsafePath(let url):
-                return "Sapphire refused to remove an unsafe path: \(url.path)"
+                return String(localized: "Sapphire refused to remove an unsafe path: \(url.path)")
             case .launchItemDeactivationFailed(let url, let reason):
-                return "The launch item could not be stopped and was left in place: \(url.path). \(reason)"
+                return String(localized: "The launch item could not be stopped and was left in place: \(url.path). \(reason)")
             }
         }
     }
@@ -524,7 +525,7 @@ enum AppUninstaller {
                 appName: app.name,
                 applicationURL: app.url,
                 removed: [],
-                failures: [.init(url: app.url, message: error.localizedDescription)]
+                failures: [.init(url: app.url, message: AppLocalization.description(for: error))]
             )
         }
 
@@ -541,7 +542,7 @@ enum AppUninstaller {
                     removed: [],
                     failures: [.init(
                         url: app.url,
-                        message: ValidationError.applicationDidNotQuit.localizedDescription
+                        message: AppLocalization.description(for: ValidationError.applicationDidNotQuit)
                     )]
                 )
             }
@@ -566,7 +567,7 @@ enum AppUninstaller {
                 try await moveToTrash(artifact.url)
                 removed.append(artifact.url)
             } catch {
-                failures.append(.init(url: artifact.url, message: error.localizedDescription))
+                failures.append(.init(url: artifact.url, message: AppLocalization.description(for: error)))
                 if artifact.isApplication { break }
             }
         }
@@ -684,7 +685,7 @@ enum AppUninstaller {
         do {
             result = try runner(arguments)
         } catch {
-            throw ValidationError.launchItemDeactivationFailed(url, error.localizedDescription)
+            throw ValidationError.launchItemDeactivationFailed(url, AppLocalization.description(for: error))
         }
 
         let normalizedError = result.errorOutput.lowercased()
@@ -695,7 +696,7 @@ enum AppUninstaller {
             let reason = result.errorOutput.trimmingCharacters(in: .whitespacesAndNewlines)
             throw ValidationError.launchItemDeactivationFailed(
                 url,
-                reason.isEmpty ? "launchctl exited with status \(result.terminationStatus)." : reason
+                reason.isEmpty ? String(localized: "launchctl exited with status \(result.terminationStatus).") : reason
             )
         }
     }

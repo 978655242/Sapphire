@@ -56,11 +56,11 @@ enum GeminiLiveError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .websocketError(let msg): return "WebSocket error: \(msg)"
-        case .apiError(let msg): return "Gemini Live API error: \(msg)"
-        case .disconnected: return "Disconnected from Gemini Live"
-        case .invalidMessage: return "Invalid message from server"
-        case .setupTimeout: return "Gemini Live setup timed out"
+        case .websocketError(let msg): return String(localized: "WebSocket error: \(msg)")
+        case .apiError(let msg): return String(localized: "Gemini Live API error: \(msg)")
+        case .disconnected: return "Disconnected from Gemini Live".local
+        case .invalidMessage: return "Invalid message from server".local
+        case .setupTimeout: return "Gemini Live setup timed out".local
         }
     }
 }

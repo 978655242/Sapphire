@@ -57,15 +57,15 @@ enum MusicKitTokenStore {
 
     static var userTokenSource: String {
         if let env = ProcessInfo.processInfo.environment["MUSICKIT_USER_TOKEN"], !env.isEmpty {
-            return "environment"
+            return "environment".local
         }
         if configValue(forKey: "UserToken") != nil {
             return "~/.sapphire/MusicKitConfig.plist"
         }
         if storedUserToken != nil {
-            return "keychain"
+            return "keychain".local
         }
-        return "none (falls back to MusicKit entitlement)"
+        return "none (falls back to MusicKit entitlement)".local
     }
 
     // MARK: - User token

@@ -305,7 +305,7 @@ final class ProcessTapController: ProcessTapControlling {
                 domain: NSOSStatusErrorDomain,
                 code: Int(mixdownErr),
                 userInfo: [
-                    NSLocalizedDescriptionKey: "Failed to create process tap (stream-specific err: \(lastError), mixdown err: \(mixdownErr))"
+                    NSLocalizedDescriptionKey: String(format: NSLocalizedString("Failed to create process tap (stream-specific err: %d, mixdown err: %d)", comment: ""), lastError, mixdownErr)
                 ]
             )
         }
@@ -346,14 +346,14 @@ final class ProcessTapController: ProcessTapControlling {
         err = AudioHardwareCreateAggregateDevice(description as CFDictionary, &aggID)
         guard err == noErr else {
             cleanupPartialActivation()
-            throw NSError(domain: NSOSStatusErrorDomain, code: Int(err), userInfo: [NSLocalizedDescriptionKey: "Failed to create aggregate device: \(err)"])
+            throw NSError(domain: NSOSStatusErrorDomain, code: Int(err), userInfo: [NSLocalizedDescriptionKey: String(format: NSLocalizedString("Failed to create aggregate device: %d", comment: ""), err)])
         }
         primaryResources.aggregateDeviceID = aggID
         CrashGuard.trackDevice(aggID)
 
         guard primaryResources.aggregateDeviceID.waitUntilReady(timeout: 2.0) else {
             cleanupPartialActivation()
-            throw NSError(domain: "ProcessTapController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Aggregate device not ready within timeout"])
+            throw NSError(domain: "ProcessTapController", code: -1, userInfo: [NSLocalizedDescriptionKey: NSLocalizedString("Aggregate device not ready within timeout", comment: "")])
         }
 
         logger.debug("Created aggregate device #\(self.primaryResources.aggregateDeviceID)")
@@ -390,13 +390,13 @@ final class ProcessTapController: ProcessTapControlling {
         }
         guard err == noErr else {
             cleanupPartialActivation()
-            throw NSError(domain: NSOSStatusErrorDomain, code: Int(err), userInfo: [NSLocalizedDescriptionKey: "Failed to create IO proc: \(err)"])
+            throw NSError(domain: NSOSStatusErrorDomain, code: Int(err), userInfo: [NSLocalizedDescriptionKey: String(format: NSLocalizedString("Failed to create IO proc: %d", comment: ""), err)])
         }
 
         err = AudioDeviceStart(primaryResources.aggregateDeviceID, primaryResources.deviceProcID)
         guard err == noErr else {
             cleanupPartialActivation()
-            throw NSError(domain: NSOSStatusErrorDomain, code: Int(err), userInfo: [NSLocalizedDescriptionKey: "Failed to start device: \(err)"])
+            throw NSError(domain: NSOSStatusErrorDomain, code: Int(err), userInfo: [NSLocalizedDescriptionKey: String(format: NSLocalizedString("Failed to start device: %d", comment: ""), err)])
         }
 
         _primaryCurrentVolume = _volume

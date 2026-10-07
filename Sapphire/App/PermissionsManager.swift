@@ -81,17 +81,17 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
     private var cancellables = Set<AnyCancellable>()
 
     public let allPermissions: [PermissionItem] = [
-        .init(type: .accessibility, title: "Accessibility", description: "Needed for media key presses, window snapping, and HUDs.", iconName: "figure.wave.circle.fill", iconColor: .purple, category: .required),
-        .init(type: .fullDiskAccess, title: "Full Disk Access", description: "Enables File Shelf, Intelligence file access, and deeper system integrations.", iconName: "folder.badge.gearshape", iconColor: .gray, category: .recommended),
-        .init(type: .screenRecording, title: "Screen Recording", description: "Required for Gemini Live screen sharing, per-app audio capture, live window previews, and the hinge-driven desktop animation.", iconName: "record.circle", iconColor: .orange, category: .recommended),
-        .init(type: .localNetwork, title: "Local Network", description: "Needed to discover and control supported media players on your network.", iconName: "network", iconColor: .cyan, category: .recommended),
-        .init(type: .automation, title: "Automation", description: "Needed to control playback and get track info from Spotify and Music.", iconName: "play.display", iconColor: .green, category: .recommended),
-        .init(type: .notifications, title: "Notifications", description: "Needed to show custom alerts for messages and system events.", iconName: "bell.badge.fill", iconColor: .red, category: .recommended),
-        .init(type: .location, title: "Location", description: "Needed to provide live weather updates for your current location.", iconName: "location.fill", iconColor: .blue, category: .recommended),
-        .init(type: .calendar, title: "Calendar", description: "Needed to show your upcoming events.", iconName: "calendar", iconColor: .red, category: .recommended),
-        .init(type: .bluetooth, title: "Bluetooth", description: "Needed to detect connected devices and their battery levels.", iconName: "ipad.landscape.and.iphone", iconColor: .blue, category: .recommended),
-        .init(type: .reminders, title: "Reminders", description: "Needed to show your upcoming reminders.", iconName: "checklist", iconColor: .orange, category: .optional),
-        .init(type: .focusStatus, title: "Focus Status", description: "Needed to show when a Focus mode is active.", iconName: "moon.fill", iconColor: .indigo, category: .optional)
+        .init(type: .accessibility, title: "Accessibility".local, description: "Needed for media key presses, window snapping, and HUDs.".local, iconName: "figure.wave.circle.fill", iconColor: .purple, category: .required),
+        .init(type: .fullDiskAccess, title: "Full Disk Access".local, description: "Enables File Shelf, Intelligence file access, and deeper system integrations.".local, iconName: "folder.badge.gearshape", iconColor: .gray, category: .recommended),
+        .init(type: .screenRecording, title: "Screen Recording".local, description: "Required for Gemini Live screen sharing, per-app audio capture, live window previews, and the hinge-driven desktop animation.".local, iconName: "record.circle", iconColor: .orange, category: .recommended),
+        .init(type: .localNetwork, title: "Local Network".local, description: "Needed to discover and control supported media players on your network.".local, iconName: "network", iconColor: .cyan, category: .recommended),
+        .init(type: .automation, title: "Automation".local, description: "Needed to control playback and get track info from Spotify and Music.".local, iconName: "play.display", iconColor: .green, category: .recommended),
+        .init(type: .notifications, title: "Notifications".local, description: "Needed to show custom alerts for messages and system events.".local, iconName: "bell.badge.fill", iconColor: .red, category: .recommended),
+        .init(type: .location, title: "Location".local, description: "Needed to provide live weather updates for your current location.".local, iconName: "location.fill", iconColor: .blue, category: .recommended),
+        .init(type: .calendar, title: "Calendar".local, description: "Needed to show your upcoming events.".local, iconName: "calendar", iconColor: .red, category: .recommended),
+        .init(type: .bluetooth, title: "Bluetooth".local, description: "Needed to detect connected devices and their battery levels.".local, iconName: "ipad.landscape.and.iphone", iconColor: .blue, category: .recommended),
+        .init(type: .reminders, title: "Reminders".local, description: "Needed to show your upcoming reminders.".local, iconName: "checklist", iconColor: .orange, category: .optional),
+        .init(type: .focusStatus, title: "Focus Status".local, description: "Needed to show when a Focus mode is active.".local, iconName: "moon.fill", iconColor: .indigo, category: .optional)
     ]
 
     var requiredPermissions: [PermissionItem] { allPermissions.filter { $0.category == .required } }

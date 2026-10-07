@@ -84,7 +84,7 @@ class GlobalShortcutRecorder: ObservableObject {
             }
         )
 
-        window.contentView = NSHostingView(rootView: captureView)
+        window.contentView = NSHostingView(rootView: captureView.environment(\.locale, AppLocalization.locale))
         window.makeKeyAndOrderFront(nil)
         self.recorderWindow = window
     }

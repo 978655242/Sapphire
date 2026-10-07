@@ -25,7 +25,7 @@ class ShortcutsFetcher: ObservableObject {
                 let shortcuts = try await self.loadShortcuts()
                 self.allShortcuts = shortcuts.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
             } catch {
-                self.accessError = "Could not fetch shortcuts. Error: \(error.localizedDescription)"
+                self.accessError = String(localized: "Could not fetch shortcuts. Error: \(error.localizedDescription)")
                 self.allShortcuts = []
             }
             self.isLoading = false

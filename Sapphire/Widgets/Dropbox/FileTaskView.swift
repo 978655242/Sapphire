@@ -426,10 +426,10 @@ private struct UniversalTransferRowView: View {
 
     private var verb: String {
         switch task.sourceType {
-        case .finder: return "Copying"
-        case .archiveExtraction: return "Extracting"
-        case .dmgInstall: return "Installing"
-        case .browserDownload, .manual: return "Downloading"
+        case .finder: return "Copying".local
+        case .archiveExtraction: return "Extracting".local
+        case .dmgInstall: return "Installing".local
+        case .browserDownload, .manual: return "Downloading".local
         }
     }
 
@@ -452,11 +452,11 @@ private struct UniversalTransferRowView: View {
 
     private var subtitle: String {
         let sizeString = ByteFormatter.string(task.currentSize)
-        guard !task.isComplete else { return "Complete (\(sizeString))" }
+        guard !task.isComplete else { return String(localized: "Complete (\(sizeString))") }
 
-        var parts = ["\(verb)..."]
+        var parts = [String(localized: "\(verb)...")]
         if let total = task.totalSize {
-            parts.append("\(sizeString) of \(ByteFormatter.string(total))")
+            parts.append(String(localized: "\(sizeString) of \(ByteFormatter.string(total))"))
         } else {
             parts.append(sizeString)
         }
@@ -468,7 +468,7 @@ private struct UniversalTransferRowView: View {
             totalBytes: task.totalSize,
             bytesPerSecond: task.speed
         ) {
-            parts.append("\(eta) left")
+            parts.append(String(localized: "\(eta) left"))
         }
         return parts.joined(separator: " • ")
     }

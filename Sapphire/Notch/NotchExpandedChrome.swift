@@ -37,11 +37,11 @@ struct NotchExpandedChrome: View {
 
     private var currentViewTitle: String? {
         switch mode {
-        case .multiAudioDeviceAdjust: return "Adjust"
-        case .multiAudioEQ: return "EQ"
-        case .musicDevices: return "Devices"
-        case .musicQueueAndPlaylists: return "Queue & Playlists"
-        case .multiAudio: return "Audio Devices"
+        case .multiAudioDeviceAdjust: return "Adjust".local
+        case .multiAudioEQ: return "EQ".local
+        case .musicDevices: return "Devices".local
+        case .musicQueueAndPlaylists: return "Queue & Playlists".local
+        case .multiAudio: return "Audio Devices".local
         default: return nil
         }
     }
@@ -293,7 +293,7 @@ private struct NotchIntelligenceControls: View {
                     )
 
                 if isHovered {
-                    Text(isLiveRunning ? "Stop" : "Blip")
+                    Text(isLiveRunning ? "Stop".local : "Blip".local)
                         .font(.system(size: NotchConfiguration.geminiButtonTextFontSize, weight: .semibold))
                         .fixedSize()
                         .foregroundColor(.white)
@@ -328,7 +328,7 @@ private struct NotchIntelligenceControls: View {
                     Image(systemName: microphoneManager.isMuted ? "mic.slash.fill" : "mic.fill")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(microphoneManager.isMuted ? .white.opacity(0.85) : .red)
-                    Text(microphoneManager.isMuted ? "Muted" : "Mic")
+                    Text(microphoneManager.isMuted ? "Muted".local : "Mic".local)
                         .font(.system(size: 12, weight: .semibold, design: .rounded))
                         .foregroundColor(.white)
                 }

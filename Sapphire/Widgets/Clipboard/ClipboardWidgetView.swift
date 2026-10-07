@@ -34,13 +34,13 @@ extension ClipboardItemKind {
     var displayName: String {
         switch self {
         case .text:
-            return "Text"
+            return "Text".local
         case .image:
-            return "Image"
+            return "Image".local
         case .file:
-            return "File"
+            return "File".local
         case .folder:
-            return "Folder"
+            return "Folder".local
         }
     }
 }
@@ -50,13 +50,13 @@ struct ClipboardWidgetView: View {
 
     var body: some View {
         NotchMiniListWidget(
-            title: "Clipboard",
+            title: "Clipboard".local,
             systemImage: "list.clipboard",
             tint: .blue,
             gradient: [Color.blue.opacity(0.35), Color.cyan.opacity(0.16)],
             count: clipboardManager.recentItems.count,
             items: Array(clipboardManager.recentItems.prefix(3)),
-            emptyText: "Nothing copied yet"
+            emptyText: "Nothing copied yet".local
         ) { item in
             let spec = item.kind.spec
             if item.isImage {
@@ -73,7 +73,7 @@ struct ClipboardWidgetView: View {
                     .foregroundStyle(spec.color)
                     .frame(width: 14)
             }
-            Text(item.preview)
+            Text(item.isImage ? "Image".local : item.preview)
                 .font(.system(size: 10, weight: .medium, design: .rounded))
                 .foregroundStyle(.primary.opacity(0.9))
                 .lineLimit(1)
@@ -108,10 +108,10 @@ struct ClipboardPlayerView: View {
 
     var body: some View {
         NotchSwipeListPanel(
-            title: "Clipboard",
-            subtitle: "\(clipboardManager.recentItems.count) items",
+            title: "Clipboard".local,
+            subtitle: String(localized: "\(clipboardManager.recentItems.count) items"),
             accent: .blue,
-            searchPlaceholder: "Search clipboard",
+            searchPlaceholder: "Search clipboard".local,
             searchText: $searchText,
             showSearch: $showSearch,
             width: 480,
@@ -131,8 +131,8 @@ struct ClipboardPlayerView: View {
             NotchListEmptyState(
                 systemImage: "list.clipboard",
                 tint: .blue,
-                title: filterImagesOnly ? "No images" : (searchText.isEmpty ? "Clipboard is empty" : "No matches"),
-                message: searchText.isEmpty ? "Copy text or images to build history." : "Try a different search."
+                title: filterImagesOnly ? "No images".local : (searchText.isEmpty ? "Clipboard is empty".local : "No matches".local),
+                message: searchText.isEmpty ? "Copy text or images to build history.".local : "Try a different search.".local
             )
         }
         .onAppear {
@@ -150,7 +150,7 @@ struct ClipboardPlayerView: View {
             thumbnail(for: item)
 
             VStack(alignment: .leading, spacing: 4) {
-                Text(item.preview)
+                Text(item.isImage ? "Image".local : item.preview)
                     .font(.system(size: 12, weight: .medium))
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)

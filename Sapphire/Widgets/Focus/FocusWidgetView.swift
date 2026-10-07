@@ -18,8 +18,8 @@ struct FocusWidgetView: View {
     }
 
     private var phaseLabel: String {
-        if focusManager.isPaused { return "PAUSED" }
-        return focusManager.isFocusBlock ? "FOCUS" : "BREAK"
+        if focusManager.isPaused { return "PAUSED".local }
+        return focusManager.isFocusBlock ? "FOCUS".local : "BREAK".local
     }
 
     private var blockedCount: Int {
@@ -77,7 +77,7 @@ struct FocusWidgetView: View {
                     if focusManager.isSessionActive {
                         FocusWidgetCountdownText(focusManager: focusManager)
                     } else {
-                        Text("Focus")
+                        Text("Focus".local)
                     }
                 }
                 .font(.system(size: 30, weight: .bold, design: .rounded))
@@ -85,13 +85,13 @@ struct FocusWidgetView: View {
                 .lineLimit(1)
                 .animation(.easeInOut(duration: 0.4), value: focusManager.isSessionActive)
 
-                Text(focusManager.isSessionActive ? phaseLabel : "Ready to focus")
+                Text(focusManager.isSessionActive ? phaseLabel : "Ready to focus".local)
                     .font(.headline).fontWeight(.medium).lineLimit(1).minimumScaleFactor(0.7)
                     .foregroundColor(focusManager.isSessionActive ? accent : .secondary)
 
                 Text(focusManager.isSessionActive
-                     ? (blockedCount > 0 ? "Blocking \(blockedCount) distraction\(blockedCount == 1 ? "" : "s")" : "No distractions blocked")
-                     : "\(Int(settings.settings.focusSessionDuration / 60))m · \(FocusSessionManager.format(focusManager.completedToday)) today")
+                     ? (blockedCount > 0 ? String(localized: "Blocking \(blockedCount) distractions") : "No distractions blocked".local)
+                     : String(localized: "\(Int(settings.settings.focusSessionDuration / 60))m · \(FocusSessionManager.format(focusManager.completedToday)) today"))
                     .font(.subheadline).opacity(0.8).lineLimit(1).minimumScaleFactor(0.7)
             }
         }
@@ -106,8 +106,8 @@ struct FocusWidgetView: View {
             CompactInfoRow(
                 iconName: focusManager.isSessionActive ? "square.stack.3d.up.fill" : "checkmark.seal.fill",
                 value: focusManager.isSessionActive
-                    ? "\(focusManager.blocksCompletedThisSession) blocks"
-                    : "\(focusManager.history.count) sessions"
+                    ? String(localized: "\(focusManager.blocksCompletedThisSession) blocks")
+                    : String(localized: "\(focusManager.history.count) sessions")
             )
         }
         .animation(.easeInOut(duration: 0.4), value: focusManager.isSessionActive)
@@ -131,7 +131,7 @@ struct FocusWidgetView: View {
 
     private var streakText: String {
         let s = focusManager.currentStreak
-        return s == 1 ? "1 day streak" : "\(s) day streak"
+        return s == 1 ? "1 day streak".local : String(localized: "\(s) day streak")
     }
 }
 

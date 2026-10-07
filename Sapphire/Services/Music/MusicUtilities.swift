@@ -971,23 +971,23 @@ enum MusicLongPressUI {
 
     static func skipHelp(primary: String, target: MusicLongPressTarget, settings: Settings) -> String {
         if !settings.musicLongPressActionsEnabled {
-            return "\(primary) · hold to seek"
+            return String(localized: "\(primary) · hold to seek")
         }
         let action = settings.resolvedSkipHoldAction(for: target)
         if action == .none {
             return primary
         }
         if action == .seek {
-            return "\(primary) · hold to seek"
+            return String(localized: "\(primary) · hold to seek")
         }
-        return "\(primary) · hold for \(action.displayName)"
+        return String(localized: "\(primary) · hold for \(action.displayName)")
     }
 
     static func accessoryHelp(primary: String, target: MusicLongPressTarget, settings: Settings) -> String {
         guard let action = settings.resolvedAccessoryHoldAction(for: target) else {
             return primary
         }
-        return "\(primary) · hold for \(action.displayName)"
+        return String(localized: "\(primary) · hold for \(action.displayName)")
     }
 }
 

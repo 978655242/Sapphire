@@ -88,7 +88,7 @@ struct MirrorPlayerView: View {
                                 .foregroundStyle(Color.red.opacity(0.9))
                         }
                     } else {
-                        Text(camera.isDenied ? "No access" : (camera.isError ? "Unavailable" : "Camera off"))
+                        Text(camera.isDenied ? "No access".local : (camera.isError ? "Unavailable".local : "Camera off".local))
                             .font(.system(size: 9, weight: .semibold, design: .rounded))
                             .foregroundStyle(.secondary)
                     }
@@ -98,19 +98,19 @@ struct MirrorPlayerView: View {
             Spacer(minLength: 8)
 
             if camera.isLive {
-                iconButton(systemName: "arrow.left.arrow.right", help: "Flip horizontally") {
+                iconButton(systemName: "arrow.left.arrow.right", help: "Flip horizontally".local) {
                     settings.settings.mirrorFlipHorizontally.toggle()
                     camera.updateMirroring(flipHorizontally: settings.settings.mirrorFlipHorizontally)
                 }
 
-                iconButton(systemName: "rotate.right", help: "Rotate camera") {
+                iconButton(systemName: "rotate.right", help: "Rotate camera".local) {
                     settings.settings.mirrorRotationMode = settings.settings.mirrorRotationMode.next
                 }
 
                 stopButton
             }
 
-            iconButton(systemName: "arrow.up.left.and.arrow.down.right", help: "Fullscreen") {
+            iconButton(systemName: "arrow.up.left.and.arrow.down.right", help: "Fullscreen".local) {
                 MirrorFullscreenWindowController.shared.present()
             }
 
@@ -190,7 +190,7 @@ struct MirrorPlayerView: View {
             }
 
             VStack(spacing: 6) {
-                Text(camera.isDenied ? "Camera Access Denied" : (camera.isError ? "Camera Unavailable" : "Camera Off"))
+                Text(camera.isDenied ? "Camera Access Denied".local : (camera.isError ? "Camera Unavailable".local : "Camera Off".local))
                     .font(.system(size: 17, weight: .semibold, design: .rounded))
                 Text(offlineMessage)
                     .font(.system(size: 12))
@@ -231,11 +231,11 @@ struct MirrorPlayerView: View {
 
     private var offlineMessage: String {
         if camera.isDenied {
-            return "Grant camera access in System Settings → Privacy & Security → Camera to use Mirror."
+            return "Grant camera access in System Settings → Privacy & Security → Camera to use Mirror.".local
         } else if camera.isError {
-            return camera.errorMessage ?? "No suitable camera found or camera in use by another app."
+            return camera.errorMessage ?? "No suitable camera found or camera in use by another app.".local
         } else {
-            return "The camera is off. Turn it on to start a live mirror."
+            return "The camera is off. Turn it on to start a live mirror.".local
         }
     }
 }
@@ -287,7 +287,7 @@ struct MirrorFullscreenView: View {
                                 .background(.black.opacity(0.5), in: Circle())
                         }
                         .buttonStyle(.plain)
-                        .help("Flip horizontally")
+                        .help("Flip horizontally".local)
 
                         Button {
                             settings.settings.mirrorRotationMode = settings.settings.mirrorRotationMode.next
@@ -299,7 +299,7 @@ struct MirrorFullscreenView: View {
                                 .background(.black.opacity(0.5), in: Circle())
                         }
                         .buttonStyle(.plain)
-                        .help("Rotate camera")
+                        .help("Rotate camera".local)
 
                         Button {
                             camera.stop()
@@ -332,7 +332,7 @@ struct MirrorFullscreenView: View {
                 Spacer()
 
                 if !camera.isLive {
-                    Text(camera.isDenied ? "Camera access denied" : "Camera off")
+                    Text(camera.isDenied ? "Camera access denied".local : "Camera off".local)
                         .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .foregroundStyle(.white.opacity(0.7))
                         .padding(.bottom, 40)
@@ -375,6 +375,7 @@ final class MirrorFullscreenWindowController {
         let hosting = NSHostingView(
             rootView: MirrorFullscreenView()
                 .environmentObject(SettingsModel.shared)
+                .environment(\.locale, AppLocalization.locale)
         )
         window.contentView = hosting
 

@@ -26,29 +26,29 @@ enum SapphireStandardMenu {
         let appMenu = NSMenu()
         appMenuItem.submenu = appMenu
         appMenu.addItem(
-            withTitle: "Quit Sapphire",
+            withTitle: "Quit Sapphire".local,
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )
 
-        let editMenuItem = NSMenuItem(title: "Edit", action: nil, keyEquivalent: "")
+        let editMenuItem = NSMenuItem(title: "Edit".local, action: nil, keyEquivalent: "")
         mainMenu.addItem(editMenuItem)
-        let editMenu = NSMenu(title: "Edit")
+        let editMenu = NSMenu(title: "Edit".local)
         editMenuItem.submenu = editMenu
 
-        editMenu.addItem(withTitle: "Undo", action: Selector("undo:"), keyEquivalent: "z")
-        editMenu.addItem(withTitle: "Redo", action: Selector("redo:"), keyEquivalent: "Z")
+        editMenu.addItem(withTitle: "Undo".local, action: Selector("undo:"), keyEquivalent: "z")
+        editMenu.addItem(withTitle: "Redo".local, action: Selector("redo:"), keyEquivalent: "Z")
         editMenu.addItem(.separator())
-        editMenu.addItem(withTitle: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x")
-        editMenu.addItem(withTitle: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c")
-        editMenu.addItem(withTitle: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v")
-        editMenu.addItem(withTitle: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+        editMenu.addItem(withTitle: "Cut".local, action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+        editMenu.addItem(withTitle: "Copy".local, action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+        editMenu.addItem(withTitle: "Paste".local, action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+        editMenu.addItem(withTitle: "Select All".local, action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
 
         NSApp.mainMenu = mainMenu
     }
 
     private static var hasEditMenu: Bool {
-        NSApp.mainMenu?.items.contains { $0.title == "Edit" } == true
+        NSApp.mainMenu?.items.contains { $0.title == "Edit".local } == true
     }
 }
 
@@ -241,11 +241,11 @@ enum HelperAlertPresenter {
         host.makeKeyAndOrderFront(nil)
 
         let alert = NSAlert()
-        alert.messageText = messageText
-        alert.informativeText = informativeText
+        alert.messageText = messageText.local
+        alert.informativeText = informativeText.local
         alert.alertStyle = alertStyle
         for title in buttonTitles {
-            alert.addButton(withTitle: title)
+            alert.addButton(withTitle: title.local)
         }
 
         activeModalCount += 1
