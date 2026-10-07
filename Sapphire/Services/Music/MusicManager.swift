@@ -881,6 +881,14 @@ class MusicManager: ObservableObject {
         isSpotifyDisplayedInUI && lastKnownBundleID != "com.apple.Music"
     }
 
+    var musicContentSource: MusicContentSource {
+        MusicContentSource.resolve(
+            bundleIdentifier: lastKnownBundleID,
+            spotifySelected: isSpotifySourceActive || isSpotifyLiveSourceSelected,
+            phoneSelected: isPhoneMediaSourceSelected
+        )
+    }
+
     var isSpotifyPausedWithNoSystemMediaPlaying: Bool {
         guard isSpotifySourceActive || isSpotifyLiveSourceSelected else { return false }
         guard !isPlaying else { return false }

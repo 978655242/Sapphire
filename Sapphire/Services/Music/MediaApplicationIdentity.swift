@@ -21,3 +21,24 @@ enum MediaApplicationIdentity {
         }
     }
 }
+
+enum MusicContentSource: Hashable {
+    case system, spotify, appleMusic
+
+    static func resolve(
+        bundleIdentifier: String?,
+        spotifySelected: Bool,
+        phoneSelected: Bool
+    ) -> MusicContentSource {
+        guard !phoneSelected else { return .system }
+        if spotifySelected { return .spotify }
+        if bundleIdentifier == "com.apple.Music" { return .appleMusic }
+        return .system
+    }
+
+    var supportsLibrary: Bool { self != .system }
+
+    func requiresSpotifyLogin(authenticated: Bool) -> Bool {
+        self == .spotify && !authenticated
+    }
+}

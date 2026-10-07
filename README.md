@@ -95,6 +95,7 @@ Translations use Apple's `Localizable.xcstrings` and `InfoPlist.xcstrings` catal
   <div style="border: 1px solid #30363d; border-radius: 8px; padding: 16px; width: 300px; background-color: #1c1c1e;">
     <h3 style="margin-top: 0;">Music</h3>
     <p>View now playing media on the notch with additional information and controls when the now playing media is expanded, and more.</p>
+    <p>Library and queue integration is available for Spotify and Apple Music. Spotify login is required only for Spotify. Other system players, including NetEase Cloud Music, use system playback controls; clicking a track opens its source app instead of Spotify's library. Unsupported playlist and queue controls are hidden.</p>
   </div>
 
   <div style="border: 1px solid #30363d; border-radius: 8px; padding: 16px; width: 300px; background-color: #1c1c1e;">

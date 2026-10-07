@@ -80,9 +80,16 @@ extension EnvironmentValues {
 // MARK: - Main View Container
 struct LockScreenMainWidgetContainerView: View {
     @EnvironmentObject var settings: SettingsModel
+    @EnvironmentObject private var musicManager: MusicManager
     @StateObject private var navigationManager = LockScreenNavigationManager()
     @State private var maxMainWidgetHeight: CGFloat = 0
     @State private var dummyStack: [NotchWidgetMode] = []
+    private var isSpotifyAuthenticated: Bool {
+        musicManager.isPrivateAPIAuthenticated || musicManager.isOfficialAPIAuthenticated
+    }
+    private var requiresSpotifyLogin: Bool {
+        musicManager.musicContentSource.requiresSpotifyLogin(authenticated: isSpotifyAuthenticated)
+    }
 
     var body: some View {
         HStack(alignment: .top, spacing: LockScreenConfiguration.widgetSpacing) {
@@ -102,6 +109,18 @@ struct LockScreenMainWidgetContainerView: View {
         .environment(\.lockScreenWidgetHeight, maxMainWidgetHeight > 0 ? maxMainWidgetHeight : nil)
         .environmentObject(navigationManager)
         .id("main-widget-\(navigationManager.currentView)")
+        .onAppear { normalizeMusicNavigation() }
+        .onChange(of: musicManager.musicContentSource) { _, _ in
+            switch navigationManager.currentView {
+            case .queueAndPlaylists, .playlistDetail, .loginPrompt:
+                navigationManager.viewStack = [.player]
+            case .devices, .lyrics:
+                navigationManager.viewStack = [.player, navigationManager.currentView]
+            case .player:
+                navigationManager.viewStack = [.player]
+            }
+        }
+        .onChange(of: isSpotifyAuthenticated) { _, _ in normalizeMusicNavigation() }
     }
 
     @ViewBuilder
@@ -147,27 +166,44 @@ struct LockScreenMainWidgetContainerView: View {
             case .player:
                 LockScreenView()
             case .queueAndPlaylists:
-                LockScreenPaddedBackground {
-                    ZStack(alignment: .topLeading) {
-                        QueueAndPlaylistsView(navigationStack: $dummyStack, isLockScreenMode: true)
-                        LockScreenBackButton()
-                            .padding(.top, 52)
-                            .zIndex(10)
+                if musicManager.musicContentSource.supportsLibrary {
+                    LockScreenPaddedBackground {
+                        ZStack(alignment: .topLeading) {
+                            if requiresSpotifyLogin {
+                                LoginPromptView(navigationStack: $dummyStack)
+                            } else {
+                                QueueAndPlaylistsView(navigationStack: $dummyStack, isLockScreenMode: true)
+                            }
+                            LockScreenBackButton()
+                                .padding(.top, 52)
+                                .zIndex(10)
+                        }
                     }
+                } else {
+                    LockScreenView()
                 }
             case .playlistDetail(let playlist):
-                LockScreenPaddedBackground {
-                    ZStack(alignment: .topLeading) {
-                        PlaylistView(playlist: playlist, isLockScreenMode: true)
-                        LockScreenBackButton()
-                            .padding(.top, 52)
-                            .zIndex(10)
+                if isPlaylistAvailable(playlist) {
+                    LockScreenPaddedBackground {
+                        ZStack(alignment: .topLeading) {
+                            PlaylistView(playlist: playlist, isLockScreenMode: true)
+                            LockScreenBackButton()
+                                .padding(.top, 52)
+                                .zIndex(10)
+                        }
                     }
+                } else {
+                    LockScreenView()
                 }
             case .devices:
                 LockScreenPaddedBackground {
                     ZStack(alignment: .topLeading) {
-                        QueueAndPlaylistsView(navigationStack: $dummyStack, isLockScreenMode: true)
+                        DevicesView(
+                            navigationStack: $dummyStack,
+                            audioHubSection: .constant(.system),
+                            isLockScreenMode: true,
+                            preferSystemTab: musicManager.musicContentSource != .spotify
+                        )
                         LockScreenBackButton()
                             .padding(.top, 52)
                             .zIndex(10)
@@ -183,15 +219,45 @@ struct LockScreenMainWidgetContainerView: View {
                     }
                 }
             case .loginPrompt:
-                LockScreenPaddedBackground {
-                    ZStack(alignment: .topLeading) {
-                        LoginPromptView(navigationStack: $dummyStack)
-                        LockScreenBackButton()
-                            .padding(.top, 52)
-                            .zIndex(10)
+                if requiresSpotifyLogin {
+                    LockScreenPaddedBackground {
+                        ZStack(alignment: .topLeading) {
+                            LoginPromptView(navigationStack: $dummyStack)
+                            LockScreenBackButton()
+                                .padding(.top, 52)
+                                .zIndex(10)
+                        }
                     }
+                } else {
+                    LockScreenView()
                 }
             }
+        }
+    }
+
+    private func isPlaylistAvailable(_ playlist: SpotifyPlaylist) -> Bool {
+        switch musicManager.musicContentSource {
+        case .appleMusic:
+            return !playlist.uri.hasPrefix("spotify:")
+        case .spotify:
+            return isSpotifyAuthenticated && playlist.uri.hasPrefix("spotify:")
+        case .system:
+            return false
+        }
+    }
+
+    private func normalizeMusicNavigation() {
+        switch navigationManager.currentView {
+        case .queueAndPlaylists:
+            if !musicManager.musicContentSource.supportsLibrary {
+                navigationManager.viewStack = [.player]
+            }
+        case .playlistDetail(let playlist):
+            if !isPlaylistAvailable(playlist) { navigationManager.viewStack = [.player] }
+        case .loginPrompt:
+            if !requiresSpotifyLogin { navigationManager.viewStack = [.player] }
+        default:
+            break
         }
     }
 

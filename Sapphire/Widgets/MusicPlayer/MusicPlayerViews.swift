@@ -136,8 +136,7 @@ struct MusicPlayerView: View {
     private var holdFeedbackButtonID: String? { holdFeedback.buttonID }
 
     private var isSpotifyOrAppleMusic: Bool {
-        let bundleID = musicManager.lastKnownBundleID
-        return bundleID == "com.spotify.client" || bundleID == "com.apple.Music"
+        musicManager.musicContentSource.supportsLibrary
     }
 
     private var shouldShowAirPlay: Bool {
@@ -152,7 +151,7 @@ struct MusicPlayerView: View {
             case .like: return isSpotifyOrAppleMusic && settings.settings.musicLikeButtonEnabled
             case .shuffle: return isSpotifyOrAppleMusic && settings.settings.musicShuffleButtonEnabled
             case .repeat: return isSpotifyOrAppleMusic && settings.settings.musicRepeatButtonEnabled
-            case .playlists: return settings.settings.musicPlaylistsButtonEnabled
+            case .playlists: return isSpotifyOrAppleMusic && settings.settings.musicPlaylistsButtonEnabled
             case .devices: return settings.settings.musicDevicesButtonEnabled
             }
         }
@@ -320,7 +319,13 @@ struct MusicPlayerView: View {
                     }
                 }
 
-                Button(action: { handleButtonTap(for: .musicQueueAndPlaylists) }) {
+                Button {
+                    if musicManager.musicContentSource.supportsLibrary {
+                        handleButtonTap(for: .musicQueueAndPlaylists)
+                    } else {
+                        musicManager.openInSourceApp()
+                    }
+                } label: {
                     VStack(alignment: .leading, spacing: 3) {
                         HStack(spacing: 6) {
                             Text(musicManager.title ?? "Title".local)
@@ -566,8 +571,11 @@ struct MusicPlayerView: View {
     }
 
     private func handleButtonTap(for targetMode: NotchWidgetMode) {
+        let requiresSpotifyLogin = musicManager.musicContentSource.requiresSpotifyLogin(
+            authenticated: musicManager.isPrivateAPIAuthenticated || musicManager.isOfficialAPIAuthenticated
+        )
         if let onQueueAction, targetMode == .musicQueueAndPlaylists {
-            if !musicManager.isPrivateAPIAuthenticated && !musicManager.isOfficialAPIAuthenticated && musicManager.lastKnownBundleID != "com.apple.Music" {
+            if requiresSpotifyLogin {
                 onLoginAction?()
                 return
             }
@@ -593,12 +601,12 @@ struct MusicPlayerView: View {
             case .musicLoginPrompt: destination = .loginPrompt
             default: return
             }
-            if !musicManager.isPrivateAPIAuthenticated && !musicManager.isOfficialAPIAuthenticated && musicManager.lastKnownBundleID != "com.apple.Music" {
+            if requiresSpotifyLogin {
                 if targetMode != .musicDevices { navigationManager.navigateTo(.loginPrompt); return }
             }
             navigationManager.navigateTo(destination)
         } else {
-            if !musicManager.isPrivateAPIAuthenticated && !musicManager.isOfficialAPIAuthenticated && musicManager.lastKnownBundleID != "com.apple.Music" {
+            if requiresSpotifyLogin {
                 if targetMode != .musicDevices { navigationStack.append(.musicLoginPrompt); return }
             }
             navigationStack.append(targetMode)

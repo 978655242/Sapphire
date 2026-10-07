@@ -92,6 +92,7 @@ final class NotchDragLocationState: ObservableObject {
 
 struct NotchWidgetView: View {
     @Environment(\.navigationStack) var navigationStack
+    @EnvironmentObject private var musicManager: MusicManager
     @Environment(\.activeDropZone) var activeDropZone
     @Environment(\.onActiveSnapZoneChange) var onActiveSnapZoneChange
     @Environment(\.onDropZoneFramesChange) var onDropZoneFramesChange
@@ -202,19 +203,37 @@ struct NotchWidgetView: View {
         case .mirrorPlayer:
             MirrorPlayerView()
         case .musicLoginPrompt:
-            LoginPromptView(navigationStack: navigationStack)
+            if musicManager.musicContentSource.requiresSpotifyLogin(
+                authenticated: musicManager.isPrivateAPIAuthenticated || musicManager.isOfficialAPIAuthenticated
+            ) {
+                LoginPromptView(navigationStack: navigationStack)
+            } else {
+                MusicPlayerView(navigationStack: navigationStack)
+            }
         case .musicQueueAndPlaylists:
             QueueAndPlaylistsView(navigationStack: navigationStack)
         case .musicDevices:
-            QueueAndPlaylistsView(navigationStack: navigationStack)
+            QueueAndPlaylistsView(navigationStack: navigationStack, openAudio: true)
         case .musicLyrics:
             LyricsView()
         case .musicPlaylistDetail(let playlist):
-            PlaylistView(playlist: playlist)
+            if musicManager.musicContentSource.supportsLibrary {
+                PlaylistView(playlist: playlist)
+            } else {
+                MusicPlayerView(navigationStack: navigationStack)
+            }
         case .musicArtistDetail(let uri, let name):
-            SpotifyArtistDetailView(uri: uri, name: name, navigationStack: navigationStack)
+            if musicManager.musicContentSource == .spotify {
+                SpotifyArtistDetailView(uri: uri, name: name, navigationStack: navigationStack)
+            } else {
+                MusicPlayerView(navigationStack: navigationStack)
+            }
         case .musicAlbumDetail(let uri, let name):
-            SpotifyAlbumDetailView(uri: uri, name: name, navigationStack: navigationStack)
+            if musicManager.musicContentSource == .spotify {
+                SpotifyAlbumDetailView(uri: uri, name: name, navigationStack: navigationStack)
+            } else {
+                MusicPlayerView(navigationStack: navigationStack)
+            }
         case .nearDrop:
             FileTaskView(navigationStack: navigationStack)
         case .weatherPlayer:

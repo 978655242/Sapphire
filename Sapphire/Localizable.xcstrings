@@ -40036,6 +40036,23 @@
         }
       }
     },
+    "Playlists and queues aren't available for this music source.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playlists and queues aren't available for this music source."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "此音乐来源不支持播放列表和队列。"
+          }
+        }
+      }
+    },
     "Playlists sorted by Spotify": {
       "extractionState": "manual",
       "localizations": {

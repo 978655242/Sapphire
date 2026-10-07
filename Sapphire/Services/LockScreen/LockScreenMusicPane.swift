@@ -90,11 +90,19 @@ struct LockScreenFullScreenMusicPane: View {
     @State private var appleMusicQueueTracks: [AppleMusicManager.QueueTrack] = []
     @Namespace private var tabNamespace
     private var screenSize: CGSize { NSScreen.main?.frame.size ?? CGSize(width: 1440, height: 900) }
+    private var isSpotifyAuthenticated: Bool {
+        musicManager.isPrivateAPIAuthenticated || musicManager.isOfficialAPIAuthenticated
+    }
+    private var canLoadSpotifyContent: Bool {
+        musicManager.musicContentSource == .spotify && isSpotifyAuthenticated
+    }
 
     var body: some View {
         ZStack {
             if controller.isPresented { paneContent.transition(.opacity) }
-            if let overlay = controller.overlay { overlayPanel(for: overlay).transition(.move(edge: .bottom).combined(with: .opacity)) }
+            if let overlay = controller.overlay, isOverlayAvailable(overlay) {
+                overlayPanel(for: overlay).transition(.move(edge: .bottom).combined(with: .opacity))
+            }
         }
         .frame(width: screenSize.width, height: screenSize.height)
         .opacity(controller.isPresented ? 1 : 0)
@@ -103,13 +111,35 @@ struct LockScreenFullScreenMusicPane: View {
         .animation(.spring(response: 0.5, dampingFraction: 0.82), value: controller.isPresented)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: controller.selectedTab)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: controller.overlay)
-        .onAppear { isAnimatingIn = controller.isPresented }
+        .onAppear {
+            isAnimatingIn = controller.isPresented
+            normalizeSourceNavigation()
+        }
         .onChange(of: controller.isPresented) { _, presented in
             isAnimatingIn = false
             if presented { withAnimation(.spring(response: 0.52, dampingFraction: 0.76).delay(0.04)) { isAnimatingIn = true } }
         }
         .onChange(of: musicManager.isPlaying) { _, playing in
             if !playing && (musicManager.title?.isEmpty ?? true) { controller.close() }
+        }
+        .onChange(of: musicManager.musicContentSource) { _, _ in
+            spotifyQueue = nil
+            appleMusicQueueTracks = []
+            controller.dismissOverlay()
+            normalizeSourceNavigation()
+            if controller.isPresented {
+                Task {
+                    if canLoadSpotifyContent {
+                        await musicManager.ensureSpotifyPlayerExtrasLoaded(force: true)
+                    }
+                    await refreshQueueData()
+                    await refreshPlaylistData()
+                }
+            }
+        }
+        .onChange(of: isSpotifyAuthenticated) { _, authenticated in
+            if !authenticated { spotifyQueue = nil }
+            normalizeSourceNavigation()
         }
     }
 
@@ -145,7 +175,9 @@ struct LockScreenFullScreenMusicPane: View {
             Task { await musicManager.setLyricsDetailOpen(controller.isLyricsView) }
             desktopWallpaper = Self.loadDesktopWallpaper()
             Task {
-                await musicManager.ensureSpotifyPlayerExtrasLoaded(force: true)
+                if canLoadSpotifyContent {
+                    await musicManager.ensureSpotifyPlayerExtrasLoaded(force: true)
+                }
                 await refreshQueueData()
                 await refreshPlaylistData()
             }
@@ -153,7 +185,7 @@ struct LockScreenFullScreenMusicPane: View {
         .onChange(of: controller.selectedTab) { _, tab in
             Task {
                 await musicManager.setLyricsDetailOpen(tab == .lyrics)
-                if tab == .artist || tab == .playlists {
+                if canLoadSpotifyContent && (tab == .artist || tab == .playlists) {
                     await musicManager.ensureSpotifyPlayerExtrasLoaded(force: false)
                 }
                 if tab == .queue { await refreshQueueData() }
@@ -163,21 +195,48 @@ struct LockScreenFullScreenMusicPane: View {
         .onDisappear { Task { await musicManager.setLyricsDetailOpen(false) } }
     }
 
-    private func refreshQueueData() async {
-        if musicManager.lastKnownBundleID == "com.apple.Music" {
-            appleMusicQueueTracks = await musicManager.appleMusic.fetchUpNextTracks()
-        } else if musicManager.isPrivateAPIAuthenticated {
-            await musicManager.spotifyPrivateAPI.refreshQueueForUI()
-            if spotifyQueue == nil || spotifyQueue?.queue.isEmpty == true {
-                spotifyQueue = await musicManager.spotifyOfficialAPI.fetchQueue()
+    private func normalizeSourceNavigation() {
+        if !visibleTabs.contains(controller.selectedTab) {
+            controller.selectTab(.nowPlaying)
+        }
+        if let overlay = controller.overlay, !isOverlayAvailable(overlay) {
+            controller.dismissOverlay()
+        }
+    }
+
+    private func isOverlayAvailable(_ overlay: LockScreenMusicPaneOverlay) -> Bool {
+        switch overlay {
+        case .playlistDetail(let playlist):
+            if musicManager.musicContentSource == .appleMusic {
+                return !playlist.uri.hasPrefix("spotify:")
             }
-        } else if musicManager.isOfficialAPIAuthenticated {
-            spotifyQueue = await musicManager.spotifyOfficialAPI.fetchQueue()
+            return canLoadSpotifyContent && playlist.uri.hasPrefix("spotify:")
+        case .loginPrompt:
+            return musicManager.musicContentSource.requiresSpotifyLogin(authenticated: isSpotifyAuthenticated)
+        }
+    }
+
+    private func refreshQueueData() async {
+        let source = musicManager.musicContentSource
+        if source == .appleMusic {
+            let tracks = await musicManager.appleMusic.fetchUpNextTracks()
+            guard musicManager.musicContentSource == source else { return }
+            appleMusicQueueTracks = tracks
+        } else if canLoadSpotifyContent {
+            if musicManager.isPrivateAPIAuthenticated {
+                await musicManager.spotifyPrivateAPI.refreshQueueForUI()
+                guard canLoadSpotifyContent else { return }
+                if spotifyQueue != nil && spotifyQueue?.queue.isEmpty == false { return }
+            }
+            guard canLoadSpotifyContent else { return }
+            let queue = await musicManager.spotifyOfficialAPI.fetchQueue()
+            guard canLoadSpotifyContent else { return }
+            spotifyQueue = queue
         }
     }
 
     private func refreshPlaylistData() async {
-        if musicManager.lastKnownBundleID == "com.apple.Music" { return }
+        guard canLoadSpotifyContent else { return }
         if musicManager.isPrivateAPIAuthenticated, musicManager.spotifyPrivateAPI.nativePlaylists.isEmpty {
             await musicManager.spotifyPrivateAPI.fetchUserLibrary()
         }
@@ -264,12 +323,13 @@ struct LockScreenFullScreenMusicPane: View {
     }
 
     private var visibleTabs: [LockScreenMusicTab] {
-        let isSpotify = musicManager.isSpotifyLiveSourceSelected || musicManager.isSpotifySourceActive
-        let hasArtist = isSpotify && musicManager.spotifyPrivateAPI.nowPlayingArtist != nil
+        let hasArtist = canLoadSpotifyContent && musicManager.spotifyPrivateAPI.nowPlayingArtist != nil
         var tabs: [LockScreenMusicTab] = [.nowPlaying]
         if hasArtist { tabs.append(.artist) }
-        tabs.append(.playlists)
-        tabs.append(.queue)
+        if musicManager.musicContentSource.supportsLibrary {
+            tabs.append(.playlists)
+            tabs.append(.queue)
+        }
         tabs.append(.devices)
         tabs.append(.lyrics)
         return tabs
@@ -282,9 +342,15 @@ struct LockScreenFullScreenMusicPane: View {
         ZStack {
             switch controller.selectedTab {
             case .nowPlaying: nowPlayingTab
-            case .artist: artistTab
-            case .playlists: playlistsTab
-            case .queue: queueTab
+            case .artist:
+                if canLoadSpotifyContent { artistTab }
+                else { nowPlayingTab }
+            case .playlists:
+                if musicManager.musicContentSource.supportsLibrary { playlistsTab }
+                else { nowPlayingTab }
+            case .queue:
+                if musicManager.musicContentSource.supportsLibrary { queueTab }
+                else { nowPlayingTab }
             case .devices: devicesTab
             case .lyrics: lyricsTab
             }
@@ -295,14 +361,14 @@ struct LockScreenFullScreenMusicPane: View {
     // MARK: - Overview Tab (shows everything)
 
     private var nowPlayingTab: some View {
-        let isSpotify = musicManager.isSpotifyLiveSourceSelected || musicManager.isSpotifySourceActive
+        let isSpotify = canLoadSpotifyContent
         let api = musicManager.spotifyPrivateAPI
-        let artist = api.nowPlayingArtist
-        let concerts = api.artistConcerts
-        let relatedTracks = api.relatedTracks
-        let similarAlbums = api.similarAlbums
-        let nativePlaylists = musicManager.spotifyPrivateAPI.nativePlaylists
-        let queue = spotifyQueue?.queue ?? []
+        let artist = isSpotify ? api.nowPlayingArtist : nil
+        let concerts = isSpotify ? api.artistConcerts : []
+        let relatedTracks = isSpotify ? api.relatedTracks : []
+        let similarAlbums = isSpotify ? api.similarAlbums : []
+        let nativePlaylists = isSpotify ? api.nativePlaylists : []
+        let queue = isSpotify ? spotifyQueue?.queue ?? [] : []
 
         return ScrollView(showsIndicators: false) {
             LazyVStack(alignment: .leading, spacing: 28) {
@@ -332,7 +398,7 @@ struct LockScreenFullScreenMusicPane: View {
                     .frame(maxWidth: 440)
 
                     HStack(spacing: 8) {
-                        if let popularity = musicManager.popularity ?? musicManager.fetchedSpotifyPopularity {
+                        if isSpotify, let popularity = musicManager.popularity ?? musicManager.fetchedSpotifyPopularity {
                             statPill(icon: "chart.bar.fill", label: "Popularity", value: "\(popularity)/100", color: musicManager.accentColor)
                         }
                         if musicManager.totalDuration > 0 {
@@ -348,6 +414,7 @@ struct LockScreenFullScreenMusicPane: View {
                 .frame(maxWidth: .infinity)
                 .padding(.bottom, 8)
 
+                if isSpotify {
                 HStack(alignment: .top, spacing: 24) {
                     VStack(alignment: .leading, spacing: 24) {
                         if let artist {
@@ -562,6 +629,7 @@ struct LockScreenFullScreenMusicPane: View {
                         }
                     }
                     .frame(maxWidth: .infinity)
+                }
                 }
             }
             .padding(.horizontal, 56)
@@ -935,15 +1003,17 @@ struct LockScreenFullScreenMusicPane: View {
     // MARK: - Playlists Tab
 
     private var playlistsTab: some View {
-        let isAppleMusic = musicManager.lastKnownBundleID == "com.apple.Music"
+        let isAppleMusic = musicManager.musicContentSource == .appleMusic
         let playlists: [SpotifyPlaylist] = {
             if isAppleMusic { return musicManager.appleMusic.fetchPlaylists() }
-            let native = musicManager.spotifyPrivateAPI.nativePlaylists
-            return native.isEmpty ? [] : native
+            guard canLoadSpotifyContent else { return [] }
+            return musicManager.spotifyPrivateAPI.nativePlaylists
         }()
 
         return Group {
-            if playlists.isEmpty {
+            if musicManager.musicContentSource.requiresSpotifyLogin(authenticated: isSpotifyAuthenticated) {
+                emptyState("Connect Spotify")
+            } else if playlists.isEmpty {
                 emptyState("No playlists found")
             } else {
                 ScrollView(showsIndicators: false) {
@@ -993,16 +1063,16 @@ struct LockScreenFullScreenMusicPane: View {
     // MARK: - Queue Tab
 
     private var queueTab: some View {
-        let isAppleMusic = musicManager.lastKnownBundleID == "com.apple.Music"
+        let isAppleMusic = musicManager.musicContentSource == .appleMusic
         return Group {
             if isAppleMusic {
                 appleMusicQueueContent
+            } else if canLoadSpotifyContent {
+                spotifyQueueContent
+            } else if musicManager.musicContentSource.requiresSpotifyLogin(authenticated: isSpotifyAuthenticated) {
+                emptyState("Sign in to Spotify to see your queue")
             } else {
-                if musicManager.isPrivateAPIAuthenticated || musicManager.isOfficialAPIAuthenticated {
-                    spotifyQueueContent
-                } else {
-                    emptyState("Sign in to Spotify to see your queue")
-                }
+                nowPlayingTab
             }
         }
     }
@@ -1104,14 +1174,12 @@ struct LockScreenFullScreenMusicPane: View {
     // MARK: - Devices Tab
 
     private var devicesTab: some View {
-        let isSpotify = musicManager.isSpotifyLiveSourceSelected || musicManager.isSpotifySourceActive
-        let isAppleMusic = musicManager.lastKnownBundleID == "com.apple.Music"
+        let isSpotify = canLoadSpotifyContent
         let devices: [SpotifyNativeDevice] = isSpotify ? musicManager.spotifyPrivateAPI.devices : []
         let activeID = musicManager.spotifyPrivateAPI.activePlayerDeviceID
-        let isLoggedIn = musicManager.isPrivateAPIAuthenticated || musicManager.isOfficialAPIAuthenticated
 
         return Group {
-            if isAppleMusic || (!isLoggedIn && !isSpotify) || devices.isEmpty {
+            if !isSpotify || devices.isEmpty {
                 DevicesView(
                     navigationStack: $dummyNavigationStack,
                     audioHubSection: .constant(.system),
