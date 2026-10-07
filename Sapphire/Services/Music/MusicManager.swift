@@ -3025,7 +3025,10 @@ class MusicManager: ObservableObject {
         }
     }
 
+    private static let showsSimplifiedChineseLyrics = AppLocalization.locale.language.script == .hanSimplified
+
     private func replaceLyrics(_ newLyrics: [LyricLine], preservePosition: Bool = false) {
+        let newLyrics = Self.showsSimplifiedChineseLyrics ? newLyrics.convertedToSimplifiedChinese() : newLyrics
         lyrics = newLyrics
         if preservePosition, let idx = currentLyricIndex, newLyrics.indices.contains(idx) {
             let line = newLyrics[idx]

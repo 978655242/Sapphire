@@ -431,6 +431,49 @@ struct LyricLine: Identifiable, Hashable {
     }
 }
 
+extension Array where Element == LyricLine {
+    /// Lyrics sources often carry only Traditional Chinese. IDs and timing are kept
+    /// so playback position, word fill and generated word timing still line up.
+    func convertedToSimplifiedChinese() -> [LyricLine] {
+        // Japanese kanji would be mangled (長い → 长い); kana marks the whole song as Japanese.
+        guard !contains(where: { $0.text.containsKana }) else { return self }
+        return map { line in
+            let convertedWords = line.words.map(\.convertedToSimplifiedChinese)
+            // Converting the line separately could break `words.joined() == text`.
+            let convertedText = line.hasReconstructibleWordTiming
+                ? convertedWords.map(\.text).joined()
+                : line.text.simplifiedChinese
+            return LyricLine(
+                id: line.id,
+                text: convertedText,
+                timestamp: line.timestamp,
+                endTimestamp: line.endTimestamp,
+                words: convertedWords,
+                translatedText: line.translatedText,
+                background: line.background.map(\.convertedToSimplifiedChinese),
+                agent: line.agent,
+                songPart: line.songPart
+            )
+        }
+    }
+}
+
+private extension LyricWord {
+    var convertedToSimplifiedChinese: LyricWord {
+        LyricWord(id: id, text: text.simplifiedChinese, timestamp: timestamp, endTimestamp: endTimestamp)
+    }
+}
+
+private extension String {
+    var simplifiedChinese: String {
+        applyingTransform(StringTransform("Hant-Hans"), reverse: false) ?? self
+    }
+
+    var containsKana: Bool {
+        unicodeScalars.contains { (0x3040...0x30FF).contains($0.value) }
+    }
+}
+
 enum LyricsTimeline {
     static func activeIndices(
         in lyrics: [LyricLine],
