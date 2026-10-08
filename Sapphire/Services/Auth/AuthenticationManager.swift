@@ -92,7 +92,7 @@ class AuthenticationManager: NSObject, ObservableObject, BLEDelegate {
         self.ble.delegate = self
         self.selectedDeviceID = settings.settings.bluetoothUnlockDeviceID
         self.isEnabled = settings.settings.bluetoothUnlockEnabled
-        self.isPasswordSet = KeychainManager.shared.load(for: passwordAccount) != nil
+        self.isPasswordSet = KeychainManager.shared.contains(for: passwordAccount)
         setupBindings()
         setupSettingsObserver()
         fetchRegisteredFaces()

@@ -7,6 +7,7 @@
 
 import Foundation
 import Security
+import LocalAuthentication
 
 class KeychainManager {
     static let shared = KeychainManager()
@@ -29,6 +30,23 @@ class KeychainManager {
         }
 
         return true
+    }
+
+    func contains(for account: String) -> Bool {
+        // ponytail: startup checks metadata, never decrypts a password or opens a consent prompt.
+        let context = LAContext()
+        context.interactionNotAllowed = true
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock,
+            kSecAttrSynchronizable as String: false,
+            kSecReturnAttributes as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne,
+            kSecUseAuthenticationContext as String: context
+        ]
+        return SecItemCopyMatching(query as CFDictionary, nil) == errSecSuccess
     }
 
     func load(for account: String) -> Data? {

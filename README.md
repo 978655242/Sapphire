@@ -38,6 +38,8 @@ This local developer fork uses `com.yuxi.sapphire.local` and its own helper/widg
 
 macOS privacy permissions belong to an application's signing identity, not its display name. An enabled `Sapphire` entry for the official `com.cshariq.sapphire` release does not grant Accessibility or other permissions to `com.yuxi.sapphire.local`. Install the local build at its final path before granting its permissions; existing official-release consent remains untouched.
 
+Startup checks whether an unlock-password record exists using a noninteractive Keychain metadata query, without decrypting the password. Actual password verification and unlock operations keep their normal credential checks; existing credentials are not removed or migrated.
+
 The app and widget use the same signing-team-prefixed macOS app group, resolved from `SapphireAppGroupIdentifier` in their built bundles. Use a genuine development identity and matching provisioning profiles; retain the app-group, keychain and system-extension entitlements.
 
 Self-updates require valid signatures, sealed resources and the installed application's designated signing requirement. A local build signed by a different developer team cannot accept the official publisher's application as an automatic update; reinstall the official release manually rather than bypassing signature checks.
