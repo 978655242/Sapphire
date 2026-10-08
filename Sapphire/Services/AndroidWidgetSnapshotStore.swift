@@ -33,8 +33,9 @@ struct AndroidWidgetCatalog: Codable, Sendable {
 }
 
 enum AndroidWidgetSnapshotStore {
-    static let appGroupIdentifier = "group.com.cshariq.sapphire"
-    static let widgetKind = "com.cshariq.sapphire.android-widget"
+    // ponytail: both signed targets resolve the same team-owned macOS app group.
+    static let appGroupIdentifier = Bundle.main.object(forInfoDictionaryKey: "SapphireAppGroupIdentifier") as! String
+    static let widgetKind = "com.yuxi.sapphire.local.android-widget"
 
     /// Widgets use the language committed by the main app on its last launch.
     /// The shared native preference is removed when following the system.

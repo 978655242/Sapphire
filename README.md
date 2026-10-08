@@ -30,6 +30,18 @@ Sapphire is a sleek notch app that displays current activities neatly around the
 2.  **Install:** Open the downloaded package and follow the installation process.
 3.  **Permissions:** At startup, Sapphire automatically requests location permission for local weather if it has not been decided yet. It then guides you through missing macOS permissions one at a time, with location first, before starting the notch and background services. Already granted permissions are skipped; denied permissions link to `System Settings`. You can skip a permission or cancel the guide and continue launching. Music/Spotify Automation consent is never requested by this guide; request it explicitly from the permissions overview when needed.
 
+### Local development builds
+
+Public-source development builds can include unavailable private-feature implementations; they are not equivalent to the complete official release. Keep an application and preferences backup before replacing an installed release. Supply a valid, ignored local `Sapphire/App/GoogleService-Info.plist`; the public placeholder is not a working Firebase configuration.
+
+This local developer fork uses `com.yuxi.sapphire.local` and its own helper/widget identifiers so a different Apple developer team can provision it legitimately. Import the original preferences into the local bundle's domain when upgrading; the original preferences and signing identity remain separate.
+
+macOS privacy permissions belong to an application's signing identity, not its display name. An enabled `Sapphire` entry for the official `com.cshariq.sapphire` release does not grant Accessibility or other permissions to `com.yuxi.sapphire.local`. Install the local build at its final path before granting its permissions; existing official-release consent remains untouched.
+
+The app and widget use the same signing-team-prefixed macOS app group, resolved from `SapphireAppGroupIdentifier` in their built bundles. Use a genuine development identity and matching provisioning profiles; retain the app-group, keychain and system-extension entitlements.
+
+Self-updates require valid signatures, sealed resources and the installed application's designated signing requirement. A local build signed by a different developer team cannot accept the official publisher's application as an automatic update; reinstall the official release manually rather than bypassing signature checks.
+
 ## Language
 
 Open **Settings → General → Language** (**设置 → 通用 → 语言**) and choose **Follow System**, **English**, or **简体中文**. Click **Restart Sapphire** (**重新启动 Sapphire**) to apply the choice; pending settings are saved before restarting.

@@ -6,7 +6,7 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.cshariq.sapphire</string>
+		<string>$(TeamIdentifierPrefix)com.yuxi.sapphire.local</string>
 	</array>
 </dict>
 </plist>

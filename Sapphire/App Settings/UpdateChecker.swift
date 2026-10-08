@@ -1074,27 +1074,7 @@ class UpdateChecker: NSObject, ObservableObject, @preconcurrency URLSessionDownl
         candidate: URL,
         replacing installed: URL
     ) throws {
-        let installedIdentity = try AppSecurityValidator.identity(at: installed)
-        let candidateIdentity = try AppSecurityValidator.identity(at: candidate)
-
-        guard candidateIdentity.bundleIdentifier == installedIdentity.bundleIdentifier else {
-            throw NSError(
-                domain: "UpdateError",
-                code: 25,
-                userInfo: [NSLocalizedDescriptionKey: "The downloaded update has the wrong bundle identifier.".local]
-            )
-        }
-        guard let installedTeam = installedIdentity.teamIdentifier else {
-            try AppSecurityValidator.validateReplacement(candidate: candidate, replacing: installed)
-            return
-        }
-        guard candidateIdentity.teamIdentifier == installedTeam else {
-            throw NSError(
-                domain: "UpdateError",
-                code: 26,
-                userInfo: [NSLocalizedDescriptionKey: "The update was not signed by the same Apple developer team.".local]
-            )
-        }
+        try AppSecurityValidator.validateReplacement(candidate: candidate, replacing: installed)
     }
 
     nonisolated private static func stageForCurrentUserInstallation(

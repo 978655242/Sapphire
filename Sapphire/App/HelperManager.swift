@@ -170,7 +170,7 @@ struct HelperStatusBanner: View {
 class HelperManager: ObservableObject {
     static let shared = HelperManager()
 
-    let helperToolIdentifier = "com.shariq.sapphireHelper"
+    let helperToolIdentifier = "com.yuxi.sapphire.local.helper"
 
     @Published var status: SMAppService.Status = .notRegistered
     @Published var isRunning: Bool = false

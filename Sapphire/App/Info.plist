@@ -81,7 +81,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.cshariq.sapphire</string>
+			<string>com.yuxi.sapphire.local</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>sapphire</string>
@@ -113,6 +113,8 @@
 	<string>Needed for gemini live activity</string>
 	<key>NSSystemExtensionPointIdentifier</key>
 	<string>com.apple.developer.driverkit.transport.audio</string>
+	<key>SapphireAppGroupIdentifier</key>
+	<string>$(TeamIdentifierPrefix)com.yuxi.sapphire.local</string>
 	<key>SapphireSubscriptionAPIKey</key>
 	<string>$(SAPPHIRE_SUBSCRIPTION_API_KEY)</string>
 	<key>UTExportedTypeDeclarations</key>

@@ -1471,7 +1471,7 @@
 				"# \"unidentified developer\" item (regression from --timestamp=none in 2.55).",
 				"echo \"Re-signing Sapphire helper with empty entitlements (identity: ${EXPANDED_CODE_SIGN_IDENTITY})\"",
 				"codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" \\",
-				"  --identifier com.shariq.sapphireHelper \\",
+				"  --identifier com.yuxi.sapphire.local.helper \\",
 				"  --entitlements \"$ENTITLEMENTS\" \\",
 				"  --generate-entitlement-der \\",
 				"  --options runtime \\",
@@ -1656,7 +1656,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.AndroidWidgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.AndroidWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SKIP_INSTALL = YES;
@@ -1686,7 +1686,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 3.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.AndroidWidgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.AndroidWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SKIP_INSTALL = YES;
@@ -1715,7 +1715,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphire.CameraExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.CameraExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1745,7 +1745,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphire.CameraExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.CameraExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1768,7 +1768,7 @@
 				INFOPLIST_FILE = PublicExtensionStubs/AudioDriver/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphire.ContinuityMicDriver;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.ContinuityMicDriver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = driver;
@@ -1789,7 +1789,7 @@
 				INFOPLIST_FILE = PublicExtensionStubs/AudioDriver/Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphire.ContinuityMicDriver;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.ContinuityMicDriver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = driver;
@@ -1819,9 +1819,9 @@
 				INFOPLIST_FILE = "$(SRCROOT)/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				OTHER_CODE_SIGN_FLAGS = "--identifier com.shariq.sapphireHelper --generate-entitlement-der --timestamp";
+				OTHER_CODE_SIGN_FLAGS = "--identifier com.yuxi.sapphire.local.helper --generate-entitlement-der --timestamp";
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphireHelper;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
@@ -1862,9 +1862,9 @@
 				INFOPLIST_FILE = "$(SRCROOT)/$(TARGET_NAME)/Info.plist";
 				LIBRARY_SEARCH_PATHS = "";
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
-				OTHER_CODE_SIGN_FLAGS = "--identifier com.shariq.sapphireHelper --generate-entitlement-der --timestamp";
+				OTHER_CODE_SIGN_FLAGS = "--identifier com.yuxi.sapphire.local.helper --generate-entitlement-der --timestamp";
 				OTHER_LDFLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.sapphireHelper;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
@@ -1896,7 +1896,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.SapphireTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.SapphireTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1919,7 +1919,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.shariq.SapphireTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.SapphireTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -2123,7 +2123,7 @@
 				OTHER_LDFLAGS = "";
 				OTHER_SWIFT_FLAGS = "";
 				"OTHER_SWIFT_FLAGS[arch=*]" = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -2205,7 +2205,7 @@
 				OTHER_CODE_SIGN_FLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_SWIFT_FLAGS = "";
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				REGISTER_APP_GROUPS = YES;
@@ -2301,7 +2301,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 2.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.FinderSync;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.FinderSync;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -2331,7 +2331,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 2.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.FinderSync;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.FinderSync;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2360,7 +2360,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 2.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.FileProvider;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.FileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -2390,7 +2390,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 2.9;
-				PRODUCT_BUNDLE_IDENTIFIER = com.cshariq.sapphire.FileProvider;
+				PRODUCT_BUNDLE_IDENTIFIER = com.yuxi.sapphire.local.FileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;

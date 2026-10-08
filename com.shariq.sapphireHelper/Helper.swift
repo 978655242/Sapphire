@@ -767,8 +767,8 @@ class Helper: NSObject, HelperProtocol {
               !expectedVersion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               currentComponents.count == applicationsComponents.count + 1,
               currentComponents.prefix(applicationsComponents.count).elementsEqual(applicationsComponents),
-              Bundle(url: currentURL)?.bundleIdentifier == "com.cshariq.sapphire",
-              Bundle(url: newURL)?.bundleIdentifier == "com.cshariq.sapphire" else {
+              Bundle(url: currentURL)?.bundleIdentifier == "com.yuxi.sapphire.local",
+              Bundle(url: newURL)?.bundleIdentifier == "com.yuxi.sapphire.local" else {
             fail("Invalid app paths for the update.")
             return
         }
@@ -816,7 +816,7 @@ class Helper: NSObject, HelperProtocol {
         let isMonotonicUpgrade = marketingComparison == .orderedDescending
             || (marketingComparison == .orderedSame
                 && HelperSapphireVersionOrdering.compareBuild(stagedBuild, currentBuild) == .orderedDescending)
-        guard stagedBundle?.bundleIdentifier == "com.cshariq.sapphire",
+        guard stagedBundle?.bundleIdentifier == "com.yuxi.sapphire.local",
               stagedVersion == expectedVersion,
               isMonotonicUpgrade,
               SecStaticCodeCreateWithPath(stagingURL as CFURL, [], &stagedCode) == errSecSuccess,

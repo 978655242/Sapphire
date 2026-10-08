@@ -107,7 +107,7 @@ class KeychainHelper {
         if let bundleIdentifier = Bundle.main.bundleIdentifier {
             self.service = bundleIdentifier
         } else {
-            self.service = "com.cshariq.sapphire"
+            self.service = "com.yuxi.sapphire.local"
         }
     }
 

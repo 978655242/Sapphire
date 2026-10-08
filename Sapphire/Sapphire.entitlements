@@ -6,12 +6,11 @@
 	<true/>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>$(TeamIdentifierPrefix)com.shariq.sapphire</string>
-		<string>group.com.cshariq.sapphire</string>
+		<string>$(TeamIdentifierPrefix)com.yuxi.sapphire.local</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.shariq.sapphire</string>
+		<string>$(AppIdentifierPrefix)com.yuxi.sapphire.local</string>
 	</array>
 </dict>
 </plist>
