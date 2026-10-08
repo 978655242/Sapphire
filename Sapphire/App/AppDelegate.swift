@@ -98,6 +98,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private var settingsWindow: NSWindow?
     private var lyricsWindow: NSWindow?
     private var betaBlockerWindow: NSWindow?
+    private var startupPermissionsWindow: NSWindow?
+    private var didCheckLaunchPermissions = false
     private var isMainAppRunning = false
     private var subscriptionValidationTimer: Timer?
     private var backgroundInitializationTask: Task<Void, Never>?
@@ -245,6 +247,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         AccessibilityTrustMonitor.shared.start()
 
         SapphireStandardMenu.installIfNeeded()
+        PermissionsManager.shared.requestPermission(.location)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleHelperConnectionLost),
@@ -279,6 +282,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
         if BetaEntitlementRuntime.isBetaBuild, !hasConfirmedBetaAccess {
             showBetaBlocker()
+            return false
+        }
+
+        if !didCheckLaunchPermissions {
+            didCheckLaunchPermissions = true
+            Task { await presentStartupPermissionsIfNeeded() }
+            return false
+        }
+        if let startupPermissionsWindow {
+            UtilityWindowPresenter.present(startupPermissionsWindow)
             return false
         }
 
@@ -426,6 +439,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         NearbyConnectionManager.shared.becomeInvisible()
 
         isMainAppRunning = false
+        startupPermissionsWindow?.close()
+        startupPermissionsWindow = nil
 
         UpdateChecker.shared.stopPeriodicChecks()
 
@@ -651,7 +666,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         MediaOptimizerManager.shared.start()
         FileOperationProgressRouter.shared.start()
         _ = ocrScreenshotMonitor
-        requestScreenRecordingForSystemEnhanceIfNeeded()
         _ = emojiShortcutManager
         _ = clipboardPickerManager
         ClipboardManager.shared.startMonitoring()
@@ -709,15 +723,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         scheduleSubscriptionValidationTimer()
     }
 
-    private func requestScreenRecordingForSystemEnhanceIfNeeded() {
-        let settings = settingsModel.settings
-        let needsWindowCapture = settings.systemEnhanceDockPreviewsEnabled || settings.systemEnhanceAltTabEnabled
-        let needsHingeCapture = settings.systemEnhanceHingeAnimationEnabled && LidAngleSensor.shared.isAvailable
-        guard needsWindowCapture || needsHingeCapture else { return }
-        guard needsHingeCapture || PermissionsManager.shared.accessibilityStatus == .granted else { return }
-        guard PermissionsManager.shared.screenRecordingStatus == .notRequested else { return }
-        guard !UserDefaults.standard.bool(forKey: "screenRecordingRequested") else { return }
-        PermissionsManager.shared.requestPermission(.screenRecording)
+    private func presentStartupPermissionsIfNeeded() async {
+        let manager = PermissionsManager.shared
+        await manager.refreshLaunchPermissions()
+        guard PermissionsManager.nextLaunchPermission(
+            in: manager.allPermissions.map { ($0.type, manager.status(for: $0.type)) },
+            excluding: []
+        ) != nil else {
+            routeAfterLaunch()
+            return
+        }
+
+        let window = NSWindow(
+            contentRect: UtilityWindowMetrics.centeredFrame(size: NSSize(width: 520, height: 300)),
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Permissions".local
+        window.isReleasedWhenClosed = false
+        window.contentView = NSHostingView(rootView: StartupPermissionsView { [weak self] in
+            self?.startupPermissionsWindow?.close()
+        }.environment(\.locale, AppLocalization.locale))
+        window.delegate = self
+        startupPermissionsWindow = window
+        UtilityWindowPresenter.present(window)
     }
 
     private func scheduleSubscriptionValidationTimer() {
@@ -1665,6 +1695,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     func windowWillClose(_ notification: Notification) {
         guard let window = notification.object as? NSWindow else { return }
+
+        if window === startupPermissionsWindow {
+            window.contentView = nil
+            startupPermissionsWindow = nil
+            finishClosingUserWindow()
+            DispatchQueue.main.async { self.routeAfterLaunch() }
+            return
+        }
 
         if window === onboardingWindow {
             NSApp.terminate(nil)

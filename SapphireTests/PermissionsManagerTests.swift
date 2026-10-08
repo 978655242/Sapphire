@@ -20,4 +20,28 @@ final class PermissionsManagerTests: XCTestCase {
         XCTAssertEqual(PermissionsManager.aggregateAutomationStatus([.notRequested, .denied]), .denied)
         XCTAssertEqual(PermissionsManager.aggregateAutomationStatus([.granted, .denied]), .denied)
     }
+
+    func testLaunchQueueSkipsAutomationGrantedAndHandledPermissions() {
+        let statuses: [(PermissionType, PermissionStatus)] = [
+            (.automation, .notRequested), (.accessibility, .granted),
+            (.fullDiskAccess, .denied), (.notifications, .notRequested)
+        ]
+        XCTAssertEqual(PermissionsManager.nextLaunchPermission(in: statuses, excluding: []), .fullDiskAccess)
+        XCTAssertEqual(PermissionsManager.nextLaunchPermission(in: statuses, excluding: [.fullDiskAccess]), .notifications)
+        XCTAssertNil(PermissionsManager.nextLaunchPermission(in: statuses, excluding: [.fullDiskAccess, .notifications]))
+        XCTAssertNil(PermissionsManager.nextLaunchPermission(in: [(.automation, .denied)], excluding: []))
+    }
+
+    func testWeatherLocationIsPrioritizedUntilGrantedOrSkipped() {
+        let missing: [(PermissionType, PermissionStatus)] = [
+            (.accessibility, .notRequested), (.location, .notRequested),
+            (.automation, .notRequested)
+        ]
+        XCTAssertEqual(PermissionsManager.nextLaunchPermission(in: missing, excluding: []), .location)
+        XCTAssertEqual(PermissionsManager.nextLaunchPermission(in: missing, excluding: [.location]), .accessibility)
+        XCTAssertEqual(
+            PermissionsManager.nextLaunchPermission(in: [(.accessibility, .notRequested), (.location, .granted)], excluding: []),
+            .accessibility
+        )
+    }
 }

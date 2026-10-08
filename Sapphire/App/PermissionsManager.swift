@@ -50,6 +50,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
     @Published var accessibilityStatus: PermissionStatus = .notRequested
     @Published var notificationsStatus: PermissionStatus = .notRequested
     @Published var locationStatus: PermissionStatus = .notRequested
+    @Published private(set) var isRequestingLocation = false
     @Published var calendarStatus: PermissionStatus = .notRequested
     @Published var remindersStatus: PermissionStatus = .notRequested
     @Published var bluetoothStatus: PermissionStatus = .notRequested
@@ -128,10 +129,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
 
         NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)
             .sink { [weak self] _ in
-                self?.checkAccessibilityStatus()
-                self?.checkFullDiskAccessStatus()
-                self?.checkScreenRecordingStatus()
-                self?.checkAutomationStatus()
+                self?.checkAllPermissions()
             }
             .store(in: &cancellables)
 
@@ -236,6 +234,50 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         }
     }
 
+    // ponytail: one visible permission at a time; Automation is always opt-in.
+    nonisolated static func nextLaunchPermission(
+        in statuses: [(PermissionType, PermissionStatus)],
+        excluding handled: Set<PermissionType>
+    ) -> PermissionType? {
+        if !handled.contains(.location),
+           statuses.contains(where: { $0.0 == .location && $0.1 != .granted }) {
+            return .location
+        }
+        return statuses.first { type, status in
+            type != .automation && status != .granted && !handled.contains(type)
+        }?.0
+    }
+
+    func refreshLaunchPermissions() async {
+        checkAllPermissions()
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        switch settings.authorizationStatus {
+        case .authorized, .provisional: notificationsStatus = .granted
+        case .denied: notificationsStatus = .denied
+        default: notificationsStatus = .notRequested
+        }
+    }
+
+    func openPermissionSettings(_ type: PermissionType) {
+        let pane: String
+        switch type {
+        case .accessibility: pane = "Privacy_Accessibility"
+        case .fullDiskAccess: pane = "Privacy_AllFiles"
+        case .screenRecording: pane = "Privacy_ScreenCapture"
+        case .localNetwork: pane = "Privacy_LocalNetwork"
+        case .notifications:
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.Notifications-Settings.extension")!)
+            return
+        case .location: pane = "Privacy_LocationServices"
+        case .calendar: pane = "Privacy_Calendars"
+        case .reminders: pane = "Privacy_Reminders"
+        case .bluetooth: pane = "Privacy_Bluetooth"
+        case .focusStatus: pane = "Privacy_Focus"
+        case .automation: return
+        }
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?\(pane)")!)
+    }
+
     func requestPermission(_ type: PermissionType) {
         switch type {
         case .accessibility:
@@ -261,7 +303,11 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
             }
 
         case .location:
-            locationManager?.requestWhenInUseAuthorization()
+            guard let locationManager,
+                  locationManager.authorizationStatus == .notDetermined,
+                  !isRequestingLocation else { return }
+            isRequestingLocation = true
+            locationManager.requestWhenInUseAuthorization()
 
         case .calendar:
             Task {
@@ -526,6 +572,9 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let wasGranted = locationStatus == PermissionStatus.granted
         updateLocationStatus(for: manager.authorizationStatus)
+        if manager.authorizationStatus != .notDetermined {
+            isRequestingLocation = false
+        }
         if locationStatus == PermissionStatus.granted && !wasGranted {
             WeatherViewModel.shared.fetch()
         }

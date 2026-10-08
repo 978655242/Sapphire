@@ -28,7 +28,7 @@ Sapphire is a sleek notch app that displays current activities neatly around the
 
 1.  **Download:** Download the latest package release from the [releases page](https://github.com/cshariq/Sapphire/releases/latest).
 2.  **Install:** Open the downloaded package and follow the installation process.
-3.  **Permissions:** On first launch, you may need to grant accessibility and other permissions in `System Settings` for all features to work correctly.
+3.  **Permissions:** At startup, Sapphire automatically requests location permission for local weather if it has not been decided yet. It then guides you through missing macOS permissions one at a time, with location first, before starting the notch and background services. Already granted permissions are skipped; denied permissions link to `System Settings`. You can skip a permission or cancel the guide and continue launching. Music/Spotify Automation consent is never requested by this guide; request it explicitly from the permissions overview when needed.
 
 ## Language
 
