@@ -545,23 +545,6 @@
         }
       }
     },
-    "%.0f °C": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%.0f °C"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%.0f °C"
-          }
-        }
-      }
-    },
     "%.0f B/s": {
       "extractionState": "manual",
       "localizations": {
@@ -626,23 +609,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "%.0f pt"
-          }
-        }
-      }
-    },
-    "%.0f RPM": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%.0f RPM"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%.0f RPM"
           }
         }
       }
@@ -966,23 +932,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "%.1f°"
-          }
-        }
-      }
-    },
-    "%.1f°C": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%.1f°C"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%.1f°C"
           }
         }
       }
@@ -1476,23 +1425,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "找不到 %@。"
-          }
-        }
-      }
-    },
-    "%@ extracted successfully.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ extracted successfully."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ 已成功解压。"
           }
         }
       }
@@ -3962,23 +3894,6 @@
         }
       }
     },
-    "Action:": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Action:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "操作："
-          }
-        }
-      }
-    },
     "Activate on Drag": {
       "extractionState": "manual",
       "localizations": {
@@ -4608,23 +4523,6 @@
         }
       }
     },
-    "Add Point": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Point"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加点"
-          }
-        }
-      }
-    },
     "Add Profile": {
       "extractionState": "manual",
       "localizations": {
@@ -4723,23 +4621,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "添加桌面空间"
-          }
-        }
-      }
-    },
-    "Add Task": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Task"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加任务"
           }
         }
       }
@@ -5713,23 +5594,6 @@
         }
       }
     },
-    "Always into a Folder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Always into a Folder"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "始终解压到文件夹"
-          }
-        }
-      }
-    },
     "Always Off": {
       "extractionState": "manual",
       "localizations": {
@@ -6457,23 +6321,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "应用限制"
-          }
-        }
-      }
-    },
-    "App Lock": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "App Lock"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "应用锁"
           }
         }
       }
@@ -7617,40 +7464,6 @@
         }
       }
     },
-    "Archives": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Archives"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "归档文件"
-          }
-        }
-      }
-    },
-    "Archives & DMG": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Archives & DMG"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "压缩文件与 DMG"
-          }
-        }
-      }
-    },
     "Arrow": {
       "extractionState": "manual",
       "localizations": {
@@ -7947,23 +7760,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "auto"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自动"
-          }
-        }
-      }
-    },
-    "Auto": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Auto"
           }
         },
         "zh-Hans": {
@@ -8633,23 +8429,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "简洁"
-          }
-        }
-      }
-    },
-    "Based on Sensor:": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Based on Sensor:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "依据传感器："
           }
         }
       }
@@ -10571,23 +10350,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "更改"
-          }
-        }
-      }
-    },
-    "Change Fan Control for '%@'": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Change Fan Control for '%@'"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "更改“%@”的风扇控制"
           }
         }
       }
@@ -12751,40 +12513,6 @@
         }
       }
     },
-    "Constant %lld RPM": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Constant %lld RPM"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "恒定 %lld RPM"
-          }
-        }
-      }
-    },
-    "Constant RPM": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Constant RPM"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "恒定转速"
-          }
-        }
-      }
-    },
     "Contacts": {
       "extractionState": "manual",
       "localizations": {
@@ -13036,23 +12764,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "控制项图标"
-          }
-        }
-      }
-    },
-    "Control Mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Control Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "控制模式"
           }
         }
       }
@@ -13482,23 +13193,6 @@
         }
       }
     },
-    "Could not create %@ to extract %@.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Could not create %@ to extract %@."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法创建 %@ 来解压 %@。"
-          }
-        }
-      }
-    },
     "Could not create AVAssetExportSession for audio.": {
       "extractionState": "manual",
       "localizations": {
@@ -13597,23 +13291,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法建立安全的附近共享连接。"
-          }
-        }
-      }
-    },
-    "Could not extract %@. It may be damaged, unsupported, or password protected.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Could not extract %@. It may be damaged, unsupported, or password protected."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法解压 %@。文件可能已损坏、格式不受支持或受密码保护。"
           }
         }
       }
@@ -14689,23 +14366,6 @@
         }
       }
     },
-    "Curve (%lld pts): %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Curve (%lld pts): %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "曲线（%lld 个点）：%@"
-          }
-        }
-      }
-    },
     "Custom": {
       "extractionState": "manual",
       "localizations": {
@@ -14736,23 +14396,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "自定义动画参数"
-          }
-        }
-      }
-    },
-    "Custom Curve": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Custom Curve"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自定义曲线"
           }
         }
       }
@@ -14804,23 +14447,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "自定义时长…"
-          }
-        }
-      }
-    },
-    "Custom Fan Curve": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Custom Fan Curve"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自定义风扇曲线"
           }
         }
       }
@@ -14889,23 +14515,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "自定义顺序"
-          }
-        }
-      }
-    },
-    "Custom...": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Custom..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自定义…"
           }
         }
       }
@@ -18905,23 +18514,6 @@
         }
       }
     },
-    "Enter the password to extract this archive. Sapphire does not store it.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter the password to extract this archive. Sapphire does not store it."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "输入密码以解压此压缩文件。Sapphire 不会保存密码。"
-          }
-        }
-      }
-    },
     "Enter your Client ID": {
       "extractionState": "manual",
       "localizations": {
@@ -19653,91 +19245,6 @@
         }
       }
     },
-    "Extract": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Extract"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "解压"
-          }
-        }
-      }
-    },
-    "Extract ZIP, RAR, 7-Zip, TAR, and other archives — or auto-mount and install disk images (DMGs) — from anywhere.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Extract ZIP, RAR, 7-Zip, TAR, and other archives — or auto-mount and install disk images (DMGs) — from anywhere."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "随时随地解压 ZIP、RAR、7-Zip、TAR 等归档文件，或自动挂载磁盘映像（DMG）并进行安装。"
-          }
-        }
-      }
-    },
-    "Extracting": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Extracting"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在解压"
-          }
-        }
-      }
-    },
-    "Extracting %@…": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Extracting %@…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在解压 %@…"
-          }
-        }
-      }
-    },
-    "Extracting...": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Extracting..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在解压…"
-          }
-        }
-      }
-    },
     "Extreme": {
       "extractionState": "manual",
       "localizations": {
@@ -20316,40 +19823,6 @@
         }
       }
     },
-    "Failed to set fan mode.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to set fan mode."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法设置风扇模式。"
-          }
-        }
-      }
-    },
-    "Failed to set fan to manual mode.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to set fan to manual mode."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法将风扇设置为手动模式。"
-          }
-        }
-      }
-    },
     "Failed to start device: %d": {
       "extractionState": "manual",
       "localizations": {
@@ -20520,125 +19993,6 @@
         }
       }
     },
-    "Fan %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fan %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "风扇 %@"
-          }
-        }
-      }
-    },
-    "Fan %lld": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fan %lld"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "风扇 %lld"
-          }
-        }
-      }
-    },
-    "Fan %lld · %@ · %lld RPM · min %lld · max %lld": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fan %lld · %@ · %lld RPM · min %lld · max %lld"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "风扇 %lld · %@ · %lld RPM · 最低 %lld · 最高 %lld"
-          }
-        }
-      }
-    },
-    "Fan Control": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fan Control"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "风扇控制"
-          }
-        }
-      }
-    },
-    "Fan control is in beta. Idle fans at 0 RPM are normal": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fan control is in beta. Idle fans at 0 RPM are normal"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "风扇控制功能处于测试阶段。空闲时风扇转速为 0 RPM 属于正常现象。"
-          }
-        }
-      }
-    },
-    "Fan count: %lld": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fan count: %lld"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "风扇数量：%lld"
-          }
-        }
-      }
-    },
-    "Fan Speed": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fan Speed"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "风扇转速"
-          }
-        }
-      }
-    },
     "Fancy": {
       "extractionState": "manual",
       "localizations": {
@@ -20652,23 +20006,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "组合布局"
-          }
-        }
-      }
-    },
-    "Fanless Macs (some MacBook Air models) will show this permanently. Otherwise, ensure the Sapphire helper is installed and retry.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fanless Macs (some MacBook Air models) will show this permanently. Otherwise, ensure the Sapphire helper is installed and retry."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无风扇的 Mac（部分 MacBook Air 机型）会一直显示此提示。其他机型请确认已安装 Sapphire 辅助程序，然后重试。"
           }
         }
       }
@@ -24175,23 +23512,6 @@
         }
       }
     },
-    "High CPU Load": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "High CPU Load"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CPU 负载过高"
-          }
-        }
-      }
-    },
     "Highly Likely": {
       "extractionState": "manual",
       "localizations": {
@@ -25225,23 +24545,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "在访达中显示"
-          }
-        }
-      }
-    },
-    "In Place": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In Place"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "解压到当前位置"
           }
         }
       }
@@ -28425,23 +27728,6 @@
         }
       }
     },
-    "Left fan": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Left fan"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "左侧风扇"
-          }
-        }
-      }
-    },
     "Level": {
       "extractionState": "manual",
       "localizations": {
@@ -29020,23 +28306,6 @@
         }
       }
     },
-    "Load Fans": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Load Fans"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加载风扇信息"
-          }
-        }
-      }
-    },
     "Load Hardware %": {
       "extractionState": "manual",
       "localizations": {
@@ -29339,23 +28608,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "锁定与解锁操作"
-          }
-        }
-      }
-    },
-    "Lock apps behind Touch ID or password — blur overlays, idle/sleep auto-lock, and auto-close.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lock apps behind Touch ID or password — blur overlays, idle/sleep auto-lock, and auto-close."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用 Touch ID 或密码锁定应用，支持模糊遮罩、闲置或睡眠时自动锁定，以及自动关闭。"
           }
         }
       }
@@ -30023,23 +29275,6 @@
         }
       }
     },
-    "Low Disk Space": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low Disk Space"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "磁盘空间不足"
-          }
-        }
-      }
-    },
     "Lower catches quieter work but may misread a busy editor as a running agent. Higher only reports sustained activity. Command-line tools that only exist while they run are unaffected.": {
       "extractionState": "manual",
       "localizations": {
@@ -30465,23 +29700,6 @@
         }
       }
     },
-    "Manage Schedule": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Manage Schedule"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "管理计划"
-          }
-        }
-      }
-    },
     "Manage temporary file storage, drag targets, and shelf behavior.": {
       "extractionState": "manual",
       "localizations": {
@@ -30750,23 +29968,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "最大容量"
-          }
-        }
-      }
-    },
-    "Maximum temperature:": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Maximum temperature:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最高温度："
           }
         }
       }
@@ -31043,57 +30244,6 @@
         }
       }
     },
-    "Memory Pressure": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memory Pressure"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "内存压力"
-          }
-        }
-      }
-    },
-    "Memory pressure is critical — consider closing some apps.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memory pressure is critical — consider closing some apps."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "内存压力严重 — 建议关闭一些应用。"
-          }
-        }
-      }
-    },
-    "Memory pressure is high — consider closing some apps.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Memory pressure is high — consider closing some apps."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "内存压力较高 — 建议关闭一些应用。"
-          }
-        }
-      }
-    },
     "Memory Proximity 1": {
       "extractionState": "manual",
       "localizations": {
@@ -31366,23 +30516,6 @@
         }
       }
     },
-    "System monitoring, fan controls, and schedules.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "System monitoring, fan controls, and schedules."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "系统监控、风扇控制和定时计划。"
-          }
-        }
-      }
-    },
     "Menu Bar Spacing (Beta)": {
       "extractionState": "manual",
       "localizations": {
@@ -31651,23 +30784,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "最低"
-          }
-        }
-      }
-    },
-    "Min: %lld | Current: %lld | Max: %lld RPM": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Min: %lld | Current: %lld | Max: %lld RPM"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "最低：%lld | 当前：%lld | 最高：%lld RPM"
           }
         }
       }
@@ -33236,23 +32352,6 @@
         }
       }
     },
-    "New Scheduled Task": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New Scheduled Task"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "新建定时任务"
-          }
-        }
-      }
-    },
     "Newest Entry": {
       "extractionState": "manual",
       "localizations": {
@@ -33929,23 +33028,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "尚未录入面容。添加面容即可开始使用 Face ID。"
-          }
-        }
-      }
-    },
-    "No fans detected on this system.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No fans detected on this system."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未在此系统上检测到风扇。"
           }
         }
       }
@@ -34800,23 +33882,6 @@
         }
       }
     },
-    "No tasks scheduled.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No tasks scheduled."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂无定时任务。"
-          }
-        }
-      }
-    },
     "No Timer": {
       "extractionState": "manual",
       "localizations": {
@@ -35374,23 +34439,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "更新说明已在线发布。"
-          }
-        }
-      }
-    },
-    "Nothing": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "不执行任何操作"
           }
         }
       }
@@ -36432,23 +35480,6 @@
         }
       }
     },
-    "Open Folder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Folder"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开文件夹"
-          }
-        }
-      }
-    },
     "Open in App Store": {
       "extractionState": "manual",
       "localizations": {
@@ -36632,23 +35663,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "打开 Island 设置"
-          }
-        }
-      }
-    },
-    "Open Scheduler": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Scheduler"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "打开计划管理器"
           }
         }
       }
@@ -38557,40 +37571,6 @@
         }
       }
     },
-    "Point %lld RPM": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Point %lld RPM"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "第 %lld 个点的转速"
-          }
-        }
-      }
-    },
-    "Point %lld Temperature": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Point %lld Temperature"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "第 %lld 个点的温度"
-          }
-        }
-      }
-    },
     "Poor": {
       "extractionState": "manual",
       "localizations": {
@@ -39862,23 +38842,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "退出与关闭保护"
-          }
-        }
-      }
-    },
-    "Quit App": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quit App"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "退出应用"
           }
         }
       }
@@ -41226,23 +40189,6 @@
         }
       }
     },
-    "Remove Point": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove Point"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "移除点"
-          }
-        }
-      }
-    },
     "Remove Selected": {
       "extractionState": "manual",
       "localizations": {
@@ -42246,40 +41192,6 @@
         }
       }
     },
-    "Retry Detection": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Retry Detection"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "重新检测"
-          }
-        }
-      }
-    },
-    "Reveal in Finder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reveal in Finder"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在访达中显示"
-          }
-        }
-      }
-    },
     "Reveal When": {
       "extractionState": "manual",
       "localizations": {
@@ -42535,23 +41447,6 @@
         }
       }
     },
-    "Right fan": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Right fan"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "右侧风扇"
-          }
-        }
-      }
-    },
     "Rock": {
       "extractionState": "manual",
       "localizations": {
@@ -42769,23 +41664,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "不能在这里移除 Sapphire 和 macOS 系统应用。"
-          }
-        }
-      }
-    },
-    "Sapphire Archives": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire Archives"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire 解压"
           }
         }
       }
@@ -43041,23 +41919,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 初始设置"
-          }
-        }
-      }
-    },
-    "Sapphire readouts — CPU, RAM, network rates": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire readouts — CPU, RAM, network rates"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire 状态读数 — CPU、内存和网络速率"
           }
         }
       }
@@ -43419,23 +42280,6 @@
         }
       }
     },
-    "Schedule Automation": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Schedule Automation"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "定时自动化"
-          }
-        }
-      }
-    },
     "Scheduled sessions respect your blocking, environment, and ambient-sound settings — they behave exactly like sessions you start manually.": {
       "extractionState": "manual",
       "localizations": {
@@ -43449,23 +42293,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "计划专注会遵循你的屏蔽、环境和环境音设置，与手动开始的专注完全一致。"
-          }
-        }
-      }
-    },
-    "Scheduled Tasks": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scheduled Tasks"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "定时任务"
           }
         }
       }
@@ -44507,23 +43334,6 @@
         }
       }
     },
-    "Sensor": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sensor"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "传感器"
-          }
-        }
-      }
-    },
     "Sensor detected and ready.": {
       "extractionState": "manual",
       "localizations": {
@@ -44571,57 +43381,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "传感器不可用"
-          }
-        }
-      }
-    },
-    "Sensor-based": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sensor-based"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "基于传感器"
-          }
-        }
-      }
-    },
-    "Sensor: %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sensor: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "传感器：%@"
-          }
-        }
-      }
-    },
-    "Sensor: %@ (%lld°C-%lld°C) | Repeats: %@ at %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sensor: %@ (%lld°C-%lld°C) | Repeats: %@ at %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "传感器：%@（%lld°C-%lld°C）| 重复：%@，时间：%@"
           }
         }
       }
@@ -44779,57 +43538,6 @@
         }
       }
     },
-    "Set Fans to Automatic": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set Fans to Automatic"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "将风扇设为自动"
-          }
-        }
-      }
-    },
-    "Set Fans to Constant RPM": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set Fans to Constant RPM"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "将风扇设为固定转速"
-          }
-        }
-      }
-    },
-    "Set Fans to Sensor-based": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set Fans to Sensor-based"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "将风扇设为基于传感器"
-          }
-        }
-      }
-    },
     "Set Password": {
       "extractionState": "manual",
       "localizations": {
@@ -44843,23 +43551,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "设置密码"
-          }
-        }
-      }
-    },
-    "Set RPM at each temperature. Sapphire interpolates between points.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set RPM at each temperature. Sapphire interpolates between points."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "设置各个温度下的转速。Sapphire 会在各点之间进行插值。"
           }
         }
       }
@@ -47771,23 +46462,6 @@
         }
       }
     },
-    "Speed: %lld RPM | Repeats: %@ at %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speed: %lld RPM | Repeats: %@ at %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "转速：%lld 转/分钟 | 重复：%@，时间：%@"
-          }
-        }
-      }
-    },
     "Split Screen": {
       "extractionState": "manual",
       "localizations": {
@@ -48243,23 +46917,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "重新开始"
-          }
-        }
-      }
-    },
-    "Start increasing from:": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start increasing from:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开始提高转速的温度："
           }
         }
       }
@@ -50236,23 +48893,6 @@
         }
       }
     },
-    "Target Speed": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Target Speed"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "目标转速"
-          }
-        }
-      }
-    },
     "Target: %lld%% | Repeats: %@ at %@": {
       "extractionState": "manual",
       "localizations": {
@@ -50266,23 +48906,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "目标：%lld%% | 重复：%@，时间：%@"
-          }
-        }
-      }
-    },
-    "Task History": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task History"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "任务历史"
           }
         }
       }
@@ -50657,23 +49280,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "下载的更新具有错误的包标识符。"
-          }
-        }
-      }
-    },
-    "The fan will be controlled automatically by macOS.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The fan will be controlled automatically by macOS."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "风扇将由 macOS 自动控制。"
           }
         }
       }
@@ -52527,23 +51133,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "充满所需时间"
-          }
-        }
-      }
-    },
-    "Time:": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Time:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "时间："
           }
         }
       }
@@ -57168,23 +55757,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "无论是否启用剪贴板历史记录，此功能均可使用。"
-          }
-        }
-      }
-    },
-    "Working…": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Working…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在处理…"
           }
         }
       }

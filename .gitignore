@@ -36,7 +36,6 @@ collect_sapphire_files.py
 Sapphire/Services/FaceID/Models/PassiveLiveness.enc
 Sapphire.xcodeproj/project.xcworkspace/xcuserdata/Shariq.xcuserdatad/UserInterfaceState.xcuserstate
 Sapphire.xcodeproj/xcuserdata/Shariq.xcuserdatad/xcschemes/xcschememanagement.plist
-/Sapphire/Services/AppLock
 
 # Premium feature infrastructure
 /Sapphire/App Settings/PremiumFeatureKit.swift
@@ -44,18 +43,15 @@ Sapphire.xcodeproj/xcuserdata/Shariq.xcuserdatad/xcschemes/xcschememanagement.pl
 
 # Premium feature settings
 /Sapphire/App Settings/AppSecurity.swift
-/Sapphire/App Settings/ArchivesAndDMGInstallerSettingsView.swift
 /Sapphire/App Settings/DockLayoutsSettingsView.swift
 /Sapphire/App Settings/EmojiSettingsView.swift
 /Sapphire/App Settings/KeyboardShortcutsSettingsView.swift
 /Sapphire/App Settings/MediaOptimizerSettingsView.swift
-/Sapphire/App Settings/MonitoringSettingsView.swift
 /Sapphire/App Settings/MouseSettingsView.swift
 /Sapphire/App Settings/StorageViews.swift
 
 # Premium feature implementations
 /Sapphire/Services/Continuity/
-/Sapphire/Services/DMGInstaller/
 /Sapphire/Services/DockLayouts/
 /Sapphire/Services/Emoji/
 /Sapphire/Services/MediaOptimizer/

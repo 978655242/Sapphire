@@ -163,14 +163,6 @@ class Helper: NSObject, HelperProtocol {
     private var sensorCacheTimestamp = Date.distantPast
     private let sensorCacheLifetime: TimeInterval = 0.25
 
-    private struct AppliedFanState: Equatable {
-        let mode: FanMode
-        let speed: Int?
-    }
-    private let fanStateLock = NSLock()
-    private var appliedFanStates: [Int: AppliedFanState] = [:]
-
-
     override init() {
         self.smc = SMC()
         super.init()
@@ -183,13 +175,6 @@ class Helper: NSObject, HelperProtocol {
     }
 
     deinit {
-        logger.log("Helper deinitializing and closing SMC connection.")
-        if let smc = smc, let fanCount = smc.getValue("FNum") {
-            for i in 0..<Int(fanCount) {
-                logger.log("Reverting fan \(i) to automatic mode as helper is deinitializing.")
-                _ = smc.setFanMode(i, mode: .automatic)
-            }
-        }
         _ = smc?.close()
     }
 
@@ -223,11 +208,6 @@ class Helper: NSObject, HelperProtocol {
         reply(values)
     }
 
-    func getSensorValue(key: String, reply: @escaping (Double) -> Void) {
-        getSensorValues(keys: [key]) { values in
-            reply((values[key] as? NSNumber)?.doubleValue ?? -1.0)
-        }
-    }
     func getVersion(reply: @escaping (String) -> Void) {
         reply(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "N/A")
     }
@@ -440,129 +420,6 @@ class Helper: NSObject, HelperProtocol {
         _ = runPrivilegedCommand("/bin/launchctl", args: ["kickstart", "-k", "system/com.apple.audio.coreaudiod"])
         logger.log("[Helper] uninstallAudioDriver succeeded")
         reply(true, nil)
-    }
-
-    // MARK: - Fan Control Functions
-    func getFanCount(reply: @escaping (Int) -> Void) {
-        guard let smc else {
-            reply(0)
-            return
-        }
-
-        let probed = probeFanCount(using: smc)
-        if let count = smc.getValue("FNum").map({ Int($0) }), count > 0 {
-            reply(max(count, probed))
-            return
-        }
-        reply(probed)
-    }
-
-    private func probeFanCount(using smc: SMC) -> Int {
-        var probed = 0
-        for index in 0..<8 {
-            let hasFan = smc.keyExists("F\(index)Mn")
-                || smc.keyExists("F\(index)Mx")
-                || smc.keyExists("F\(index)Ac")
-                || smc.keyExists("F\(index)Tg")
-            if hasFan {
-                probed = index + 1
-            } else if probed > 0 {
-                break
-            } else {
-                break
-            }
-        }
-        return probed
-    }
-
-    func getFanInfo(fanIndex: Int, reply: @escaping (FanInfo?) -> Void) {
-        guard let smc = smc else { reply(nil); return }
-        let hardwareName = smc.getStringValue("F\(fanIndex)ID")
-        let name = hardwareName ?? (fanIndex == 0 ? "Left fan" : fanIndex == 1 ? "Right fan" : "Fan \(fanIndex)")
-        let minRPM = Int(smc.getValue("F\(fanIndex)Mn") ?? 0)
-        let maxRPM = Int(smc.getValue("F\(fanIndex)Mx") ?? 0)
-        let currentRPM = Int(smc.getValue("F\(fanIndex)Ac") ?? 0)
-        guard minRPM > 0 || maxRPM > 0 || currentRPM > 0 || smc.keyExists("F\(fanIndex)Ac") else {
-            reply(nil)
-            return
-        }
-        reply(FanInfo(
-            id: fanIndex,
-            name: name.isEmpty ? "Fan \(fanIndex)" : name,
-            minRPM: minRPM,
-            maxRPM: max(maxRPM, minRPM),
-            currentRPM: currentRPM,
-            usesDefaultName: hardwareName?.isEmpty != false
-        ))
-    }
-    func setFanMode(fanIndex: Int, mode: UInt8, reply: @escaping (Error?) -> Void) {
-        guard let smc = smc else { reply(makeError(code: .smcOpenFailed, description: "SMC not connected.")); return }
-        let targetMode: FanMode = mode == 0 ? .automatic : .forced
-        let requestedState = AppliedFanState(mode: targetMode, speed: targetMode == .automatic ? 0 : nil)
-
-        fanStateLock.lock()
-        let alreadyApplied = appliedFanStates[fanIndex] == requestedState
-        fanStateLock.unlock()
-        if alreadyApplied {
-            reply(nil)
-            return
-        }
-
-        logger.log("Request to set fan \(fanIndex) to \(targetMode == .automatic ? "AUTO" : "FORCED") mode.")
-        let modeResult = smc.setFanMode(fanIndex, mode: targetMode)
-        let speedResult = targetMode == .automatic ? smc.setFanSpeed(fanIndex, speed: 0) : kIOReturnSuccess
-        if modeResult == kIOReturnSuccess && speedResult == kIOReturnSuccess {
-            fanStateLock.lock()
-            appliedFanStates[fanIndex] = requestedState
-            fanStateLock.unlock()
-            reply(nil)
-        } else {
-            reply(makeError(code: .smcWriteFailed, description: "Failed to set fan mode."))
-        }
-    }
-    func setFanTargetSpeed(fanIndex: Int, speed: Int, reply: @escaping (Error?) -> Void) {
-        guard let smc = smc else { reply(makeError(code: .smcOpenFailed, description: "SMC not connected.")); return }
-        fanStateLock.lock()
-        let alreadyApplied = appliedFanStates[fanIndex] == AppliedFanState(mode: .forced, speed: speed)
-        fanStateLock.unlock()
-        if alreadyApplied {
-            reply(nil)
-            return
-        }
-
-        let result = smc.setFanSpeed(fanIndex, speed: speed)
-        if result == kIOReturnSuccess {
-            fanStateLock.lock()
-            appliedFanStates[fanIndex] = AppliedFanState(mode: .forced, speed: speed)
-            fanStateLock.unlock()
-        }
-        reply(result == kIOReturnSuccess ? nil : makeError(code: .smcWriteFailed, description: "Failed to write F%@Tg.", arguments: [String(fanIndex)]))
-    }
-    func setFanToConstantRPM(fanIndex: Int, speed: Int, reply: @escaping (Error?) -> Void) {
-        logger.log("Request to set fan \(fanIndex) to a constant \(speed) RPM.")
-        guard let smc = smc else { logger.error("SMC connection not available."); reply(makeError(code: .smcOpenFailed, description: "SMC not connected.")); return }
-
-        fanStateLock.lock()
-        let alreadyApplied = appliedFanStates[fanIndex] == AppliedFanState(mode: .forced, speed: speed)
-        fanStateLock.unlock()
-        if alreadyApplied {
-            reply(nil)
-            return
-        }
-        logger.log("Step 1/2: Setting fan \(fanIndex) to FORCED mode.")
-        let modeResult = smc.setFanMode(fanIndex, mode: .forced)
-        if modeResult != kIOReturnSuccess {
-            logger.error("Failed to set fan mode to forced for fan \(fanIndex). Aborting. Error code: \(modeResult)"); reply(makeError(code: .smcWriteFailed, description: "Failed to set fan to manual mode.")); return
-        }
-        logger.log("Step 2/2: Setting fan \(fanIndex) target speed to \(speed) RPM.")
-        let speedResult = smc.setFanSpeed(fanIndex, speed: speed)
-        if speedResult != kIOReturnSuccess {
-            logger.error("Failed to set fan target speed for fan \(fanIndex). Error code: \(speedResult)"); _ = smc.setFanMode(fanIndex, mode: .automatic); reply(makeError(code: .smcWriteFailed, description: "Failed to write F%@Tg.", arguments: [String(fanIndex)])); return
-        }
-        fanStateLock.lock()
-        appliedFanStates[fanIndex] = AppliedFanState(mode: .forced, speed: speed)
-        fanStateLock.unlock()
-        logger.log("Successfully set fan \(fanIndex) to \(speed) RPM."); reply(nil)
     }
 
     func createAggregateDevice(subDeviceUIDs: [String], masterDeviceUID: String, reply: @escaping (UInt32) -> Void) {

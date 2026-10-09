@@ -174,7 +174,7 @@ public struct SensorWrapper: Codable {
         case base, payload
     }
     private enum SensorTyp: Int, Codable {
-        case sensor, fan
+        case sensor
     }
 
     init(_ sensor: any Sensor_p) {
@@ -186,7 +186,6 @@ public struct SensorWrapper: Codable {
         let base = try container.decode(SensorTyp.self, forKey: .base)
         switch base {
         case .sensor: self.sensor = try container.decode(Sensor.self, forKey: .payload)
-        case .fan: self.sensor = try container.decode(Fan.self, forKey: .payload)
         }
     }
 
@@ -195,9 +194,6 @@ public struct SensorWrapper: Codable {
         switch sensor {
         case let payload as Sensor:
             try container.encode(SensorTyp.sensor, forKey: .base)
-            try container.encode(payload, forKey: .payload)
-        case let payload as Fan:
-            try container.encode(SensorTyp.fan, forKey: .base)
             try container.encode(payload, forKey: .payload)
         default:
             let context = EncodingError.Context(codingPath: [], debugDescription: "Unknown Sensor_p type.")
@@ -241,7 +237,6 @@ public struct Sensor: Sensor_p, Codable {
         case .current: return "A"
         case .power: return "W"
         case .energy: return "Wh"
-        case .fan: return "RPM"
         case .unknown: return ""
         }
     }
@@ -252,8 +247,6 @@ public struct Sensor: Sensor_p, Codable {
             return "\(Int(value))°"
         case .voltage, .current, .power, .energy:
             valStr = String(format: "%.2f", value)
-        case .fan:
-            valStr = "\(Int(value))"
         case .unknown:
             return ""
         }
@@ -261,15 +254,6 @@ public struct Sensor: Sensor_p, Codable {
     }
 }
 
-public struct Fan: Sensor_p, Codable {
-    public var key: String
-    public var name: String
-    public var value: Double
-    public var group: SensorGroup
-    public var type: SensorType
-    public var unit: String { "RPM" }
-    public var formattedValue: String { "\(Int(value)) RPM" }
-}
 
 // MARK: - Main Stats Manager
 @MainActor

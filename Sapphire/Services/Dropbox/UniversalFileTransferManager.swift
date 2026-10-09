@@ -28,8 +28,6 @@ struct FileTransferTask: Identifiable, Equatable {
         case manual
         case browserDownload
         case finder
-        case archiveExtraction
-        case dmgInstall
     }
 
     var progress: Double? {

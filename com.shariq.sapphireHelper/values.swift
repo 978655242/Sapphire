@@ -12,7 +12,6 @@ public enum SensorType: String, Codable, CaseIterable {
     case voltage = "Voltage"
     case current = "Current"
     case power = "Power"
-    case fan = "Fans"
     case energy = "Energy"
     case unknown = "Unknown"
 }

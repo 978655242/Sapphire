@@ -7,57 +7,11 @@
 
 import Foundation
 
-let SapphireHelperProtocolVersion: Int = 13
-
-
-@objc(FanInfo)
-public class FanInfo: NSObject, NSSecureCoding, Identifiable {
-    public static var supportsSecureCoding: Bool = true
-    @objc public var id: Int
-    @objc var name: String
-    @objc var minRPM: Int
-    @objc var maxRPM: Int
-    @objc var currentRPM: Int
-    private var usesDefaultName: Bool
-
-    var displayName: String {
-        guard usesDefaultName else { return name }
-        switch id {
-        case 0: return NSLocalizedString("Left fan", comment: "")
-        case 1: return NSLocalizedString("Right fan", comment: "")
-        default: return String(localized: "Fan \(id)")
-        }
-    }
-
-    @objc public init(id: Int, name: String, minRPM: Int, maxRPM: Int, currentRPM: Int, usesDefaultName: Bool = false) {
-        self.id = id; self.name = name; self.minRPM = minRPM; self.maxRPM = maxRPM; self.currentRPM = currentRPM
-        self.usesDefaultName = usesDefaultName
-    }
-
-    public func encode(with coder: NSCoder) {
-        coder.encode(id, forKey: "id"); coder.encode(name, forKey: "name"); coder.encode(minRPM, forKey: "minRPM"); coder.encode(maxRPM, forKey: "maxRPM"); coder.encode(currentRPM, forKey: "currentRPM")
-        coder.encode(usesDefaultName, forKey: "usesDefaultName")
-    }
-
-    public required init?(coder: NSCoder) {
-        id = coder.decodeInteger(forKey: "id")
-        name = coder.decodeObject(of: NSString.self, forKey: "name") as String? ?? NSLocalizedString("Unknown", comment: "")
-        usesDefaultName = coder.decodeBool(forKey: "usesDefaultName")
-        minRPM = coder.decodeInteger(forKey: "minRPM")
-        maxRPM = coder.decodeInteger(forKey: "maxRPM")
-        currentRPM = coder.decodeInteger(forKey: "currentRPM")
-    }
-}
+let SapphireHelperProtocolVersion: Int = 14
 
 @objc protocol HelperProtocol {
-    func getFanCount(reply: @escaping (Int) -> Void)
-    func getFanInfo(fanIndex: Int, reply: @escaping (FanInfo?) -> Void)
-    func setFanMode(fanIndex: Int, mode: UInt8, reply: @escaping (Error?) -> Void)
-    func setFanTargetSpeed(fanIndex: Int, speed: Int, reply: @escaping (Error?) -> Void)
-    func setFanToConstantRPM(fanIndex: Int, speed: Int, reply: @escaping (Error?) -> Void)
     func getAllSMCKeys(reply: @escaping ([String]) -> Void)
     func getSensorValues(keys: [String], reply: @escaping (NSDictionary) -> Void)
-    func getSensorValue(key: String, reply: @escaping (Double) -> Void)
     func getVersion(reply: @escaping (String) -> Void)
     func getProtocolVersion(reply: @escaping (Int) -> Void)
     func createAggregateDevice(subDeviceUIDs: [String], masterDeviceUID: String, reply: @escaping (UInt32) -> Void)

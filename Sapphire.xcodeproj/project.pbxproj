@@ -431,7 +431,6 @@
 				HelperError.swift,
 				HelperProtocol.swift,
 				Protocols.swift,
-				SensorNameMap.swift,
 				values.swift,
 			);
 			target = DA46CF752DCBCA0000F00EC5 /* Sapphire */;

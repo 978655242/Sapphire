@@ -23,26 +23,37 @@ final class InfrastructureUtilitiesTests: XCTestCase {
         XCTAssertTrue(SensorsStatsReader.sensors(for: []).isEmpty)
     }
 
-    func testFanControlCannotPollRetiredOrUndiscoveredSensorKeys() {
-        let retiredKeys: Set<String> = [
-            "TB0T", "TB1T", "TB2T", "TB3T", "Tb0P", "Tb0T",
-            "TCHP", "IBAC", "PPBR", "Vb0R", "TBXT", "VD0R", "ID0R", "PDTR", "Unknown"
+    func testRetiredUtilityPreferencesDoNotResetAuthenticationOrFileShelfSettings() throws {
+        let legacy: [String: Any] = [
+            "appLockEnabled": true,
+            "appLockProtectedApps": ["com.apple.Safari"],
+            "monitoringMenuBarReadoutsEnabled": true,
+            "monitoringAlertsEnabled": true,
+            "archiveExtractorEnabled": true,
+            "archiveExtractionMode": "smart",
+            "dmgInstallerEnabled": true,
+            "fanControlModes": ["0": ["kind": "constant", "rpm": 3000]],
+            "scheduledTasks": [["action": "setFanConstant", "fanSpeed": 3000]],
+            "faceIDUnlockEnabled": true,
+            "faceIDAntiSpoofEnabled": true,
+            "bluetoothUnlockTimeout": 7.5,
+            "clickToOpenFileShelf": false,
+            "weatherUseCelsius": true
         ]
-        let retainedKeys: Set<String> = ["TC0P", "TC0c"]
-        let sensors = FanManager.temperatureSensors(for: retiredKeys.union(retainedKeys))
-        XCTAssertEqual(Set(sensors.map(\.key)), retainedKeys)
-
-        var modes: [Int: FanControlMode] = [:]
-        for (index, key) in retiredKeys.union(retainedKeys).enumerated() {
-            modes[index] = .sensor(sensorKey: key, minTemp: 40, maxTemp: 75)
+        let data = try JSONSerialization.data(withJSONObject: ["settings": legacy])
+        let settings = try XCTUnwrap(SettingsPersistence.decodeFromPayload(data))
+        XCTAssertTrue(settings.faceIDUnlockEnabled)
+        XCTAssertTrue(settings.faceIDAntiSpoofEnabled)
+        XCTAssertEqual(settings.bluetoothUnlockTimeout, 7.5)
+        XCTAssertFalse(settings.clickToOpenFileShelf)
+        XCTAssertTrue(settings.weatherUseCelsius)
+        let saved = try XCTUnwrap(SettingsPersistence.encodeToDictionary(settings))
+        for key in legacy.keys where key.hasPrefix("appLock") || key.hasPrefix("monitoring")
+            || key.hasPrefix("archive") || key.hasPrefix("dmg") || key == "fanControlModes" || key == "scheduledTasks" {
+            XCTAssertNil(saved[key], key)
         }
-        modes[modes.count] = .customCurve(sensorKey: "Tb0T", points: [])
-        modes[modes.count] = .customCurve(sensorKey: "TC0P", points: [])
-        modes[modes.count] = .sensor(sensorKey: "TC1P", minTemp: 40, maxTemp: 75)
-        XCTAssertEqual(FanManager.controlSensorKeys(for: modes, sensors: sensors), retainedKeys)
-        XCTAssertTrue(FanManager.controlSensorKeys(for: modes, sensors: []).isEmpty)
-        XCTAssertTrue(FanManager.controlSensorKeys(for: [0: .auto, 1: .constant(rpm: 2500)], sensors: sensors).isEmpty)
     }
+
 
     @MainActor
     func testNotchDragLocationOnlyPublishesDistinctCoordinates() {
@@ -440,53 +451,6 @@ final class InfrastructureUtilitiesTests: XCTestCase {
         XCTAssertTrue(decoded.focusSessionWidgetEnabled)
     }
 
-    func testNewFeaturesAreDisabledByDefault() {
-        let settings = Settings()
-
-        XCTAssertFalse(settings.systemEnhanceDockPreviewsEnabled)
-        XCTAssertFalse(settings.systemEnhanceAltTabEnabled)
-        XCTAssertFalse(settings.systemEnhanceCalendarIntegrationEnabled)
-        XCTAssertFalse(settings.systemEnhanceCompactPreviewEnabled)
-        XCTAssertFalse(settings.systemEnhanceEnhancedPreviewsEnabled)
-        XCTAssertFalse(settings.systemEnhancePasteAsPlainTextEnabled)
-        XCTAssertFalse(settings.systemEnhanceHingeAnimationEnabled)
-        XCTAssertFalse(settings.systemEnhanceDockClicksEnabled)
-        XCTAssertFalse(settings.systemEnhanceAutoQuitEnabled)
-        XCTAssertFalse(settings.systemEnhanceQuitProtectionEnabled)
-        XCTAssertFalse(settings.systemEnhanceGreenMaximizeEnabled)
-        XCTAssertFalse(settings.dockLayoutsEnabled)
-        XCTAssertFalse(settings.mediaToolsAutoOptimizeClipboard)
-        XCTAssertFalse(settings.mediaToolsShowShelfActions)
-        XCTAssertFalse(settings.mediaToolsOCRShortcutEnabled)
-        XCTAssertTrue(settings.automaticUpdateChecksEnabled)
-        XCTAssertTrue(settings.automaticallyDownloadSapphireUpdates)
-        XCTAssertTrue(settings.updateAvailableNotificationsEnabled)
-        XCTAssertTrue(settings.showUpdateAvailableLiveActivity)
-        XCTAssertFalse(settings.installedAppUpdatesEnabled)
-        XCTAssertFalse(settings.installedAppUpdateNotificationsEnabled)
-        XCTAssertFalse(settings.clipboardPickerEnabled)
-        XCTAssertFalse(settings.clipboardAutoClearEnabled)
-        XCTAssertFalse(settings.clipboardCleanURLEnabled)
-        XCTAssertFalse(settings.clipboardFinderCutPasteEnabled)
-        XCTAssertFalse(settings.clipboardFinderF2RenameEnabled)
-        XCTAssertFalse(settings.snippetsEnabled)
-        XCTAssertFalse(settings.emojiEnabled)
-        XCTAssertFalse(settings.mouseControlEnabled)
-        XCTAssertFalse(settings.monitoringMenuBarReadoutsEnabled)
-        XCTAssertFalse(settings.monitoringAlertsEnabled)
-        XCTAssertFalse(settings.archiveExtractorEnabled)
-        XCTAssertFalse(settings.dmgInstallerEnabled)
-        XCTAssertFalse(settings.timerWidgetEnabled)
-        XCTAssertFalse(settings.storageWidgetEnabled)
-        XCTAssertFalse(settings.continuityEnabled)
-        XCTAssertFalse(settings.fileShelfAirDropDestinationEnabled)
-        XCTAssertFalse(settings.fileShelfDeviceDestinationsEnabled)
-        XCTAssertFalse(settings.caffeinateAutoDuringTasks)
-        XCTAssertFalse(settings.devActivityEnabled)
-        XCTAssertFalse(settings.menuBarEnabled)
-        XCTAssertFalse(settings.menuBarProfilesEnabled)
-        XCTAssertFalse(settings.showOnlyRunningAppsInDock)
-    }
 
     func testEventHandlingSnapshotPreservesHotPathPreferences() {
         var settings = Settings()

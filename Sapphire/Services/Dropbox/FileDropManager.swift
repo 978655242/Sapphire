@@ -203,10 +203,6 @@ class FileDropManager: ObservableObject {
         syncUniversalTasks(newTasks: finderTasks, sourceType: .finder, keepDuration: 30.0)
     }
 
-    func updateExternalTask(_ task: FileTransferTask?, sourceType: FileTransferTask.FileTransferSource) {
-        syncUniversalTasks(newTasks: task.map { [$0] } ?? [], sourceType: sourceType, keepDuration: 5.0)
-    }
-
     private func syncUniversalTasks(newTasks: [FileTransferTask], sourceType: FileTransferTask.FileTransferSource, keepDuration: TimeInterval) {
         var updatedTasks = tasks
         let activeTaskIDs = Set(newTasks.map { "universal-\($0.id)" })

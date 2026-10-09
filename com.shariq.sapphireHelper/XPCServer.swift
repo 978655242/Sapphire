@@ -64,12 +64,6 @@ extension XPCServer: NSXPCListenerDelegate {
         NSLog("[SMJBS]: Client is valid. Accepting connection.")
 
         let interface = NSXPCInterface(with: HelperProtocol.self)
-        interface.setClasses(
-            NSSet(array: [FanInfo.self, NSNull.self]) as! Set<AnyHashable>,
-            for: #selector(HelperProtocol.getFanInfo(fanIndex:reply:)),
-            argumentIndex: 0,
-            ofReply: true
-        )
         newConnection.exportedInterface = interface
         newConnection.exportedObject = helper
 

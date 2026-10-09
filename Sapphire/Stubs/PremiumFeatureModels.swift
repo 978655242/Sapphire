@@ -37,16 +37,6 @@ final class WiFiStatusMonitor: ObservableObject {
     func refresh(completion: (() -> Void)? = nil) { completion?() }
 }
 
-@MainActor
-final class DMGInstallerManager: ObservableObject {
-    static let shared = DMGInstallerManager()
-    @Published private(set) var currentTransferTask: FileTransferTask?
-
-    private init() {}
-    func handleOpenURLs(_ urls: [URL]) {}
-    static func isDefaultDMGHandler() -> Bool { false }
-    static func setAsDefaultDMGHandler() {}
-}
 
 struct DockLayout: Codable, Equatable, Identifiable {
     var id: UUID = UUID()

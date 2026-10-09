@@ -427,8 +427,6 @@ private struct UniversalTransferRowView: View {
     private var verb: String {
         switch task.sourceType {
         case .finder: return "Copying".local
-        case .archiveExtraction: return "Extracting".local
-        case .dmgInstall: return "Installing".local
         case .browserDownload, .manual: return "Downloading".local
         }
     }
@@ -436,18 +434,12 @@ private struct UniversalTransferRowView: View {
     private var icon: String {
         switch task.sourceType {
         case .finder: return "arrow.right.arrow.left.circle.fill"
-        case .archiveExtraction: return "archivebox.fill"
-        case .dmgInstall: return "externaldrive.fill.badge.plus"
         case .browserDownload, .manual: return "arrow.down.circle.fill"
         }
     }
 
     private var tint: Color {
-        switch task.sourceType {
-        case .archiveExtraction: return .brown
-        case .dmgInstall: return .indigo
-        default: return .blue
-        }
+        .blue
     }
 
     private var subtitle: String {

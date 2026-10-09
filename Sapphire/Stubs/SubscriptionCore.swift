@@ -19,7 +19,7 @@ public enum AppFeature: String, Codable, CaseIterable {
     case unlimitedLyricsFetch, translation, geminiLive, advancedFileConversion,
          priorityAutomation, betaSoftwareUpdates, circleToSearch, liveSports,
          financeWidget, sportsWidget, financeLiveActivity, prioritizedFeedback,
-         appLock, focusProductiveAccess,
+         focusProductiveAccess,
          menuBarProfiles, androidContinuitySyncMedia, androidContinuityWidgets,
          androidContinuityPhotoDisk, mediaTools, basicMouseSettings,
          dockPresets,
@@ -28,7 +28,7 @@ public enum AppFeature: String, Codable, CaseIterable {
          continuityCameraAndMic, continuityMacTabsOnPhone,
          androidNotificationsOnMac, continuityCloudflareRelay, windowsPreview, dockPreview, allMouseSettings,
          surroundSound, snapZonesKeyboardShortcuts, emojiSuggestAsYouType,
-         basicStorageFeatures, clipboardPicker, clipboardAdvancedTools, dmgInstaller,
+         basicStorageFeatures, clipboardPicker, clipboardAdvancedTools,
          macScreenMirroringOnAndroid, macScreenExtensionOnMac, androidInstantHotspot,
          androidRemoteConnection, advancedStorageFeatures, audio8D,
          storageWidgets, ocrFeature

@@ -10,8 +10,6 @@ import Foundation
 public let HelperErrorDomain = "com.shariq.sapphireHelper.ErrorDomain"
 
 public enum HelperErrorCode: Int {
-    case smcOpenFailed = 1
-    case smcWriteFailed = 2
     case generalError = 3
 }
 

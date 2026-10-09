@@ -22,9 +22,6 @@ struct KeyboardShortcutsSettingsView: View { var body: some View { PremiumUnavai
 struct ContinuitySettingsView: View { var body: some View { PremiumUnavailableView(title: "Continuity".local) } }
 struct EmojiSettingsView: View { var body: some View { PremiumUnavailableView(title: "Emoji".local) } }
 struct MouseSettingsView: View { var body: some View { PremiumUnavailableView(title: "Mouse".local) } }
-struct MonitoringSettingsView: View { var body: some View { PremiumUnavailableView(title: "Monitoring".local) } }
-struct ArchivesAndDMGInstallerSettingsView: View { var body: some View { PremiumUnavailableView(title: "Archives".local) } }
-struct AppLockSettingsView: View { var body: some View { PremiumUnavailableView(title: "App Lock".local) } }
 struct DockLayoutsSettingsView: View { var body: some View { PremiumUnavailableView(title: "Dock Layouts".local) } }
 struct MediaOptimizerSettingsView: View { var body: some View { PremiumUnavailableView(title: "Media Optimizer".local) } }
 

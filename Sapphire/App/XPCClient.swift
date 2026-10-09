@@ -164,14 +164,7 @@ final class XPCClient {
     }
 
     private func makeRemoteInterface() -> NSXPCInterface {
-        let interface = NSXPCInterface(with: HelperProtocol.self)
-        interface.setClasses(
-            NSSet(array: [FanInfo.self, NSNull.self]) as! Set<AnyHashable>,
-            for: #selector(HelperProtocol.getFanInfo(fanIndex:reply:)),
-            argumentIndex: 0,
-            ofReply: true
-        )
-        return interface
+        NSXPCInterface(with: HelperProtocol.self)
     }
 
     private func installHandlers(on connection: NSXPCConnection) {
@@ -230,5 +223,46 @@ final class XPCClient {
         failedConnection.interruptionHandler = nil
         detach(failedConnection, notifyLost: true)
         failedConnection.invalidate()
+    }
+}
+
+private enum HelperAsyncTimeout {
+    static let seconds: TimeInterval = 8.0
+}
+
+extension HelperProtocol {
+    func getSensorValues(keys: [String]) async -> NSDictionary {
+        await withTimeoutReply(seconds: HelperAsyncTimeout.seconds, default: NSDictionary()) { finish in
+            getSensorValues(keys: keys, reply: finish)
+        }
+    }
+
+    func getAllSMCKeys() async -> [String] {
+        await withTimeoutReply(seconds: HelperAsyncTimeout.seconds, default: [String]()) { finish in
+            getAllSMCKeys(reply: finish)
+        }
+    }
+}
+
+private func withTimeoutReply<T>(
+    seconds: TimeInterval,
+    default defaultValue: T,
+    start: (@escaping (T) -> Void) -> Void
+) async -> T {
+    await withCheckedContinuation { continuation in
+        let lock = NSLock()
+        var finished = false
+        let finish: (T) -> Void = { value in
+            lock.lock()
+            defer { lock.unlock() }
+            guard !finished else { return }
+            finished = true
+            continuation.resume(returning: value)
+        }
+
+        start(finish)
+        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + seconds) {
+            finish(defaultValue)
+        }
     }
 }

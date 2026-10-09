@@ -177,7 +177,6 @@ struct statsLiveActivityView {
                 case .highLevel(let statType): return statType.systemImage
                 case .sensor(let sensor):
                     switch sensor.type {
-                    case .fan: return "fanblades.fill"
                     case .temperature: return "thermometer.medium"
                     case .voltage: return "bolt.circle"
                     case .current: return "bolt.horizontal.circle"
@@ -227,8 +226,6 @@ struct FileProgressLiveActivityView {
         case .universalTransfer(let transfer):
             switch transfer.sourceType {
             case .finder: iconName = "arrow.right.arrow.left.circle.fill"
-            case .archiveExtraction: iconName = "archivebox.fill"
-            case .dmgInstall: iconName = "externaldrive.fill.badge.plus"
             case .browserDownload, .manual: iconName = "arrow.down.circle.fill"
             }
         case .airDrop: iconName = "airplayaudio"
@@ -257,8 +254,6 @@ struct FileProgressLiveActivityView {
             let verb: String
             switch transferTask.sourceType {
             case .finder: verb = "Copying...".local
-            case .archiveExtraction: verb = "Extracting...".local
-            case .dmgInstall: verb = "Installing...".local
             case .browserDownload, .manual: verb = "Downloading...".local
             }
             if transferTask.sourceType == .finder {

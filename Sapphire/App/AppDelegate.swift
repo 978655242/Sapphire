@@ -127,13 +127,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     lazy var focusSessionShortcutMonitor: FocusSessionShortcutMonitor = .shared
     lazy var ocrScreenshotMonitor: OCRScreenshotMonitor = .shared
     lazy var focusScheduleManager: FocusScheduleManager = .shared
-    lazy var appLockManager: AppLockManager = .shared
     lazy var weatherActivityViewModel: WeatherActivityViewModel = WeatherActivityViewModel()
     lazy var contentPickerHelper: ContentPickerHelper = ContentPickerHelper()
     lazy var geminiLiveManager: GeminiLiveManager = GeminiLiveManager()
     lazy var settingsModel: SettingsModel = .shared
     lazy var activeAppMonitor: ActiveAppMonitor = .shared
-    lazy var scheduleManager: ScheduleManager = .shared
     lazy var keyboardShortcutManager: KeyboardShortcutManager = .shared
     lazy var plainTextPasteManager: PlainTextPasteManager = .shared
     lazy var globalDragManager: GlobalDragManager = .shared
@@ -150,7 +148,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     lazy var systemEnhanceGreenMaximize = SystemEnhanceGreenMaximize.shared
     lazy var systemEnhanceContextMenu = SystemEnhanceContextMenu.shared
     lazy var systemEnhanceHingeAnimation = SystemEnhanceHingeAnimationManager.shared
-    lazy var dmgInstallerManager: DMGInstallerManager = .shared
     lazy var emojiShortcutManager: EmojiShortcutManager = .shared
     lazy var clipboardPickerManager: ClipboardPickerManager = .shared
     lazy var clipboardAutoClearManager = ClipboardAutoClearManager.shared
@@ -162,9 +159,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     lazy var extraClickFilterManager = ExtraClickFilterManager.shared
     lazy var keyboardDebounceManager = KeyboardDebounceManager.shared
     lazy var superKeyManager = SuperKeyManager.shared
-    lazy var menuBarReadoutsManager = MenuBarReadoutsManager.shared
-    lazy var systemAlertsManager = SystemAlertsManager.shared
-    lazy var archiveExtractor: ArchiveExtractor = .shared
 
     var statusBarController: StatusBarController?
     var interactionManager: MenuBarInteractionManager?
@@ -487,8 +481,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         extraClickFilterManager.shutdown()
         keyboardDebounceManager.stopMonitoring()
         superKeyManager.stopMonitoring()
-        menuBarReadoutsManager.removeStatusItem()
-        systemAlertsManager.stopMonitoring()
 
         subscriptionValidationTimer?.invalidate()
         subscriptionValidationTimer = nil
@@ -656,7 +648,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             .sink { _ in SportsAPIService.shared.bootstrapIfNeeded() }
             .store(in: &cancellables)
         MediaOptimizerManager.shared.start()
-        FileOperationProgressRouter.shared.start()
         _ = ocrScreenshotMonitor
         _ = emojiShortcutManager
         _ = clipboardPickerManager
@@ -670,16 +661,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         extraClickFilterManager.start()
         keyboardDebounceManager.start()
         superKeyManager.start()
-        menuBarReadoutsManager.start()
-        systemAlertsManager.start()
         DevActivityMonitor.shared.start()
         LiveWallpaperManager.shared.start()
-        _ = archiveExtractor
         _ = keyboardShortcutManager
         _ = plainTextPasteManager
         _ = focusSessionShortcutMonitor
         _ = focusScheduleManager
-        _ = appLockManager
         _ = lidAngleAutomationManager
         setupStatusBarItem()
         initializeBackgroundServices()
@@ -1209,18 +1196,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         notchWindows.removeAll()
     }
 
-    // MARK: - File Handling (DMG Installer & Archives)
+    // MARK: - Dock Layout File Handling
 
     func application(_ application: NSApplication, open urls: [URL]) {
-        let dmgURLs = urls.filter { $0.pathExtension.lowercased() == "dmg" }
-        let archiveURLs = urls.filter { !dmgURLs.contains($0) && ArchiveExtractor.isArchiveURL($0) }
-        let layoutURLs = urls.filter { !dmgURLs.contains($0) && !archiveURLs.contains($0) && $0.pathExtension.lowercased() == "sapphiredocklayout" }
-        if !dmgURLs.isEmpty {
-            dmgInstallerManager.handleOpenURLs(dmgURLs)
-        }
-        if !archiveURLs.isEmpty {
-            archiveExtractor.handleOpenURLs(archiveURLs)
-        }
+        let layoutURLs = urls.filter { $0.pathExtension.lowercased() == "sapphiredocklayout" }
         if !layoutURLs.isEmpty {
             DockLayoutsManager.shared.importLayoutFiles(at: layoutURLs)
         }

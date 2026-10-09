@@ -48,44 +48,6 @@ final class BatterySettingsMigrationTests: XCTestCase {
         XCTAssertNil(saved["liveWallpaperPauseOnBattery"])
     }
 
-    func testMixedLegacyScheduledTasksPreserveEveryFanTaskAndItsParameters() throws {
-        let autoID = UUID(uuidString: "00000000-0000-0000-0000-000000000001")!
-        let constantID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
-        let sensorID = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
-        func task(_ action: String, id: UUID) -> [String: Any] {
-            ["id": id.uuidString, "action": action, "repeatInterval": "daily",
-             "startTime": 12345.0, "chargeLimit": 80, "fanSpeed": 3456,
-             "sensorKey": "TC0P", "minTemp": 37, "maxTemp": 82, "isActive": false]
-        }
-        var retiredSensorTask = task("setFanSensorBased", id: sensorID)
-        retiredSensorTask["sensorKey"] = "TB0T"
-        let legacy: [String: Any] = [
-            "weatherUseCelsius": true,
-            "scheduledTasks": [
-                task("setChargeLimit", id: autoID), task("setFanAuto", id: autoID),
-                task("topUp", id: constantID), task("setFanConstant", id: constantID),
-                task("dischargeTo", id: sensorID), task("setFanSensorBased", id: sensorID),
-                task("startCalibration", id: autoID), retiredSensorTask
-            ]
-        ]
-        let settings = try XCTUnwrap(SettingsPersistence.decodeFromDictionary(legacy))
-        XCTAssertEqual(settings.scheduledTasks.map(\.action), [.setFanAuto, .setFanConstant, .setFanSensorBased])
-        XCTAssertEqual(settings.scheduledTasks.map(\.id), [autoID, constantID, sensorID])
-        for task in settings.scheduledTasks {
-            XCTAssertEqual(task.repeatInterval, .daily)
-            XCTAssertEqual(task.startTime, Date(timeIntervalSinceReferenceDate: 12345))
-            XCTAssertEqual(task.fanSpeed, 3456)
-            XCTAssertEqual(task.sensorKey, "TC0P")
-            XCTAssertEqual(task.minTemp, 37)
-            XCTAssertEqual(task.maxTemp, 82)
-            XCTAssertFalse(task.isActive)
-        }
-        XCTAssertTrue(settings.weatherUseCelsius)
-        let saved = try XCTUnwrap(SettingsPersistence.encodeToDictionary(settings))
-        let savedTasks = try XCTUnwrap(saved["scheduledTasks"] as? [[String: Any]])
-        XCTAssertTrue(savedTasks.allSatisfy { $0["chargeLimit"] == nil })
-    }
-
     func testRetiredScalarSelectionsUseConventionalDefaultsWithoutResettingOtherSettings() throws {
         let legacy: [String: Any] = [
             "lockScreenWidgets": "battery", "lockScreenMainWidgets": "battery",
@@ -113,23 +75,12 @@ final class BatterySettingsMigrationTests: XCTestCase {
         XCTAssertTrue(settings.selectedStats.isEmpty)
     }
 
-    func testLegacyBatterySensorsAreRetiredWithoutDiscardingOtherFanModes() throws {
+    func testLegacyBatterySensorsAreRetiredWithoutDiscardingOtherSensors() throws {
         var legacy = try XCTUnwrap(SettingsPersistence.encodeToDictionary(Settings()))
         legacy["selectedSensorKeys"] = ["TC0P", "TB0T", "Tb0P", "IBAC", "PPBR", "TCHP", "Vb0R", "VD0R", "ID0R", "PDTR", "TG0P"]
-        legacy["fanControlModes"] = [
-            "0": ["kind": "sensor", "sensorKey": "TB0T", "minTemp": 40, "maxTemp": 75],
-            "1": ["kind": "constant", "rpm": 3200],
-            "2": ["kind": "customCurve", "sensorKey": "Tb0P", "points": [["temperature": 40, "rpm": 2000]]],
-            "3": ["kind": "sensor", "sensorKey": "TC0P", "minTemp": 43, "maxTemp": 79]
-        ] as [String: Any]
         let data = try JSONSerialization.data(withJSONObject: legacy)
         let settings = try XCTUnwrap(SettingsPersistence.decodeFromPayload(data))
         XCTAssertEqual(settings.selectedSensorKeys, ["TC0P", "TG0P"])
-        XCTAssertEqual(settings.fanControlModes.count, 4)
-        XCTAssertEqual(settings.fanControlModes["0"]?.toMode(), .auto)
-        XCTAssertEqual(settings.fanControlModes["1"]?.toMode(), .constant(rpm: 3200))
-        XCTAssertEqual(settings.fanControlModes["2"]?.toMode(), .auto)
-        XCTAssertEqual(settings.fanControlModes["3"]?.toMode(), .sensor(sensorKey: "TC0P", minTemp: 43, maxTemp: 79))
     }
 
     func testBackupImportMigratesBatterySensorsEvenWhenThePayloadStillDecodes() throws {

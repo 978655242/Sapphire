@@ -870,7 +870,7 @@ final class CameraController: NSObject, ObservableObject, Identifiable, AVCaptur
                 self.appState = .recognized
                 self.faceIsRecognized = true
                 self.userInstruction = "Authenticated!".local
-                AuthenticationManager.shared.handleFaceIDAuthenticated()
+                AuthenticationManager.shared.handleUnlock()
             }
         }
     }
