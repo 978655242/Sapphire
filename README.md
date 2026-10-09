@@ -40,6 +40,8 @@ This local developer fork uses `com.yuxi.sapphire.local` and its own helper/widg
 
 The local app builds and installs as `Island.app`, with `Island` as its macOS application name. The Xcode scheme and Swift module remain `Sapphire`; bundle identifiers, preferences domains, keychain accounts and helper identifiers are unchanged.
 
+Island stays a background (`LSUIElement` / accessory) app even while settings, lyrics, or permission/helper dialogs are open. Closing settings keeps the notch running without creating a running-app Dock icon or a new recent-app entry. Existing Dock shortcuts or recent entries are owned by macOS and may need to be removed once through the Dock menu; Island does not rewrite Dock preferences.
+
 macOS privacy permissions belong to an application's signing identity, not its display name. An enabled `Sapphire` entry for the official `com.cshariq.sapphire` release does not grant Accessibility or other permissions to `com.yuxi.sapphire.local`. Install the local build at its final path before granting its permissions; existing official-release consent remains untouched.
 
 Startup checks whether an unlock-password record exists using a noninteractive Keychain metadata query, without decrypting the password. Actual password verification and unlock operations keep their normal credential checks; existing credentials are not removed or migrated.

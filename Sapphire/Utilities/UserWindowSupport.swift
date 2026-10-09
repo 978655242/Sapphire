@@ -121,12 +121,7 @@ enum UtilityWindowPresenter {
         DispatchQueue.main.async { [weak window] in
             guard let window else { return }
 
-            if NSApp.activationPolicy() != .regular {
-                NSApp.setActivationPolicy(.regular)
-            }
-            if NSApp.isHidden {
-                NSApp.unhide(nil)
-            }
+            activate()
 
             window.collectionBehavior = .fullScreenAuxiliary
             window.level = .normal
@@ -134,7 +129,6 @@ enum UtilityWindowPresenter {
                 window.deminiaturize(nil)
             }
 
-            NSApp.activate(ignoringOtherApps: true)
             window.makeKeyAndOrderFront(nil)
         }
     }
@@ -143,7 +137,7 @@ enum UtilityWindowPresenter {
         DispatchQueue.main.async { [weak window] in
             guard let window else { return }
 
-            activateAsRegularApp()
+            activate()
             window.collectionBehavior.insert(.canJoinAllSpaces)
             window.level = elevatedWindowLevel
             if window.isMiniaturized {
@@ -155,12 +149,13 @@ enum UtilityWindowPresenter {
         }
     }
 
-    static func activateAsRegularApp() {
+    static func activate() {
         if NSApp.isHidden {
             NSApp.unhide(nil)
         }
-        if NSApp.activationPolicy() != .regular {
-            NSApp.setActivationPolicy(.regular)
+        // Keep utility windows out of the Dock and its recent-app history.
+        if NSApp.activationPolicy() != .accessory {
+            NSApp.setActivationPolicy(.accessory)
         }
         NSApp.activate(ignoringOtherApps: true)
     }
@@ -234,7 +229,7 @@ enum HelperAlertPresenter {
         buttonTitles: [String],
         completion: @escaping (Int) -> Void
     ) {
-        UtilityWindowPresenter.activateAsRegularApp()
+        UtilityWindowPresenter.activate()
 
         let host = acquireHostWindow()
         host.orderFrontRegardless()

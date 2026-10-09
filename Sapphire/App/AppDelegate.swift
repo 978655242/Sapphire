@@ -1238,7 +1238,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             #if SAPPHIRE_FULL_BUILD
             continuityManager.openWidgets()
             #else
-            UtilityWindowPresenter.activateAsRegularApp()
+            UtilityWindowPresenter.activate()
             let alert = NSAlert()
             alert.messageText = "Android Widgets".local
             alert.informativeText = "Android widget management requires the full build of Sapphire. The public source does not include the phone integration.".local
@@ -1708,7 +1708,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     private func finishClosingUserWindow() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             guard let self else { return }
-            self.restoreAgentActivationIfNeeded()
             SettingsModel.shared.flushPendingSave()
             SystemAppFetcher.shared.releaseCachedApps()
             AppIconLoader.releaseCache()
@@ -1729,13 +1728,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         )
     }
 
-    private func restoreAgentActivationIfNeeded() {
-        let hasUserWindow = [settingsWindow, lyricsWindow, onboardingWindow, betaBlockerWindow]
-            .compactMap { $0 }
-            .contains { $0.isVisible }
-        guard !hasUserWindow else { return }
-        transitionToAgentApp()
-    }
 
     // MARK: - Screen Parameters
 
