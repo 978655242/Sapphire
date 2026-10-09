@@ -2772,40 +2772,6 @@
         }
       }
     },
-    "%lld%% battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld%% battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电量 %lld%%"
-          }
-        }
-      }
-    },
-    "%lld%% Battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld%% Battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电量 %lld%%"
-          }
-        }
-      }
-    },
     "%lld%% COMPLETE": {
       "extractionState": "manual",
       "localizations": {
@@ -5747,23 +5713,6 @@
         }
       }
     },
-    "Although functionality is in place to keep the battery management functinal even when the device is sleeping it may not always work. Use these settings if you want to be certain of the behaviour when the device is sleeping.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Although functionality is in place to keep the battery management functinal even when the device is sleeping it may not always work. Use these settings if you want to be certain of the behaviour when the device is sleeping."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "虽然已采取措施，让电池管理在设备睡眠时继续运行，但可能无法始终正常工作。如果您希望确保设备睡眠时按预期运行，请使用这些设置。"
-          }
-        }
-      }
-    },
     "Always into a Folder": {
       "extractionState": "manual",
       "localizations": {
@@ -8195,23 +8144,6 @@
         }
       }
     },
-    "Automate charging behaviors and perform manual or scheduled calibrations to keep your battery's readings accurate.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automate charging behaviors and perform manual or scheduled calibrations to keep your battery's readings accurate."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自动执行充电操作，并手动或定时校准电池，让电池读数保持准确。"
-          }
-        }
-      }
-    },
     "Automatic": {
       "extractionState": "manual",
       "localizations": {
@@ -8225,23 +8157,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "自动"
-          }
-        }
-      }
-    },
-    "Automatic Discharge": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatic Discharge"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "自动放电"
           }
         }
       }
@@ -8412,23 +8327,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "自动暂停正在播放的媒体，并在重新打开屏幕时恢复播放。"
-          }
-        }
-      }
-    },
-    "Automatically pauses charging if the battery temperature gets too high to prevent heat-related damage and extend its lifespan.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatically pauses charging if the battery temperature gets too high to prevent heat-related damage and extend its lifespan."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池温度过高时自动暂停充电，防止高温损伤并延长电池寿命。"
           }
         }
       }
@@ -8888,346 +8786,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "低音削减"
-          }
-        }
-      }
-    },
-    "Battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池"
-          }
-        }
-      }
-    },
-    "BATTERY": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "BATTERY"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池"
-          }
-        }
-      }
-    },
-    "Battery 1": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery 1"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池 1"
-          }
-        }
-      }
-    },
-    "Battery 2": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery 2"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池 2"
-          }
-        }
-      }
-    },
-    "Battery 3": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery 3"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池 3"
-          }
-        }
-      }
-    },
-    "Battery 4": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery 4"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池 4"
-          }
-        }
-      }
-    },
-    "Battery Calibration": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Calibration"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池校准"
-          }
-        }
-      }
-    },
-    "Battery Draw": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Draw"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池耗电量"
-          }
-        }
-      }
-    },
-    "Battery Health": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Health"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池健康"
-          }
-        }
-      }
-    },
-    "Battery Icon": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Icon"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池图标"
-          }
-        }
-      }
-    },
-    "Battery Level Above": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Level Above"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电量高于"
-          }
-        }
-      }
-    },
-    "Battery Level Below": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Level Below"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电量低于"
-          }
-        }
-      }
-    },
-    "Battery Management Features": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Management Features"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池管理功能"
-          }
-        }
-      }
-    },
-    "Battery Proximity": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Proximity"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池附近"
-          }
-        }
-      }
-    },
-    "Battery Specs": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Specs"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池规格"
-          }
-        }
-      }
-    },
-    "Battery State": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery State"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池状态"
-          }
-        }
-      }
-    },
-    "Battery TS_MAX": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery TS_MAX"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池 TS_MAX"
-          }
-        }
-      }
-    },
-    "Battery usage data will appear here once collected": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery usage data will appear here once collected"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "收集到电池使用数据后，将在此处显示"
-          }
-        }
-      }
-    },
-    "Battery Usage History": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery Usage History"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池使用历史"
-          }
-        }
-      }
-    },
-    "Battery widgets, history, charging preferences, and power-related controls.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Battery widgets, history, charging preferences, and power-related controls."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池小组件、历史记录、充电偏好及电源相关控制。"
           }
         }
       }
@@ -10626,40 +10184,6 @@
         }
       }
     },
-    "Calibrating": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calibrating"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在校准"
-          }
-        }
-      }
-    },
-    "Calibrating your battery helps macOS get a more accurate reading of its health and time remaining. This process can take several hours and involves a full charge and discharge cycle. Sleeping will be disabled during calibration.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calibrating your battery helps macOS get a more accurate reading of its health and time remaining. This process can take several hours and involves a full charge and discharge cycle. Sleeping will be disabled during calibration."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "校准电池有助于 macOS 更准确地读取电池健康状况和剩余使用时间。此过程可能需要数小时，包括一次完整的充放电循环。校准期间将禁用睡眠。"
-          }
-        }
-      }
-    },
     "Calibration Complete": {
       "extractionState": "manual",
       "localizations": {
@@ -10673,57 +10197,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "校准完成"
-          }
-        }
-      }
-    },
-    "Calibration completed successfully.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calibration completed successfully."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "校准已成功完成。"
-          }
-        }
-      }
-    },
-    "Calibration Failed": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calibration Failed"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "校准失败"
-          }
-        }
-      }
-    },
-    "Calibration Started": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calibration Started"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已开始校准"
           }
         }
       }
@@ -10894,23 +10367,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "取消"
-          }
-        }
-      }
-    },
-    "Cancel Calibration": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel Calibration"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "取消校准"
           }
         }
       }
@@ -11187,57 +10643,6 @@
         }
       }
     },
-    "Charge Limit": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Charge Limit"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "充电上限"
-          }
-        }
-      }
-    },
-    "Charge limit %lld%%": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Charge limit %lld%%"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "充电上限 %lld%%"
-          }
-        }
-      }
-    },
-    "Charge limit changed to %lld%%": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Charge limit changed to %lld%%"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "充电上限已更改为%lld%%"
-          }
-        }
-      }
-    },
     "Charge Paused": {
       "extractionState": "manual",
       "localizations": {
@@ -11306,74 +10711,6 @@
         }
       }
     },
-    "Charging": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Charging"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在充电"
-          }
-        }
-      }
-    },
-    "Charging & Sleep": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Charging & Sleep"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "充电与睡眠"
-          }
-        }
-      }
-    },
-    "Charging Controls": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Charging Controls"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "充电控制"
-          }
-        }
-      }
-    },
-    "Charging Paused": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Charging Paused"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "充电已暂停"
-          }
-        }
-      }
-    },
     "Check after launch, wake, network recovery, and on a recurring schedule.": {
       "extractionState": "manual",
       "localizations": {
@@ -11421,23 +10758,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "再次检查"
-          }
-        }
-      }
-    },
-    "Check Battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Check Battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "检查电池"
           }
         }
       }
@@ -12424,23 +11744,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "点击“安装并重新启动”"
-          }
-        }
-      }
-    },
-    "Click for the full battery & power overview": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Click for the full battery & power overview"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "点击查看完整的电池与电源概览"
           }
         }
       }
@@ -16950,23 +16253,6 @@
         }
       }
     },
-    "Disable Sleep until Charge Limit": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Disable Sleep until Charge Limit"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "达到充电上限前禁止睡眠"
-          }
-        }
-      }
-    },
     "Disabled": {
       "extractionState": "manual",
       "localizations": {
@@ -17014,108 +16300,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "要解散文件夹吗？"
-          }
-        }
-      }
-    },
-    "Discharge Started": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discharge Started"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已开始放电"
-          }
-        }
-      }
-    },
-    "Discharge Stopped": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discharge Stopped"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已停止放电"
-          }
-        }
-      }
-    },
-    "Discharge Target: %lld%%": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discharge Target: %lld%%"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "放电目标：%lld%%"
-          }
-        }
-      }
-    },
-    "Discharge To": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discharge To"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "放电至"
-          }
-        }
-      }
-    },
-    "Discharging": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discharging"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在放电"
-          }
-        }
-      }
-    },
-    "Discharging to %lld%%...": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Discharging to %lld%%..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "正在放电至 %lld%%…"
           }
         }
       }
@@ -17596,23 +16780,6 @@
         }
       }
     },
-    "Display static info like weather or battery.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Display static info like weather or battery."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示天气、电池等静态信息。"
-          }
-        }
-      }
-    },
     "Display synchronized lyrics when available.": {
       "extractionState": "manual",
       "localizations": {
@@ -17626,40 +16793,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "有同步歌词时显示歌词。"
-          }
-        }
-      }
-    },
-    "Display the device name in the live activity for connection and battery events.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Display the device name in the live activity for connection and battery events."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在连接和电量事件的实时活动中显示设备名称。"
-          }
-        }
-      }
-    },
-    "Display the estimated time to full (when charging) or time to empty (when on battery) in the live activity.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Display the estimated time to full (when charging) or time to empty (when on battery) in the live activity."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在实时活动中显示预计充满所需时间（充电时）或剩余使用时间（使用电池时）。"
           }
         }
       }
@@ -18238,23 +17371,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "将文件拖到此处以添加。"
-          }
-        }
-      }
-    },
-    "Drag to set the charge limit — charging pauses at this level to help preserve battery health.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Drag to set the charge limit — charging pauses at this level to help preserve battery health."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "拖动以设置充电上限，到达此电量时将暂停充电，以保护电池健康。"
           }
         }
       }
@@ -18871,23 +17987,6 @@
         }
       }
     },
-    "Enable Automatic Discharge": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enable Automatic Discharge"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启用自动放电"
-          }
-        }
-      }
-    },
     "Enable Blocking": {
       "extractionState": "manual",
       "localizations": {
@@ -19177,23 +18276,6 @@
         }
       }
     },
-    "Enable Low Power Mode as lid closes": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enable Low Power Mode as lid closes"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "合上屏幕时启用低电量模式"
-          }
-        }
-      }
-    },
     "Enable Menu Bar Icon Hiding": {
       "extractionState": "manual",
       "localizations": {
@@ -19343,23 +18425,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "启用快速选择器"
-          }
-        }
-      }
-    },
-    "Enable Sailing Mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enable Sailing Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启用航行模式"
           }
         }
       }
@@ -21132,23 +20197,6 @@
         }
       }
     },
-    "Failed to disable Low Power Mode. Exit code: %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to disable Low Power Mode. Exit code: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法停用低电量模式。退出代码：%@"
-          }
-        }
-      }
-    },
     "Failed to disable system sleep via IOKit. Error: %@": {
       "extractionState": "manual",
       "localizations": {
@@ -21162,23 +20210,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法通过 IOKit 禁用系统睡眠。错误：%@"
-          }
-        }
-      }
-    },
-    "Failed to enable Low Power Mode. Exit code: %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to enable Low Power Mode. Exit code: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法启用低电量模式。退出代码：%@"
           }
         }
       }
@@ -21319,23 +20350,6 @@
         }
       }
     },
-    "Failed to start calibration: %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to start calibration: %@"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法开始校准：%@"
-          }
-        }
-      }
-    },
     "Failed to start device: %d": {
       "extractionState": "manual",
       "localizations": {
@@ -21421,23 +20435,6 @@
         }
       }
     },
-    "Failed to write discharge key '%@'.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to write discharge key '%@'."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法写入放电控制键“%@”。"
-          }
-        }
-      }
-    },
     "Failed to write F%@Tg.": {
       "extractionState": "manual",
       "localizations": {
@@ -21468,23 +20465,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "无法将图像写入目标文件。"
-          }
-        }
-      }
-    },
-    "Failed to write MagSafe LED key.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Failed to write MagSafe LED key."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法写入 MagSafe LED 控制键。"
           }
         }
       }
@@ -22203,40 +21183,6 @@
         }
       }
     },
-    "Firmware charge-limit activation key not found.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Firmware charge-limit activation key not found."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到固件充电上限激活键。"
-          }
-        }
-      }
-    },
-    "Firmware charge-limit keys not found.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Firmware charge-limit keys not found."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到固件充电上限控制键。"
-          }
-        }
-      }
-    },
     "Fit to Screen": {
       "extractionState": "manual",
       "localizations": {
@@ -22743,23 +21689,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "拖动特定 App 的窗口时，强制使用指定的布局模式（单视图或多视图）。"
-          }
-        }
-      }
-    },
-    "Force Low Power Mode while the lid is partially closed and restore the previous state when reopened.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Force Low Power Mode while the lid is partially closed and restore the previous state when reopened."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "屏幕部分合上时强制启用低电量模式，重新打开后恢复之前的状态。"
           }
         }
       }
@@ -23372,23 +22301,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "在专注阶段结束并开始休息、休息结束以及整个专注时段结束时接收通知。"
-          }
-        }
-      }
-    },
-    "Get an audible alert when your battery is running low.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Get an audible alert when your battery is running low."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池电量不足时发出声音提醒。"
           }
         }
       }
@@ -26640,23 +25552,6 @@
         }
       }
     },
-    "Install the helper to enable battery management and system integrations.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Install the helper to enable battery management and system integrations."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "安装辅助程序以启用电池管理和系统集成。"
-          }
-        }
-      }
-    },
     "Installed app notifications": {
       "extractionState": "manual",
       "localizations": {
@@ -26840,23 +25735,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "此版本不提供智能功能"
-          }
-        }
-      }
-    },
-    "Intelligent Battery Management": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Intelligent Battery Management"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "智能电池管理"
           }
         }
       }
@@ -28969,23 +27847,6 @@
         }
       }
     },
-    "Keeps your Mac awake to ensure it reaches the charge limit, useful for 'top-up' schedules before you need to leave.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Keeps your Mac awake to ensure it reaches the charge limit, useful for 'top-up' schedules before you need to leave."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "让 Mac 保持唤醒，确保电量达到充电上限，适合在出门前按计划补充电量。"
-          }
-        }
-      }
-    },
     "Keyboard Brightness": {
       "extractionState": "manual",
       "localizations": {
@@ -30618,23 +29479,6 @@
         }
       }
     },
-    "Log battery during sleep": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log battery during sleep"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "睡眠期间记录电池状态"
-          }
-        }
-      }
-    },
     "Log every": {
       "extractionState": "manual",
       "localizations": {
@@ -31162,23 +30006,6 @@
         }
       }
     },
-    "Low Battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low Battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电量低"
-          }
-        }
-      }
-    },
     "Low Chance": {
       "extractionState": "manual",
       "localizations": {
@@ -31209,91 +30036,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "磁盘空间不足"
-          }
-        }
-      }
-    },
-    "Low power mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low power mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量模式"
-          }
-        }
-      }
-    },
-    "Low Power Mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low Power Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量模式"
-          }
-        }
-      }
-    },
-    "Low Power Trigger": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low Power Trigger"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量模式的触发角度"
-          }
-        }
-      }
-    },
-    "Low Power: Off": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low Power: Off"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量：关闭"
-          }
-        }
-      }
-    },
-    "Low Power: On": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low Power: On"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量：开启"
           }
         }
       }
@@ -31583,74 +30325,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "为你精选"
-          }
-        }
-      }
-    },
-    "MagSafe Amber": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MagSafe Amber"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MagSafe 橙色灯"
-          }
-        }
-      }
-    },
-    "MagSafe Green": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MagSafe Green"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MagSafe 绿色灯"
-          }
-        }
-      }
-    },
-    "MagSafe LED key not found.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MagSafe LED key not found."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到 MagSafe LED 控制键。"
-          }
-        }
-      }
-    },
-    "MagSafe Off": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MagSafe Off"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "关闭 MagSafe 指示灯"
           }
         }
       }
@@ -32692,19 +31366,19 @@
         }
       }
     },
-    "Menu bar readouts and notifications for CPU, memory, disk, and network.": {
+    "System monitoring, fan controls, and schedules.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Menu bar readouts and notifications for CPU, memory, disk, and network."
+            "value": "System monitoring, fan controls, and schedules."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "在菜单栏显示 CPU、内存、磁盘和网络信息及通知。"
+            "value": "系统监控、风扇控制和定时计划。"
           }
         }
       }
@@ -34256,23 +32930,6 @@
         }
       }
     },
-    "Needed to detect connected devices and their battery levels.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Needed to detect connected devices and their battery levels."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "用于检测已连接设备及其电量。"
-          }
-        }
-      }
-    },
     "Needed to discover and control supported media players on your network.": {
       "extractionState": "manual",
       "localizations": {
@@ -35004,23 +33661,6 @@
         }
       }
     },
-    "No charge limit key found for this Mac.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No charge limit key found for this Mac."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到此 Mac 的充电上限控制键。"
-          }
-        }
-      }
-    },
     "No completed sessions yet. Start one and stay focused! ": {
       "extractionState": "manual",
       "localizations": {
@@ -35204,23 +33844,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "没有设备的距离出现明显变化。"
-          }
-        }
-      }
-    },
-    "No discharge control key found.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No discharge control key found."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未找到放电控制键。"
           }
         }
       }
@@ -36976,40 +35599,6 @@
         }
       }
     },
-    "Notify for Low Battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notify for Low Battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量提醒"
-          }
-        }
-      }
-    },
-    "Notify when battery is below": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notify when battery is below"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电量低于以下值时通知"
-          }
-        }
-      }
-    },
     "Notify you when a background scan discovers new updates.": {
       "extractionState": "manual",
       "localizations": {
@@ -37333,57 +35922,6 @@
         }
       }
     },
-    "On battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用电池供电"
-          }
-        }
-      }
-    },
-    "On Battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On Battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用电池"
-          }
-        }
-      }
-    },
-    "On Battery Power": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On Battery Power"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用电池供电"
-          }
-        }
-      }
-    },
     "On session end": {
       "extractionState": "manual",
       "localizations": {
@@ -37482,23 +36020,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "一次"
-          }
-        }
-      }
-    },
-    "One-Time Discharge": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "One-Time Discharge"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "单次放电"
           }
         }
       }
@@ -38098,19 +36619,19 @@
         }
       }
     },
-    "Open Sapphire Setting": {
+    "Open Island Setting": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open Sapphire Setting"
+            "value": "Open Island Setting"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "打开 Sapphire 设置"
+            "value": "打开 Island 设置"
           }
         }
       }
@@ -38642,23 +37163,6 @@
         }
       }
     },
-    "Pair an Android phone for clipboard, notifications, media, battery, and Instant Hotspot.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pair an Android phone for clipboard, notifications, media, battery, and Instant Hotspot."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "配对 Android 手机以使用剪贴板、通知、媒体、电池及即时热点功能。"
-          }
-        }
-      }
-    },
     "Paired & Monitoring": {
       "extractionState": "manual",
       "localizations": {
@@ -38948,57 +37452,6 @@
         }
       }
     },
-    "Pause Charging": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pause Charging"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "暂停充电"
-          }
-        }
-      }
-    },
-    "Pause charging above": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pause charging above"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "温度高于以下值时暂停充电"
-          }
-        }
-      }
-    },
-    "Pause in Low Power Mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pause in Low Power Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量模式下暂停"
-          }
-        }
-      }
-    },
     "Pause in Mission Control": {
       "extractionState": "manual",
       "localizations": {
@@ -39050,23 +37503,6 @@
         }
       }
     },
-    "Pause on Battery Power": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pause on Battery Power"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用电池供电时暂停"
-          }
-        }
-      }
-    },
     "Pause video when it is covered or power and thermal conditions call for it.": {
       "extractionState": "manual",
       "localizations": {
@@ -39114,23 +37550,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "已暂停"
-          }
-        }
-      }
-    },
-    "Pauses charging if the battery gets too hot.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pauses charging if the battery gets too hot."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池过热时暂停充电。"
           }
         }
       }
@@ -39815,23 +38234,6 @@
         }
       }
     },
-    "Play Sound for Low Battery Alert": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Play Sound for Low Battery Alert"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量提醒时播放声音"
-          }
-        }
-      }
-    },
     "Play sounds when breaks begin and end.": {
       "extractionState": "manual",
       "localizations": {
@@ -40117,23 +38519,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "已连接电源"
-          }
-        }
-      }
-    },
-    "Plugged in (not charging)": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Plugged in (not charging)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "已接通电源（未充电）"
           }
         }
       }
@@ -40784,57 +39169,6 @@
         }
       }
     },
-    "Prevent wear by stopping charging at a lower level. 80% is recommended.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prevent wear by stopping charging at a lower level. 80% is recommended."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在较低电量时停止充电以减少损耗。建议设为 80%。"
-          }
-        }
-      }
-    },
-    "Prevents battery wear from constant micro-charging cycles when plugged in for long periods. Charging will pause at the limit and only resume when the battery drops by a set amount.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prevents battery wear from constant micro-charging cycles when plugged in for long periods. Charging will pause at the limit and only resume when the battery drops by a set amount."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "避免长时间连接电源时，反复小幅充电造成电池损耗。电量达到上限后会暂停充电，只有下降指定幅度后才会恢复充电。"
-          }
-        }
-      }
-    },
-    "Prevents your Mac from sitting at 100% charge overnight, which can degrade the battery over time. Charging resumes on wake.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prevents your Mac from sitting at 100% charge overnight, which can degrade the battery over time. Charging resumes on wake."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "避免 Mac 整夜保持 100% 电量，以免长期损害电池。唤醒后恢复充电。"
-          }
-        }
-      }
-    },
     "Preview": {
       "extractionState": "manual",
       "localizations": {
@@ -41107,23 +39441,6 @@
         }
       }
     },
-    "Prompt to Turn on Low Power Mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Prompt to Turn on Low Power Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "提示开启低电量模式"
-          }
-        }
-      }
-    },
     "Protect ⌘Q (Quit)": {
       "extractionState": "manual",
       "localizations": {
@@ -41171,23 +39488,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "保护退出和关闭快捷键"
-          }
-        }
-      }
-    },
-    "Protect your battery's health and extend its lifespan with these features.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Protect your battery's health and extend its lifespan with these features."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用这些功能保护电池健康，延长电池寿命。"
           }
         }
       }
@@ -41617,19 +39917,19 @@
         }
       }
     },
-    "Quit Sapphire": {
+    "Quit Island": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Quit Sapphire"
+            "value": "Quit Island"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "退出 Sapphire"
+            "value": "退出 Island"
           }
         }
       }
@@ -42008,23 +40308,6 @@
         }
       }
     },
-    "Reads the 'true' charge from the battery controller, which can be more accurate but may differ from what macOS shows.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reads the 'true' charge from the battery controller, which can be more accurate but may differ from what macOS shows."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "从电池控制器读取“真实”电量，可能更准确，但可能与 macOS 显示的电量不同。"
-          }
-        }
-      }
-    },
     "Ready": {
       "extractionState": "manual",
       "localizations": {
@@ -42395,23 +40678,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "减少蓝光"
-          }
-        }
-      }
-    },
-    "Reduces micro-charging cycles when the limit is reached.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reduces micro-charging cycles when the limit is reached."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "达到充电上限后，减少小幅反复充电。"
           }
         }
       }
@@ -43963,40 +42229,6 @@
         }
       }
     },
-    "Resume Charging": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Resume Charging"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "恢复充电"
-          }
-        }
-      }
-    },
-    "Resume charging below": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Resume charging below"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电量低于以下阈值时恢复充电"
-          }
-        }
-      }
-    },
     "Retry": {
       "extractionState": "manual",
       "localizations": {
@@ -44027,23 +42259,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "重新检测"
-          }
-        }
-      }
-    },
-    "Reveal hidden menu bar items when a condition is met — battery level, active Focus, Wi-Fi network, or a script's exit code — and bind profiles to displays, Spaces, or Focus filters.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reveal hidden menu bar items when a condition is met — battery level, active Focus, Wi-Fi network, or a script's exit code — and bind profiles to displays, Spaces, or Focus filters."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "在满足条件时显示隐藏的菜单栏项目，例如电量、当前专注模式、Wi-Fi 网络或脚本退出码，并将配置绑定到显示器、桌面空间或专注模式过滤条件。"
           }
         }
       }
@@ -44490,57 +42705,6 @@
         }
       }
     },
-    "Sailing": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sailing"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电量巡航"
-          }
-        }
-      }
-    },
-    "Sailing by %lld%%": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sailing by %lld%%"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "滑行模式 %lld%%"
-          }
-        }
-      }
-    },
-    "Sailing Mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sailing Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "航行模式"
-          }
-        }
-      }
-    },
     "Sample Rate": {
       "extractionState": "manual",
       "localizations": {
@@ -44843,23 +43007,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sapphire 的核心功能需要获得一些权限。"
-          }
-        }
-      }
-    },
-    "Sapphire needs a privileged helper for battery management and system integrations. macOS will ask you to allow it under Login Items → Background Activity.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire needs a privileged helper for battery management and system integrations. macOS will ask you to allow it under Login Items → Background Activity."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sapphire 需要具有特权的辅助程序来管理电池并与系统集成。macOS 会要求您在“登录项 → 后台活动”中允许该程序运行。"
           }
         }
       }
@@ -46530,23 +44677,6 @@
         }
       }
     },
-    "Service Battery": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Service Battery"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "维修电池"
-          }
-        }
-      }
-    },
     "Service Recommended": {
       "extractionState": "manual",
       "localizations": {
@@ -46645,23 +44775,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "专注次数"
-          }
-        }
-      }
-    },
-    "Set Charge Limit": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set Charge Limit"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "设置充电上限"
           }
         }
       }
@@ -47091,23 +45204,6 @@
         }
       }
     },
-    "Show a convenient button to enable Low Power Mode when your battery gets low.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show a convenient button to enable Low Power Mode when your battery gets low."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "电池电量不足时显示快捷按钮，方便开启低电量模式。"
-          }
-        }
-      }
-    },
     "Show a dedicated verification-code popover in the notch.": {
       "extractionState": "manual",
       "localizations": {
@@ -47278,23 +45374,6 @@
         }
       }
     },
-    "Show an alert when a connected device's battery is low.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show an alert when a connected device's battery is low."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当已连接设备的电量不足时显示提醒。"
-          }
-        }
-      }
-    },
     "Show App Volume in HUD": {
       "extractionState": "manual",
       "localizations": {
@@ -47363,23 +45442,6 @@
         }
       }
     },
-    "Show compact battery live activity": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show compact battery live activity"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示精简的电池实时活动"
-          }
-        }
-      }
-    },
     "Show compact focus live activity text": {
       "extractionState": "manual",
       "localizations": {
@@ -47393,23 +45455,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "显示精简的专注模式实时活动文字"
-          }
-        }
-      }
-    },
-    "Show connection, disconnection, and battery events for Bluetooth devices.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show connection, disconnection, and battery events for Bluetooth devices."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示蓝牙设备的连接、断开连接和电量事件。"
           }
         }
       }
@@ -48277,23 +46322,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "在刘海小组件栏中显示日历小组件。"
-          }
-        }
-      }
-    },
-    "Show the first frame instead of playing the video while Low Power Mode is on.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show the first frame instead of playing the video while Low Power Mode is on."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开启低电量模式时，显示视频的第一帧而不播放视频。"
           }
         }
       }
@@ -50168,23 +48196,6 @@
         }
       }
     },
-    "Start Calibration": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start Calibration"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开始校准"
-          }
-        }
-      }
-    },
     "Start Date": {
       "extractionState": "manual",
       "localizations": {
@@ -50198,23 +48209,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "开始日期"
-          }
-        }
-      }
-    },
-    "Start Discharge": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start Discharge"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开始放电"
           }
         }
       }
@@ -50283,23 +48277,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "开始近距离校准"
-          }
-        }
-      }
-    },
-    "Start One-Time Discharge": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start One-Time Discharge"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开始单次放电"
           }
         }
       }
@@ -50678,23 +48655,6 @@
         }
       }
     },
-    "Step 1: Charging to 100%": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Step 1: Charging to 100%"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "步骤 1：充电至 100%"
-          }
-        }
-      }
-    },
     "Step 2: Calibrate 'Far' Distance": {
       "extractionState": "manual",
       "localizations": {
@@ -50746,23 +48706,6 @@
         }
       }
     },
-    "Step 3: Discharging to 10%": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Step 3: Discharging to 10%"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "步骤 3：放电至 10%"
-          }
-        }
-      }
-    },
     "Step 3: Select Your Device": {
       "extractionState": "manual",
       "localizations": {
@@ -50776,23 +48719,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "第 3 步：选择你的设备"
-          }
-        }
-      }
-    },
-    "Step 4: Recharging to original limit": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Step 4: Recharging to original limit"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "步骤 4：重新充电至原上限"
           }
         }
       }
@@ -50861,57 +48787,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "停止摄像头"
-          }
-        }
-      }
-    },
-    "Stop charging when app closed": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stop charging when app closed"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "应用关闭时停止充电"
-          }
-        }
-      }
-    },
-    "Stop charging when sleeping": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stop charging when sleeping"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "睡眠时停止充电"
-          }
-        }
-      }
-    },
-    "Stop Discharge": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stop Discharge"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "停止放电"
           }
         }
       }
@@ -52344,40 +50219,6 @@
         }
       }
     },
-    "Tap to turn off Low Power Mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap to turn off Low Power Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "点击以关闭低电量模式"
-          }
-        }
-      }
-    },
-    "Tap to turn on Low Power Mode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap to turn on Low Power Mode"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "点击以开启低电量模式"
-          }
-        }
-      }
-    },
     "Target Charge": {
       "extractionState": "manual",
       "localizations": {
@@ -52510,23 +50351,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "温度单位"
-          }
-        }
-      }
-    },
-    "Temporarily discharge to a specific percentage. This will not affect your main charge limit or automatic discharge settings.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Temporarily discharge to a specific percentage. This will not affect your main charge limit or automatic discharge settings."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "临时放电至指定百分比。这不会影响你的主要充电上限或自动放电设置。"
           }
         }
       }
@@ -53041,23 +50865,6 @@
         }
       }
     },
-    "The helper tool ensures your charging rules are still applied even if the Sapphire app isn't running.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The helper tool ensures your charging rules are still applied even if the Sapphire app isn't running."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "辅助工具可确保即使 Sapphire 未运行，也会继续执行你的充电规则。"
-          }
-        }
-      }
-    },
     "The installed Sapphire signature could not be validated.": {
       "extractionState": "manual",
       "localizations": {
@@ -53241,23 +51048,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "屏幕开合角度传感器停止响应。正在重新连接…"
-          }
-        }
-      }
-    },
-    "The privileged helper is not reachable. Install or reset it (Settings → Battery → Helper) before calibrating.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The privileged helper is not reachable. Install or reset it (Settings → Battery → Helper) before calibrating."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法连接特权辅助程序。请在校准前安装或重置辅助程序（设置 → 电池 → 辅助程序）。"
           }
         }
       }
@@ -55234,23 +53024,6 @@
         }
       }
     },
-    "Top Up (Charge to 100%)": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Top Up (Charge to 100%)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "充满电（充电至 100%）"
-          }
-        }
-      }
-    },
     "Tornado": {
       "extractionState": "manual",
       "localizations": {
@@ -56233,23 +54006,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "未知设备"
-          }
-        }
-      }
-    },
-    "Unknown discharge key.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unknown discharge key."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "未知放电控制键。"
           }
         }
       }
@@ -57308,23 +55064,6 @@
         }
       }
     },
-    "Use Hardware Battery Percentage": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use Hardware Battery Percentage"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用硬件电池百分比"
-          }
-        }
-      }
-    },
     "Use Metric Units": {
       "extractionState": "manual",
       "localizations": {
@@ -57954,23 +55693,6 @@
         }
       }
     },
-    "Visible Battery Info": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visible Battery Info"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示的电池信息"
-          }
-        }
-      }
-    },
     "Visible Main Widgets": {
       "extractionState": "manual",
       "localizations": {
@@ -58392,23 +56114,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "仅唤醒，不解锁"
-          }
-        }
-      }
-    },
-    "Wakes the Mac briefly (display stays off) at a set interval to record battery state and re-assert your charge limit overnight. Sleep is never disabled.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wakes the Mac briefly (display stays off) at a set interval to record battery state and re-assert your charge limit overnight. Sleep is never disabled."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "按设定的间隔短暂唤醒 Mac（屏幕保持关闭），记录电池状态，并在夜间重新应用充电上限。不会禁用睡眠。"
           }
         }
       }
@@ -58902,23 +56607,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "启用后，应用的 100% 音量以当前系统输出音量为上限。"
-          }
-        }
-      }
-    },
-    "When enabled, your Mac will stop using AC power and run from its battery until the battery limit is reached.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "When enabled, your Mac will stop using AC power and run from its battery until the battery limit is reached."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "启用后，Mac 将停止使用外接电源，改用电池供电，直到电量降至设定的上限。"
           }
         }
       }
@@ -60092,6 +57780,125 @@
           "stringUnit": {
             "state": "translated",
             "value": "简体中文"
+          }
+        }
+      }
+    },
+    "Install the helper to enable system integrations.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Install the helper to enable system integrations."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "安装辅助程序以启用系统集成。"
+          }
+        }
+      }
+    },
+    "Sapphire needs a privileged helper for system integrations. macOS will ask you to allow it under Login Items → Background Activity.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire needs a privileged helper for system integrations. macOS will ask you to allow it under Login Items → Background Activity."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sapphire 需要特权辅助程序来启用系统集成。macOS 会要求你在“登录项 → 后台活动”中允许它。"
+          }
+        }
+      }
+    },
+    "Display static info like weather or calendar events.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display static info like weather or calendar events."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示天气或日历事件等信息。"
+          }
+        }
+      }
+    },
+    "Needed to detect connected devices and their proximity.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needed to detect connected devices and their proximity."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "用于检测已连接设备及其距离。"
+          }
+        }
+      }
+    },
+    "Show connection and disconnection events for Bluetooth devices.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show connection and disconnection events for Bluetooth devices."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示蓝牙设备的连接和断开事件。"
+          }
+        }
+      }
+    },
+    "Display the device name in connection and disconnection live activities.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Display the device name in connection and disconnection live activities."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在连接和断开连接实时活动中显示设备名称。"
+          }
+        }
+      }
+    },
+    "Reveal hidden menu bar items when a condition is met — active Focus, Wi-Fi network, or a script's exit code — and bind profiles to displays, Spaces, or Focus filters.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reveal hidden menu bar items when a condition is met — active Focus, Wi-Fi network, or a script's exit code — and bind profiles to displays, Spaces, or Focus filters."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "根据专注模式、Wi-Fi 网络或脚本退出码等条件显示隐藏的菜单栏项目，并将配置绑定到显示器、空间或专注模式过滤条件。"
           }
         }
       }

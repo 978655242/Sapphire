@@ -9,15 +9,7 @@ import Foundation
 import CoreAudio
 import IOBluetooth
 
-enum BatteryStatus {
-    case hasBattery
-    case noBattery
-    case unknown
-}
-
 struct IconMapper {
-
-    private static let learnedBatteryDevicesKey = "learnedBatteryDevices"
 
     static func cleanDeviceName(_ name: String) -> String {
         let suffixesToRemove = [" (ANC)", " - Find My"]
@@ -28,116 +20,88 @@ struct IconMapper {
         return cleanedName
     }
 
-    static func getBatteryStatus(for device: IOBluetoothDevice) -> BatteryStatus {
-        guard let name = device.name, !name.isEmpty, let address = device.addressString else {
-            return .noBattery
-        }
+    private static let universalDeviceMap: [(keywords: [String], icon: String)] = [
+        (["macbook"], "macbook"),
+        (["imac"], "desktopcomputer"),
+        (["mac mini"], "macmini.fill"),
+        (["mac studio"], "macstudio.fill"),
+        (["mac pro"], "macpro.gen3.fill"),
+        (["xserve"], "xserve"),
 
-        let lowercasedName = name.lowercased()
-        if let matchedDevice = universalDeviceMap.first(where: { entry in
-            entry.keywords.contains { keyword in lowercasedName.contains(keyword) }
-        }) {
-            return matchedDevice.hasBattery ? .hasBattery : .noBattery
-        }
+        (["studio display", "apple display"], "display"),
 
-        if let learnedDevices = UserDefaults.standard.dictionary(forKey: learnedBatteryDevicesKey) as? [String: Bool] {
-            if let hasBattery = learnedDevices[address] {
-                return hasBattery ? .hasBattery : .noBattery
-            }
-        }
+        (["iphone"], "iphone"),
+        (["ipad"], "ipad"),
+        (["apple watch"], "applewatch"),
+        (["vision pro"], "visionpro"),
 
-        return .unknown
-    }
+        (["magic keyboard"], "keyboard.fill"),
+        (["magic mouse"], "magicmouse.fill"),
+        (["magic trackpad"], "magictrackpad.fill"),
+        (["apple pencil"], "applepencil"),
+        (["airtag"], "airtag.fill"),
 
-    static func learnDeviceBatteryStatus(address: String, hasBattery: Bool) {
-        var learnedDevices = UserDefaults.standard.dictionary(forKey: learnedBatteryDevicesKey) as? [String: Bool] ?? [:]
-        learnedDevices[address] = hasBattery
-        UserDefaults.standard.set(learnedDevices, forKey: learnedBatteryDevicesKey)
-        print("[IconMapper] Learned that device \(address) " + (hasBattery ? "HAS a battery." : "does NOT have a battery."))
-    }
+        (["airpods max"], "airpods.max"),
+        (["airpods pro"], "airpods.pro"),
+        (["airpods 4"], "airpods.gen4"),
+        (["airpods 4 anc"], "airpods.gen4"),
+        (["airpods 3"], "airpods gen3"),
+        (["airpods 2", "airpods"], "airpods"),
+        (["earpods"], "earpods"),
+        (["homepod mini"], "homepod.mini"),
+        (["homepod"], "homepod"),
+        (["beats fit pro"], "beats.fitpro"),
+        (["studio buds plus"], "beats.studiobuds.plus"),
+        (["studio buds"], "beats.studiobuds"),
+        (["solobuds"], "beats.solobuds"),
+        (["powerbeats pro 2"], "beats.powerbeats.pro.2"),
+        (["powerbeats pro"], "beats.powerbeats.pro"),
+        (["powerbeats3"], "beats.powerbeats3"),
+        (["powerbeats"], "beats.powerbeats"),
+        (["beats pill"], "beats.pill"),
+        (["beats flex", "beats ep", "beats earphones"], "beats.earphones"),
+        (["beats headphones"], "beats.headphones"),
 
-    private static let universalDeviceMap: [(keywords: [String], icon: String, hasBattery: Bool)] = [
-        (["macbook"], "macbook", false),
-        (["imac"], "desktopcomputer", false),
-        (["mac mini"], "macmini.fill", false),
-        (["mac studio"], "macstudio.fill", false),
-        (["mac pro"], "macpro.gen3.fill", false),
-        (["xserve"], "xserve", false),
+        (["echo dot"], "homepod.mini"),
+        (["echo show"], "homepod"),
+        (["echo studio", "echo pop", "echo plus", "echo link", "echo"], "hifispeaker"),
 
-        (["studio display", "apple display"], "display", false),
+        (["pixel buds pro", "pixel buds a-series", "pixel buds"], "earbuds.stemless"),
+        (["nest mini", "nest audio", "nest wifi point"], "homepod.mini"),
+        (["nest hub"], "homepod"),
 
-        (["iphone"], "iphone", false),
-        (["ipad"], "ipad", false),
-        (["apple watch"], "applewatch", false),
-        (["vision pro"], "visionpro", false),
+        (["galaxy buds 3 pro"], "airpods.pro"),
+        (["galaxy buds 3"], "airpods.gen4"),
+        (["galaxy buds live", "galaxy buds2 pro", "galaxy buds2", "galaxy buds pro", "galaxy buds+", "galaxy buds fe", "galaxy buds"], "earbuds.stemless"),
 
-        (["magic keyboard"], "keyboard.fill", true),
-        (["magic mouse"], "magicmouse.fill", true),
-        (["magic trackpad"], "magictrackpad.fill", true),
-        (["apple pencil"], "applepencil", true),
-        (["airtag"], "airtag.fill", true),
+        (["wh", "wf", "sony headphones"], "airpods.max"),
+        (["linkbuds s", "linkbuds"], "earbuds.in.ear"),
+        (["srs-xb43", "srs-xe200", "srs-xg300", "ht-a5000", "ht-g700", "ht-s40r", "sony speaker"], "hifispeaker"),
 
-        (["airpods max"], "airpods.max", true),
-        (["airpods pro"], "airpods.pro", true),
-        (["airpods 4"], "airpods.gen4", true),
-        (["airpods 4 anc"], "airpods.gen4", true),
-        (["airpods 3"], "airpods gen3", true),
-        (["airpods 2", "airpods"], "airpods", true),
-        (["earpods"], "earpods", false),
-        (["homepod mini"], "homepod.mini", false),
-        (["homepod"], "homepod", false),
-        (["beats fit pro"], "beats.fitpro", true),
-        (["studio buds plus"], "beats.studiobuds.plus", true),
-        (["studio buds"], "beats.studiobuds", true),
-        (["solobuds"], "beats.solobuds", true),
-        (["powerbeats pro 2"], "beats.powerbeats.pro.2", true),
-        (["powerbeats pro"], "beats.powerbeats.pro", true),
-        (["powerbeats3"], "beats.powerbeats3", true),
-        (["powerbeats"], "beats.powerbeats", true),
-        (["beats pill"], "beats.pill", true),
-        (["beats flex", "beats ep", "beats earphones"], "beats.earphones", true),
-        (["beats headphones"], "beats.headphones", true),
+        (["qc ultra earbuds", "qc earbuds ii", "bose sport earbuds"], "earbuds.in.ear"),
+        (["qc 45", "qc 35", "qc ultra headphones", "bose headphones"], "airpods.max"),
+        (["bose home speaker", "bose soundbar", "bose portable smart speaker"], "hifispeaker"),
+        (["bose frames", "bose tempo"], "headphones"),
 
-        (["echo dot"], "homepod.mini", false),
-        (["echo show"], "homepod", false),
-        (["echo studio", "echo pop", "echo plus", "echo link", "echo"], "hifispeaker", false),
+        (["dualsense", "dualshock", "playstation"], "gamecontroller.fill"),
+        (["xbox wireless controller", "xbox elite"], "gamecontroller.fill"),
+        (["nintendo", "joy-con", "switch pro controller"], "gamecontroller.fill"),
 
-        (["pixel buds pro", "pixel buds a-series", "pixel buds"], "earbuds.stemless", true),
-        (["nest mini", "nest audio", "nest wifi point"], "homepod.mini", false),
-        (["nest hub"], "homepod", false),
+        (["logitech mouse", "razer mouse", "mx master"], "computermouse.fill"),
+        (["inphic bt mouse"], "computermouse"),
+        (["logitech", "razer", "keychron", "nuphy", "mechanical keyboard"], "keyboard.fill"),
 
-        (["galaxy buds 3 pro"], "airpods.pro", true),
-        (["galaxy buds 3"], "airpods.gen4", true),
-        (["galaxy buds live", "galaxy buds2 pro", "galaxy buds2", "galaxy buds pro", "galaxy buds+", "galaxy buds fe", "galaxy buds"], "earbuds.stemless", true),
+        (["sennheiser", "momentum", "pxc", "hd 280", "hd 450", "hd 600", "hd 800"], "headphones.over.ear"),
+        (["jbl", "anker", "soundcore"], "hifispeaker"),
+        (["shure", "mv7", "sm7b", "sm58"], "mic.fill"),
 
-        (["wh", "wf", "sony headphones"], "airpods.max", true),
-        (["linkbuds s", "linkbuds"], "earbuds.in.ear", true),
-        (["srs-xb43", "srs-xe200", "srs-xg300", "ht-a5000", "ht-g700", "ht-s40r", "sony speaker"], "hifispeaker", false),
-
-        (["qc ultra earbuds", "qc earbuds ii", "bose sport earbuds"], "earbuds.in.ear", true),
-        (["qc 45", "qc 35", "qc ultra headphones", "bose headphones"], "airpods.max", true),
-        (["bose home speaker", "bose soundbar", "bose portable smart speaker"], "hifispeaker", false),
-        (["bose frames", "bose tempo"], "headphones", true),
-
-        (["dualsense", "dualshock", "playstation"], "gamecontroller.fill", true),
-        (["xbox wireless controller", "xbox elite"], "gamecontroller.fill", true),
-        (["nintendo", "joy-con", "switch pro controller"], "gamecontroller.fill", true),
-
-        (["logitech mouse", "razer mouse", "mx master"], "computermouse.fill", true),
-        (["inphic bt mouse"], "computermouse", true),
-        (["logitech", "razer", "keychron", "nuphy", "mechanical keyboard"], "keyboard.fill", true),
-
-        (["sennheiser", "momentum", "pxc", "hd 280", "hd 450", "hd 600", "hd 800"], "headphones.over.ear", true),
-        (["jbl", "anker", "soundcore"], "hifispeaker", true),
-        (["shure", "mv7", "sm7b", "sm58"], "mic.fill", false),
-
-        (["printer"], "printer.fill", false),
-        (["scanner"], "scanner.fill", false),
+        (["printer"], "printer.fill"),
+        (["scanner"], "scanner.fill"),
     ]
 
     static func icon(forName name: String) -> String? {
         let lowercasedName = name.lowercased()
-        for (keywords, icon, _) in universalDeviceMap {
+        for (keywords, icon) in universalDeviceMap {
             if keywords.contains(where: { lowercasedName.contains($0) }) {
                 return icon
             }

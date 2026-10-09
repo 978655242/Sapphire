@@ -55,7 +55,6 @@ enum NotchWidgetMode: Hashable {
     case musicLoginPrompt
     case timerDetailView
     case focusSessionDetailView
-    case batteryDetailView
     case storageDetailView
     case continuityDetail
     case continuityActivityDetail
@@ -132,8 +131,6 @@ enum NotchWidgetMode: Hashable {
             hasher.combine(20)
         case .focusSessionDetailView:
             hasher.combine(32)
-        case .batteryDetailView:
-            hasher.combine(34)
         case .storageDetailView:
             hasher.combine(39)
         case .continuityDetail:
@@ -238,25 +235,18 @@ public struct StatsPayload: Equatable, Hashable {
     public var disk: drive?
     public var gpu: GPU_Info?
     public var sensors: Sensors_List?
-    public var battery: Battery_Usage?
 
     public var systemPower: Double? {
         sensors?.sensors.first(where: { $0.key == "PSTR" })?.value
     }
 
-    public var batteryPower: Double? {
-        guard let b = battery else { return nil }
-        return abs(b.powerDraw)
-    }
 
     public static func == (lhs: StatsPayload, rhs: StatsPayload) -> Bool {
         lhs.cpu?.totalUsage == rhs.cpu?.totalUsage &&
         lhs.ram?.usage == rhs.ram?.usage &&
         lhs.disk?.uuid == rhs.disk?.uuid && lhs.disk?.activity.read == rhs.disk?.activity.read && lhs.disk?.activity.write == rhs.disk?.activity.write &&
         lhs.gpu?.id == rhs.gpu?.id && lhs.gpu?.utilization == rhs.gpu?.utilization &&
-        lhs.battery?.level == rhs.battery?.level &&
-        lhs.systemPower == rhs.systemPower &&
-        lhs.batteryPower == rhs.batteryPower
+        lhs.systemPower == rhs.systemPower
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -267,9 +257,7 @@ public struct StatsPayload: Equatable, Hashable {
         hasher.combine(disk?.activity.write)
         hasher.combine(gpu?.id)
         hasher.combine(gpu?.utilization)
-        hasher.combine(battery?.level)
         hasher.combine(systemPower)
-        hasher.combine(batteryPower)
     }
 }
 
@@ -279,7 +267,6 @@ enum StandardActivityData: Equatable {
     case devActivity(task: DevTask, additionalCount: Int)
     case weather(data: ProcessedWeatherData)
     case calendar(event: EKEvent)
-    case battery(state: BatteryState, style: BatteryNotificationStyle, timeRemaining: String?, systemState: BatterySystemState)
     case timer
     case focusSession
     case desktop(number: Int)
@@ -311,8 +298,6 @@ enum StandardActivityData: Equatable {
         case let (.reminder(a), .reminder(b)): return a == b
         case (.timer, .timer): return true
         case (.focusSession, .focusSession): return true
-        case let (.battery(s1, st1, t1, sy1), .battery(s2, st2, t2, sy2)):
-                    return s1 == s2 && st1 == st2 && t1 == t2 && sy1 == sy2
         case let (.desktop(a), .desktop(b)): return a == b
         case let (.focus(a), .focus(b)): return a == b
         case let (.fileShelf(a), .fileShelf(b)): return a == b
@@ -548,10 +533,6 @@ enum LyricsTimeline {
 
 }
 
-struct BatteryState: Equatable, Hashable {
-    let level: Int, isCharging: Bool, isPluggedIn: Bool
-    var isLow: Bool { level <= 20 && !isCharging }
-}
 
 struct SportsPayload: Equatable, Hashable {
     let league: String

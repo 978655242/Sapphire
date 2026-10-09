@@ -191,7 +191,6 @@ struct WidgetRowView: View {
         case .notes: return $settings.settings.notesWidgetEnabled
         case .clipboard: return $settings.settings.clipboardWidgetEnabled
         case .mirror: return $settings.settings.mirrorWidgetEnabled
-        case .battery: return $settings.settings.batteryWidgetEnabled
         case .timer: return $settings.settings.timerWidgetEnabled
         case .focusSession: return $settings.settings.focusSessionWidgetEnabled
         case .storage: return $settings.settings.storageWidgetEnabled
@@ -247,7 +246,6 @@ struct LiveActivityRowView: View {
         case .calendar: return $settings.settings.calendarLiveActivityEnabled
         case .reminders: return $settings.settings.remindersLiveActivityEnabled
         case .timers: return $settings.settings.timersLiveActivityEnabled
-        case .battery: return $settings.settings.batteryLiveActivityEnabled
         case .eyeBreak: return $settings.settings.eyeBreakLiveActivityEnabled
         case .desktop: return $settings.settings.desktopLiveActivityEnabled
         case .focus: return $settings.settings.focusLiveActivityEnabled

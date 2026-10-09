@@ -10,25 +10,36 @@ import Foundation
 class XPCServer: NSObject {
 
     internal static let shared = XPCServer()
+    // Listener initialization is serialized on main.
     private var listener: NSXPCListener?
     private let helper = Helper()
 
+    private func onMain(_ action: () -> Void) {
+        if Thread.isMainThread {
+            action()
+        } else {
+            DispatchQueue.main.sync(execute: action)
+        }
+    }
+
     internal func start() {
-        guard listener == nil else { return }
+        onMain {
+            guard listener == nil else { return }
 
-        let newListener = NSXPCListener(machServiceName: Constant.helperMachLabel)
-        newListener.delegate = self
-        listener = newListener
-        newListener.resume()
-        NSLog("[SMJBS]: XPC listener resumed for \(Constant.helperMachLabel)")
+            let newListener = NSXPCListener(machServiceName: Constant.helperMachLabel)
+            newListener.delegate = self
+            listener = newListener
+            newListener.resume()
+            NSLog("[SMJBS]: XPC listener resumed for \(Constant.helperMachLabel)")
+        }
     }
 
-    private func connectionInterruptionHandler(_ connection: NSXPCConnection) {
-        NSLog("[SMJBS]: Client connection interrupted (pid=\(connection.processIdentifier)).")
+    private func connectionInterruptionHandler(pid: Int32) {
+        NSLog("[SMJBS]: Client connection interrupted (pid=\(pid)).")
     }
 
-    private func connectionInvalidationHandler(_ connection: NSXPCConnection) {
-        NSLog("[SMJBS]: Client connection invalidated (pid=\(connection.processIdentifier)).")
+    private func connectionInvalidationHandler(pid: Int32) {
+        NSLog("[SMJBS]: Client connection invalidated (pid=\(pid)).")
     }
 
     private func isValidClient(forConnection connection: NSXPCConnection) -> Bool {
@@ -64,19 +75,19 @@ extension XPCServer: NSXPCListenerDelegate {
 
         newConnection.remoteObjectInterface = NSXPCInterface(with: InstallationClient.self)
 
-        newConnection.interruptionHandler = { [weak self, weak newConnection] in
-            guard let newConnection else { return }
-            self?.connectionInterruptionHandler(newConnection)
+        let pid = newConnection.processIdentifier
+        newConnection.interruptionHandler = { [weak self] in
+            self?.connectionInterruptionHandler(pid: pid)
         }
-        newConnection.invalidationHandler = { [weak self, weak newConnection] in
-            guard let newConnection else { return }
-            self?.connectionInvalidationHandler(newConnection)
+        newConnection.invalidationHandler = { [weak self] in
+            self?.connectionInvalidationHandler(pid: pid)
         }
 
-        newConnection.resume()
-
-        helper.client = newConnection.remoteObjectProxy as? InstallationClient
-
+        // Serialize listener connection setup.
+        onMain {
+            helper.client = newConnection.remoteObjectProxy as? InstallationClient
+            newConnection.resume()
+        }
         return true
     }
 }

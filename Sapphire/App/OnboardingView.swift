@@ -12,7 +12,7 @@ import ServiceManagement
 // MARK: - Main Onboarding View
 struct OnboardingView: View {
     enum OnboardingStep {
-        case welcome, permissions, helperInstallation, privacyPolicy, musicChoice, spotifySetup, batterySetup, corePreferences, lockScreenSetup, subscriptionOverview, finish
+        case welcome, permissions, helperInstallation, privacyPolicy, musicChoice, spotifySetup, corePreferences, lockScreenSetup, subscriptionOverview, finish
     }
 
     @State private var currentStep: OnboardingStep = .welcome
@@ -55,18 +55,16 @@ struct OnboardingView: View {
                             if settings.settings.defaultMusicPlayer == .spotify {
                                 currentStep = .spotifySetup
                             } else {
-                                currentStep = .batterySetup
+                                currentStep = .corePreferences
                             }
                         })
                     case .spotifySetup:
                         SpotifySetupStepView(
-                            onNext: { currentStep = .batterySetup },
+                            onNext: { currentStep = .corePreferences },
                             isLoading: $isPrivateApiLoading,
                             error: $privateApiError
                         )
                         .environmentObject(musicManager)
-                    case .batterySetup:
-                        BatterySetupStepView(onNext: { currentStep = .corePreferences })
                     case .corePreferences:
                         CorePreferencesStepView(onNext: { currentStep = .lockScreenSetup })
                     case .lockScreenSetup:
@@ -170,7 +168,7 @@ private struct HelperInstallationStepView: View {
                 .font(.system(size: 32, weight: .bold, design: .rounded))
                 .padding(.top, 40).padding(.bottom, 10)
 
-            Text("Sapphire needs a privileged helper for battery management and system integrations. macOS will ask you to allow it under Login Items → Background Activity.")
+            Text("Sapphire needs a privileged helper for system integrations. macOS will ask you to allow it under Login Items → Background Activity.")
                 .font(.body)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
@@ -438,57 +436,6 @@ private struct SpotifySetupStepView: View {
     }
 }
 
-private struct BatterySetupStepView: View {
-    @EnvironmentObject var settings: SettingsModel
-    var onNext: () -> Void
-
-    private var chargeLimitBinding: Binding<Int> {
-        Binding<Int>(
-            get: { settings.settings.batteryChargeLimit },
-            set: { settings.settings.batteryChargeLimit = $0 }
-        )
-    }
-
-    var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            Text("Intelligent Battery Management")
-                .fontWeight(.bold)
-                .font(.system(size: 32, weight: .bold, design: .rounded))
-
-            Text("Protect your battery's health and extend its lifespan with these features.")
-                .font(.title3)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-                .padding(.horizontal, 50)
-
-            VStack(spacing: 15) {
-                ModernOnboardingRow(iconName: "battery.100.bolt", iconColor: .green, title: "Set Charge Limit".local, description: "Prevent wear by stopping charging at a lower level. 80% is recommended.".local) {
-                    Picker("", selection: chargeLimitBinding) {
-                        Text("80%").tag(80)
-                        Text("90%").tag(90)
-                        Text("100%").tag(100)
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
-                    .frame(width: 150)
-                }
-
-                ModernOnboardingRow(iconName: "sailboat.fill", iconColor: .blue, title: "Enable Sailing Mode".local, description: "Reduces micro-charging cycles when the limit is reached.".local) {
-                    SettingsSwitch(isOn: $settings.settings.sailingModeEnabled)
-                }
-
-                ModernOnboardingRow(iconName: "thermometer.medium", iconColor: .red, title: "Enable Heat Protection".local, description: "Pauses charging if the battery gets too hot.".local) {
-                    SettingsSwitch(isOn: $settings.settings.heatProtectionEnabled)
-                }
-            }
-            .padding(50)
-
-            Spacer()
-            OnboardingButton(title: "Continue".local, action: onNext)
-        }
-    }
-}
 
 private struct CorePreferencesStepView: View {
     @EnvironmentObject var settings: SettingsModel
@@ -539,7 +486,7 @@ private struct LockScreenSetupStepView: View {
                         SettingsSwitch(isOn: $settings.settings.lockScreenLiveActivityEnabled)
                     }
 
-                    ModernOnboardingRow(iconName: "info.circle.fill", iconColor: .blue, title: "Show Info Widgets".local, description: "Display static info like weather or battery.".local) {
+                    ModernOnboardingRow(iconName: "info.circle.fill", iconColor: .blue, title: "Show Info Widgets".local, description: "Display static info like weather or calendar events.".local) {
                         SettingsSwitch(isOn: $settings.settings.lockScreenShowInfoWidget)
                     }
                 }

@@ -234,12 +234,6 @@ public class SMC {
         }
     }
 
-    public func readRawBytes(_ key: String) -> [UInt8]? {
-        var val = SMCVal_t(key)
-        guard read(&val) == kIOReturnSuccess, val.dataSize > 0 else { return nil }
-        return Array(val.bytes[0..<min(Int(val.dataSize), val.bytes.count)])
-    }
-
     public func getStringValue(_ key: String) -> String? {
         var val = SMCVal_t(key)
         guard read(&val) == kIOReturnSuccess, val.dataSize > 0 else { return nil }

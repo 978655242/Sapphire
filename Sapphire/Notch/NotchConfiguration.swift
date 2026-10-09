@@ -9,6 +9,16 @@ import SwiftUI
 import AppKit
 import CoreGraphics
 
+func getMenuBarHeight(for screen: NSScreen? = nil) -> CGFloat {
+    let resolvedScreen = screen ?? {
+        let mouseLocation = NSEvent.mouseLocation
+        return NSScreen.screens.first(where: { NSMouseInRect(mouseLocation, $0.frame, false) })
+    }()
+    guard let resolvedScreen else { return 0.0 }
+    return resolvedScreen.frame.height - resolvedScreen.visibleFrame.height
+        - (resolvedScreen.visibleFrame.origin.y - resolvedScreen.frame.origin.y) - 1
+}
+
 struct NotchConfiguration {
     private static let designReferenceResolution = CGSize(width: 1728, height: 1117)
 
@@ -147,17 +157,6 @@ struct NotchConfiguration {
     static var primaryWidgetSwitchDelay: TimeInterval = 0.2
     static var dragActivationCollapseDelay: TimeInterval = 0.05
 
-    // MARK: - Battery View Configuration
-    static var batteryTextFontSize: CGFloat = 12
-    static var batteryIconSize: CGFloat = 22
-    static var batteryValueFontSize: CGFloat = 7
-    static var batteryBoltIconSize: CGFloat = 6
-    static var batteryIconPadding: CGFloat = 2.7
-    static var batteryHorizontalPadding: CGFloat = 10
-    static var batteryHStackSpacing: CGFloat = 6
-    static var batteryTextTrailingPadding: CGFloat = 2
-    static var batteryFrameWidth: CGFloat = 22
-    static var batteryFrameHeight: CGFloat = 10
 
     // MARK: - Notch Activity View Configuration
     static var activityContentHorizontalPadding: CGFloat = 15

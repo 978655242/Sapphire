@@ -15,8 +15,6 @@ private struct LidAngleAutomationSettings: Equatable {
     let muteAudioTrigger: Double
     let sleepDisplayEnabled: Bool
     let sleepDisplayTrigger: Double
-    let lowPowerModeEnabled: Bool
-    let lowPowerModeTrigger: Double
 
     init(_ settings: Settings) {
         pauseMediaEnabled = settings.lidAnglePauseMediaEnabled
@@ -25,8 +23,6 @@ private struct LidAngleAutomationSettings: Equatable {
         muteAudioTrigger = settings.lidAngleMuteAudioTrigger
         sleepDisplayEnabled = settings.lidAngleSleepDisplayEnabled
         sleepDisplayTrigger = settings.lidAngleSleepDisplayTrigger
-        lowPowerModeEnabled = settings.lidAngleLowPowerModeEnabled
-        lowPowerModeTrigger = settings.lidAngleLowPowerModeTrigger
     }
 }
 
@@ -37,7 +33,6 @@ final class LidAngleAutomationManager: ObservableObject {
     private let sensor = LidAngleSensor.shared
     private let settings = SettingsModel.shared
     private let musicManager = MusicManager.shared
-    private let powerModeManager = PowerModeManager.shared
 
     private var cancellables = Set<AnyCancellable>()
     private let hysteresis = 6.0
@@ -45,8 +40,6 @@ final class LidAngleAutomationManager: ObservableObject {
     private var autoPausedPlayback = false
     private var autoMutedSystemAudio = false
     private var autoSleptDisplay = false
-    private var forcedLowPowerMode = false
-    private var lowPowerModeWasAlreadyEnabled = false
 
     private init() {
         sensor.$angle
@@ -82,7 +75,6 @@ final class LidAngleAutomationManager: ObservableObject {
         evaluateMediaAutomation(configuration)
         evaluateAudioAutomation(configuration)
         evaluateDisplayAutomation(configuration)
-        evaluateLowPowerAutomation(configuration)
     }
 
     private func evaluateMediaAutomation(_ configuration: LidAngleAutomationSettings) {
@@ -142,35 +134,6 @@ final class LidAngleAutomationManager: ObservableObject {
         }
     }
 
-    private func evaluateLowPowerAutomation(_ configuration: LidAngleAutomationSettings) {
-        let trigger = configuration.lowPowerModeTrigger
-        let shouldEnable = configuration.lowPowerModeEnabled && sensor.angle <= trigger
-        let shouldRestore = forcedLowPowerMode && sensor.angle > trigger + hysteresis
-
-        if shouldEnable, !forcedLowPowerMode {
-            lowPowerModeWasAlreadyEnabled = powerModeManager.isLowPowerModeEnabled()
-            if !lowPowerModeWasAlreadyEnabled {
-                powerModeManager.enableLowPowerMode()
-            }
-            forcedLowPowerMode = true
-            return
-        }
-
-        if shouldRestore {
-            if !lowPowerModeWasAlreadyEnabled {
-                powerModeManager.disableLowPowerMode()
-            }
-            forcedLowPowerMode = false
-            lowPowerModeWasAlreadyEnabled = false
-        } else if !configuration.lowPowerModeEnabled {
-            if forcedLowPowerMode, !lowPowerModeWasAlreadyEnabled {
-                powerModeManager.disableLowPowerMode()
-            }
-            forcedLowPowerMode = false
-            lowPowerModeWasAlreadyEnabled = false
-        }
-    }
-
     private func restoreAllAutomations() {
         releaseForcedSystemChanges()
     }
@@ -188,19 +151,13 @@ final class LidAngleAutomationManager: ObservableObject {
             autoSleptDisplay = false
         }
 
-        if forcedLowPowerMode, !lowPowerModeWasAlreadyEnabled {
-            powerModeManager.disableLowPowerMode()
-        }
-        forcedLowPowerMode = false
-        lowPowerModeWasAlreadyEnabled = false
     }
 
     private func updateSensorRequirement(_ settings: LidAngleAutomationSettings) {
         let needsSensor =
             settings.pauseMediaEnabled ||
             settings.muteAudioEnabled ||
-            settings.sleepDisplayEnabled ||
-            settings.lowPowerModeEnabled
+            settings.sleepDisplayEnabled
 
         if needsSensor {
             sensor.acquire(.automationManager)

@@ -118,7 +118,7 @@ bool acquirePreventSystemSleepOnlyAssertion(void)
         IOReturn result = IOPMAssertionCreateWithName(
             kIOPMAssertPreventUserIdleSystemSleep,
             kIOPMAssertionLevelOn,
-            CFSTR("Sapphire Battery"),
+            CFSTR("Sapphire Keep Awake"),
             &userIdleSystemSleepAssertionID
         );
         return result == kIOReturnSuccess;

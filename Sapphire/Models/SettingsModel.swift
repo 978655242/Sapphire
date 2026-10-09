@@ -25,7 +25,7 @@ public struct NotchSizeOverride: Codable, Equatable {
 }
 
 public enum StatType: String, Codable, CaseIterable, Identifiable {
-    case cpu, ram, gpu, disk, systemPower, batteryPower
+    case cpu, ram, gpu, disk, systemPower
 
     public var id: String { self.rawValue }
 
@@ -36,7 +36,6 @@ public enum StatType: String, Codable, CaseIterable, Identifiable {
         case .gpu: return "GPU Usage".local
         case .disk: return "Disk Activity".local
         case .systemPower: return "System Power".local
-        case .batteryPower: return "Battery Draw".local
         }
     }
 
@@ -47,7 +46,6 @@ public enum StatType: String, Codable, CaseIterable, Identifiable {
         case .gpu: return "tv"
         case .disk: return "internaldrive"
         case .systemPower: return "bolt.fill"
-        case .batteryPower: return "battery.75"
         }
     }
 }
@@ -227,7 +225,7 @@ enum FocusDisplayMode: String, Codable, CaseIterable, Identifiable {
 }
 
 enum LockScreenMainWidgetType: String, Codable, CaseIterable, Identifiable {
-    case music, weather, calendar, battery, focus, timer, notes, clipboard
+    case music, weather, calendar, focus, timer, notes, clipboard
     var id: String { self.rawValue }
     var displayName: String {
         switch self {
@@ -238,12 +236,12 @@ enum LockScreenMainWidgetType: String, Codable, CaseIterable, Identifiable {
     }
 
     static var selectableCases: [LockScreenMainWidgetType] {
-        return [.music, .weather, .calendar, .battery, .focus, .timer, .notes, .clipboard]
+        return [.music, .weather, .calendar, .focus, .timer, .notes, .clipboard]
     }
 }
 
 enum LockScreenWidgetType: String, Codable, CaseIterable, Identifiable {
-    case none, weather, calendar, music, focus, bluetooth, battery, caffeine, timer, clock, notes, clipboard, system
+    case none, weather, calendar, music, focus, bluetooth, caffeine, timer, clock, notes, clipboard, system
     var id: String { self.rawValue }
     var displayName: String {
         switch self {
@@ -258,12 +256,12 @@ enum LockScreenWidgetType: String, Codable, CaseIterable, Identifiable {
     }
 
     static var selectableCases: [LockScreenWidgetType] {
-        return [.weather, .calendar, .music, .focus, .bluetooth, .battery, .caffeine, .timer, .clock, .notes, .clipboard, .system]
+        return [.weather, .calendar, .music, .focus, .bluetooth, .caffeine, .timer, .clock, .notes, .clipboard, .system]
     }
 }
 
 enum LockScreenMiniWidgetType: String, Codable, CaseIterable, Identifiable {
-    case none, weather, calendar, music, battery, focus, caffeine, timer, bluetooth, clipboard, notes, system
+    case none, weather, calendar, music, focus, caffeine, timer, bluetooth, clipboard, notes, system
     var id: String { self.rawValue }
     var displayName: String {
         switch self {
@@ -277,24 +275,10 @@ enum LockScreenMiniWidgetType: String, Codable, CaseIterable, Identifiable {
     }
 
     static var selectableCases: [LockScreenMiniWidgetType] {
-        return [.weather, .calendar, .music, .battery, .focus, .caffeine, .timer, .bluetooth, .clipboard, .notes, .system]
+        return [.weather, .calendar, .music, .focus, .caffeine, .timer, .bluetooth, .clipboard, .notes, .system]
     }
 }
 
-enum BatteryInfoType: String, Codable, CaseIterable, Identifiable {
-    case percentage, statusIcon, statusText, batteryIcon, estimatedTime
-    var id: String { self.rawValue }
-
-    var displayName: String {
-        switch self {
-        case .percentage: "Percentage".local
-        case .statusIcon: "Status Icon".local
-        case .statusText: "Status Text".local
-        case .batteryIcon: "Battery Icon".local
-        case .estimatedTime: "Estimated Time".local
-        }
-    }
-}
 
 enum SnapZoneViewMode: String, Codable, CaseIterable, Identifiable {
     case single, multi
@@ -487,7 +471,6 @@ extension Settings {
             case .notes: return notesWidgetEnabled
             case .clipboard: return clipboardWidgetEnabled
             case .mirror: return mirrorWidgetEnabled
-            case .battery: return batteryWidgetEnabled
             case .timer: return timerWidgetEnabled
             case .focusSession: return focusSessionWidgetEnabled
             case .storage: return storageWidgetEnabled
@@ -856,8 +839,6 @@ struct Settings: Codable, Equatable {
     var desktopWallpaperPath: String? = nil
     var liveWallpaperScaling: WallpaperScaling = .fill
     var liveWallpaperPlaybackMode: LiveWallpaperPlaybackMode = .adaptive
-    var liveWallpaperPauseOnLowPower: Bool = false
-    var liveWallpaperPauseOnBattery: Bool = false
     var lockScreenLiveWallpaperShowsClock: Bool = false
     var lockScreenLiveWallpaperIdleDelay: Double = 8
     var lockScreenLiveActivityEnabled: Bool = true
@@ -867,7 +848,6 @@ struct Settings: Codable, Equatable {
     var lockScreenShowInfoWidgetBackgrounds: Bool = true
     var lockScreenShowMusicWhenPaused: Bool = true
     var lockScreenWeatherInfo: [WeatherInfoType] = [.temperature]
-    var lockScreenBatteryInfo: [BatteryInfoType] = [.batteryIcon, .percentage, .statusText]
     var notchWidgetAppearance: NotchAppearanceSettings = .init()
     var systemEnhanceDockPreviewsEnabled: Bool = false
     var systemEnhanceAltTabEnabled: Bool = false
@@ -970,7 +950,6 @@ struct Settings: Codable, Equatable {
     var clipboardIconEnabled: Bool = true
     var fileShelfIconEnabled: Bool = true
     var focusSessionIconEnabled: Bool = true
-    var batteryEstimatorEnabled: Bool = true
     var showMultiAudioIcon: Bool = true
     var intelligenceEnabled: Bool = true
     var intelligenceBackend: LLMBackend = .auto
@@ -995,7 +974,7 @@ struct Settings: Codable, Equatable {
 
     var installedAppUpdatesEnabled: Bool = false
     var installedAppUpdateNotificationsEnabled: Bool = false
-    var notchButtonOrder: [NotchButtonType] = [.settings, .fileShelf, .notes, .clipboard, .intelligence, .focusSession, .spacer, .battery, .multiAudio, .caffeine, .pin]
+    var notchButtonOrder: [NotchButtonType] = [.settings, .fileShelf, .notes, .clipboard, .intelligence, .focusSession, .spacer, .multiAudio, .caffeine, .pin]
     var circleToSearchEnabled: Bool = true
     var circleToSearchShortcut: KeyboardShortcut = KeyboardShortcut(key: "C", modifiers: [.control, .shift])
     var circleToSearchBrowserEngine: CircleSearchBrowserEngine = .google
@@ -1046,7 +1025,7 @@ struct Settings: Codable, Equatable {
     var lastNotchNavigationStack: [RestorableNotchMenu]? = nil
     var showDividersBetweenWidgets: Bool = false
     var bypassWidgetSpaceLimit: Bool = false
-    var widgetOrder: [WidgetType] = [.music, .weather, .sports, .finance, .calendar, .focusSession, .battery, .timer, .shortcuts, .notes, .clipboard, .mirror]
+    var widgetOrder: [WidgetType] = [.music, .weather, .sports, .finance, .calendar, .focusSession, .timer, .shortcuts, .notes, .clipboard, .mirror]
     var musicWidgetEnabled: Bool = true
     var weatherWidgetEnabled: Bool = true
     var sportsWidgetEnabled: Bool = false
@@ -1156,7 +1135,6 @@ struct Settings: Codable, Equatable {
     var dmgInstallerReplaceWithoutPrompting: Bool = false
     var dmgInstallerProgressDisplay: FileOperationProgressDisplay = .liveActivity
     var timerWidgetEnabled: Bool = false
-    var batteryWidgetEnabled: Bool = true
     var focusSessionWidgetEnabled: Bool = true
     var storageWidgetEnabled: Bool = false
     var storageOpenOnClick: Bool = true
@@ -1167,7 +1145,6 @@ struct Settings: Codable, Equatable {
     var calendarLiveActivityEnabled: Bool = true
     var remindersLiveActivityEnabled: Bool = true
     var timersLiveActivityEnabled: Bool = true
-    var batteryLiveActivityEnabled: Bool = true
     var eyeBreakLiveActivityEnabled: Bool = false
     var desktopLiveActivityEnabled: Bool = true
     var focusLiveActivityEnabled: Bool = true
@@ -1356,7 +1333,6 @@ struct Settings: Codable, Equatable {
     var hideLiveActivityInFullScreen: Bool = false
     var hideActivitiesInFullScreen: [String: Bool] = [:]
     var showPersistentStatsLiveActivity: Bool = false
-    var showPersistentBatteryLiveActivity: Bool = false
     var showPersistentWeatherLiveActivity: Bool = true
     var weatherLiveActivityInterval: Int = 10
     var focusDisplayMode: FocusDisplayMode = .full
@@ -1465,37 +1441,8 @@ struct Settings: Codable, Equatable {
     // MARK: - Per-shortcut disabling (Keyboard Shortcuts page)
 
     var disabledShortcutIDs: Set<String> = []
-    var batteryChargeLimit: Int = 100
-    var lowBatteryNotificationPercentage: Int = 20
-    var lowBatteryNotificationSoundEnabled: Bool = true
-    var batteryNotificationStyle: BatteryNotificationStyle = .default
-    var promptForLowPowerMode: Bool = true
-    var showEstimatedBatteryTime: Bool = true
-    var automaticDischargeEnabled: Bool = true
-    var heatProtectionEnabled: Bool = true
-    var heatProtectionThreshold: Double = 40.0
-    var sailingModeEnabled: Bool = true
-    var sailingModeLowerLimit: Int = 10
-    var useHardwareBatteryPercentage: Bool = false
-    var controlMagSafeLEDEnabled: Bool = true
-    var stopChargingWhenSleeping: Bool = false
-    var logBatteryDuringSleep: Bool = false
-    var sleepLoggingIntervalMinutes: Int = 30
-    var dischargeToLimitEnabled: Bool = false
-    var oneTimeDischargeEnabled: Bool = false
-    var oneTimeDischargeTarget: Int = 20
-    var disableSleepUntilChargeLimit: Bool = false
-    var lowPowerMode: LowPowerMode = .never
     var scheduledTasks: [ScheduledTask] = []
-    var stopChargingWhenAppClosed: Bool = false
-    var magSafeLEDBlinkOnDischarge: Bool = false
-    var magSafeLEDSetting: MagSafeLEDSetting = .alwaysOn
-    var preventSleepDuringCalibration: Bool = false
-    var preventSleepDuringDischarge: Bool = false
     var fanControlModes: [String: StoredFanControlMode] = [:]
-    var enableBiweeklyCalibration: Bool = false
-    var magSafeGreenAtLimit: Bool = true
-    var bluetoothNotifyLowBattery: Bool = true
     var bluetoothNotifySound: Bool = true
     var showBluetoothDeviceName: Bool = false
     var bluetoothLiveActivityEnabled: Bool = true
@@ -1563,7 +1510,6 @@ struct Settings: Codable, Equatable {
     var continuitySyncFocusSessionSettings: Bool = false
     var continuitySyncFocus: Bool = true
     var continuityMediaControls: Bool = true
-    var continuityShowPhoneBattery: Bool = true
     var continuityStatusLiveActivityEnabled: Bool = true
     var continuityHotspot: Bool = true
     var continuityFiles: Bool = true
@@ -1626,8 +1572,6 @@ struct Settings: Codable, Equatable {
     var lidAngleMuteAudioTrigger: Double = 14.0
     var lidAngleSleepDisplayEnabled: Bool = false
     var lidAngleSleepDisplayTrigger: Double = 12.0
-    var lidAngleLowPowerModeEnabled: Bool = false
-    var lidAngleLowPowerModeTrigger: Double = 35.0
 
     var menuBarEnabled: Bool = false
     var menuBarProfilesEnabled: Bool = false
@@ -1679,7 +1623,7 @@ struct SettingsBackupPayload: Codable {
     let appName: String
     let schemaVersion: Int
     let exportedAt: Date
-    let settings: Settings
+    var settings: Settings
 
     init(settings: Settings, exportedAt: Date = .now) {
         self.appName = "Sapphire"
@@ -1716,7 +1660,9 @@ struct SettingsBackupDocument: FileDocument {
     static func decodePayload(from data: Data) throws -> SettingsBackupPayload {
         let decoder = JSONDecoder()
 
-        if let payload = try? decoder.decode(SettingsBackupPayload.self, from: data) {
+        if var payload = try? decoder.decode(SettingsBackupPayload.self, from: data),
+           let settings = SettingsPersistence.decodeFromPayload(data) {
+            payload.settings = settings
             return payload
         }
 
@@ -1860,10 +1806,6 @@ enum SettingsPersistence {
     }
 
     static func decodeFromPayload(_ data: Data) -> Settings? {
-        if var settings = try? decoder.decode(Settings.self, from: data) {
-            settings.normalizeCollectionOrders()
-            return settings
-        }
         guard let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
             return nil
         }
@@ -1880,6 +1822,7 @@ enum SettingsPersistence {
 
     private static func decodeDictionaryTolerantly(_ dictionary: [String: Any]) -> Settings? {
         var dictionary = dictionary
+        migrateRetiredBatteryEntries(in: &dictionary)
         if dictionary["systemEnhanceDockClicksAllAppsEnabled"] == nil,
            dictionary["systemEnhanceDockClicksSelectedApps"] != nil {
             dictionary["systemEnhanceDockClicksAllAppsEnabled"] = false
@@ -1940,6 +1883,68 @@ enum SettingsPersistence {
         let midpoint = entries.index(entries.startIndex, offsetBy: entries.count / 2)
         applyCompatibleEntries(entries[..<midpoint], to: &merged, droppedKeys: &droppedKeys)
         applyCompatibleEntries(entries[midpoint...], to: &merged, droppedKeys: &droppedKeys)
+    }
+
+    private static func migrateRetiredBatteryEntries(in dictionary: inout [String: Any]) {
+        for key in ["widgetOrder", "notchButtonOrder", "liveActivityOrder",
+                    "lockScreenWidgets", "lockScreenMainWidgets", "lockScreenMiniWidgets", "selectedStats"] {
+            let retiredValue = key == "selectedStats" ? "batteryPower" : "battery"
+            if let entries = dictionary[key] as? [Any] {
+                dictionary[key] = entries.filter { ($0 as? String) != retiredValue }
+            } else if dictionary[key] as? String == retiredValue {
+                dictionary.removeValue(forKey: key)
+            }
+        }
+        if let profiles = dictionary["menuBarProfiles"] as? [Any] {
+            let retiredKinds = ["batteryBelow", "batteryAbove", "charging", "onBatteryPower"]
+            dictionary["menuBarProfiles"] = profiles.map { entry -> Any in
+                guard var profile = entry as? [String: Any],
+                      let conditions = profile["revealConditions"] as? [Any] else { return entry }
+                profile["revealConditions"] = conditions.filter { condition in
+                    guard let condition = condition as? [String: Any],
+                          let kind = condition["kind"] as? String else { return true }
+                    return !retiredKinds.contains(kind)
+                }
+                return profile
+            }
+        }
+        if var hiddenActivities = dictionary["hideActivitiesInFullScreen"] as? [String: Any] {
+            hiddenActivities.removeValue(forKey: "battery")
+            dictionary["hideActivitiesInFullScreen"] = hiddenActivities
+        }
+        // Codable enum-keyed dictionaries are alternating key/value arrays, not JSON objects.
+        if let thresholds = dictionary["statThresholds"] as? [Any], thresholds.count.isMultiple(of: 2) {
+            dictionary["statThresholds"] = stride(from: 0, to: thresholds.count, by: 2).flatMap { index -> [Any] in
+                thresholds[index] as? String == "batteryPower" ? [] : [thresholds[index], thresholds[index + 1]]
+            }
+        }
+        func isRetiredSensor(_ key: String) -> Bool {
+            ["TB", "Tb", "IB", "Ib", "PB", "Pb", "VB", "Vb"].contains(where: key.hasPrefix)
+                || ["TCHP", "PPBR", "VD0R", "ID0R", "PDTR"].contains(key)
+        }
+        if let sensorKeys = dictionary["selectedSensorKeys"] as? [String] {
+            dictionary["selectedSensorKeys"] = sensorKeys.filter { !isRetiredSensor($0) }
+        }
+        if var fanModes = dictionary["fanControlModes"] as? [String: Any] {
+            for (id, value) in fanModes {
+                guard let mode = value as? [String: Any],
+                      let kind = mode["kind"] as? String, ["sensor", "customCurve"].contains(kind),
+                      let sensorKey = mode["sensorKey"] as? String, isRetiredSensor(sensorKey) else { continue }
+                fanModes[id] = ["kind": "auto"]
+            }
+            dictionary["fanControlModes"] = fanModes
+        }
+        if let tasks = dictionary["scheduledTasks"] as? [Any] {
+            let retiredActions = ["setChargeLimit", "topUp", "dischargeTo", "startCalibration"]
+            dictionary["scheduledTasks"] = tasks.filter { entry in
+                guard let task = entry as? [String: Any], let action = task["action"] as? String else { return true }
+                if retiredActions.contains(action) { return false }
+                if action == "setFanSensorBased", let sensorKey = task["sensorKey"] as? String {
+                    return !isRetiredSensor(sensorKey)
+                }
+                return true
+            }
+        }
     }
 
     private static func migrateLegacyGlassIntensity(
@@ -2570,31 +2575,10 @@ private extension Array where Element: Equatable {
     }
 }
 
-enum MagSafeLEDSetting: String, Codable, CaseIterable, Identifiable {
-    case alwaysOn, off
-    var id: String { self.rawValue }
-    var displayName: String {
-        switch self {
-        case .alwaysOn: "Always On".local
-        case .off: "Always Off".local
-        }
-    }
-}
 
-enum LowPowerMode: String, Codable, CaseIterable, Identifiable {
-    case alwaysOn, onBattery, never
-    var id: String { self.rawValue }
-    var displayName: String {
-        switch self {
-        case .alwaysOn: "Always On".local
-        case .onBattery: "On Battery".local
-        case .never: "Never".local
-        }
-    }
-}
 
 enum WidgetType: String, Codable, CaseIterable, Identifiable, Equatable {
-    case weather, calendar, shortcuts, music, sports, finance, shopify, notes, clipboard, mirror, battery, timer, focusSession, storage, agent
+    case weather, calendar, shortcuts, music, sports, finance, shopify, notes, clipboard, mirror, timer, focusSession, storage, agent
     var id: String { self.rawValue }
     var displayName: String {
         switch self {
@@ -2608,7 +2592,6 @@ enum WidgetType: String, Codable, CaseIterable, Identifiable, Equatable {
         case .notes: return "Notes".local
         case .clipboard: return "Clipboard".local
         case .mirror: return "Mirror".local
-        case .battery: return "Battery".local
         case .timer: return "Timer".local
         case .focusSession: return "Focus".local
         case .storage: return "Storage".local
@@ -2618,11 +2601,11 @@ enum WidgetType: String, Codable, CaseIterable, Identifiable, Equatable {
 }
 
 enum LiveActivityType: String, Codable, CaseIterable, Identifiable, Equatable {
-    case fileShelf, eyeBreak, focus, desktop, battery, timers, calendar, reminders, weather, music, fileProgress, stats, microphone, devActivity, sports, finance
+    case fileShelf, eyeBreak, focus, desktop, timers, calendar, reminders, weather, music, fileProgress, stats, microphone, devActivity, sports, finance
     var id: String { self.rawValue }
     var displayName: String {
         switch self {
-        case .music: "Music".local; case .weather: "Weather".local; case .calendar: "Calendar".local; case .reminders: "Reminders".local; case .timers: "Timers".local; case .battery: "Battery".local; case .eyeBreak: "Eye Break".local; case .desktop: "Desktop".local; case .focus: "Focus".local; case .fileShelf: "File Shelf".local; case .fileProgress: "File Progress".local; case .stats: "Stats".local; case .microphone: "Microphone".local; case .devActivity: "Dev Activity".local; case .sports: "Sports".local; case .finance: "Finance".local
+        case .music: "Music".local; case .weather: "Weather".local; case .calendar: "Calendar".local; case .reminders: "Reminders".local; case .timers: "Timers".local; case .eyeBreak: "Eye Break".local; case .desktop: "Desktop".local; case .focus: "Focus".local; case .fileShelf: "File Shelf".local; case .fileProgress: "File Progress".local; case .stats: "Stats".local; case .microphone: "Microphone".local; case .devActivity: "Dev Activity".local; case .sports: "Sports".local; case .finance: "Finance".local
         }
     }
 }
@@ -2813,17 +2796,6 @@ enum MicrophoneLiveActivityBehavior: String, Codable, CaseIterable, Identifiable
     }
 }
 
-enum BatteryNotificationStyle: String, CaseIterable, Identifiable, Decodable, Encodable {
-    case `default`
-    case compact
-    case persistent
-
-    var id: String { self.rawValue.capitalized }
-
-    static var userSelectableCases: [BatteryNotificationStyle] {
-        return [.default, .compact]
-    }
-}
 
 enum NotificationSource: String, CaseIterable, Identifiable {
     case iMessage, faceTime, airDrop
@@ -2863,12 +2835,12 @@ enum GeneralSettingType: String, CaseIterable, Identifiable, Equatable {
 }
 
 enum NotchButtonType: String, Codable, Identifiable, Equatable {
-    case settings, fileShelf, notes, clipboard, intelligence, intelligenceLive, focusSession, caffeine, spacer, multiAudio, battery, pin
+    case settings, fileShelf, notes, clipboard, intelligence, intelligenceLive, focusSession, caffeine, spacer, multiAudio, pin
     var id: String { self.rawValue }
 
     static let allCases: [NotchButtonType] = [
         .settings, .fileShelf, .notes, .clipboard, .intelligence,
-        .focusSession, .caffeine, .spacer, .multiAudio, .battery, .pin,
+        .focusSession, .caffeine, .spacer, .multiAudio, .pin,
     ]
 
     var displayName: String {
@@ -2877,7 +2849,7 @@ enum NotchButtonType: String, Codable, Identifiable, Equatable {
         case .intelligence: "Blip".local; case .intelligenceLive: "Gemini".local;
         case .focusSession: "Focus".local;
         case .caffeine: "Caffeinate".local; case .spacer: "Spacer".local;
-        case .multiAudio: "Multi-Audio (Beta)".local; case .battery: "Battery".local; case .pin: "Pin".local
+        case .multiAudio: "Multi-Audio (Beta)".local; case .pin: "Pin".local
         }
     }
 
@@ -2887,7 +2859,7 @@ enum NotchButtonType: String, Codable, Identifiable, Equatable {
         case .intelligence: "sparkle"; case .intelligenceLive: "waveform";
         case .focusSession: "moon.fill";
         case .caffeine: "cup.and.saucer"; case .spacer: "space";
-        case .multiAudio: "hifispeaker.and.homepod.mini.fill"; case .battery: "battery.100"; case .pin: "pin"
+        case .multiAudio: "hifispeaker.and.homepod.mini.fill"; case .pin: "pin"
         }
     }
 }
@@ -3039,7 +3011,7 @@ extension UTType {
 }
 
 enum SettingsSection: String, CaseIterable, Identifiable {
-    case general, systemEnhance, apps, storage, widgets, liveActivities, appearance, lockScreen, bluetoothUnlock, shortcuts, keyboardShortcuts, snapZones, audio, battery, bluetooth, hud, notifications, neardrop, continuity, fileShelf, notes, clipboard, emoji, mouse, monitoring, devActivity, archives, mirror, caffeine, music, weather, calendar, eyeBreak, focusSession, appLock, intelligence, sports, finance, dockLayouts, mediaOptimizer, about
+    case general, systemEnhance, apps, storage, widgets, liveActivities, appearance, lockScreen, bluetoothUnlock, shortcuts, keyboardShortcuts, snapZones, audio, bluetooth, hud, notifications, neardrop, continuity, fileShelf, notes, clipboard, emoji, mouse, monitoring, devActivity, archives, mirror, caffeine, music, weather, calendar, eyeBreak, focusSession, appLock, intelligence, sports, finance, dockLayouts, mediaOptimizer, about
 
     var id: String { self.rawValue }
 
@@ -3083,18 +3055,17 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         case .keyboardShortcuts: "Reference page listing every keyboard shortcut in Sapphire — global hotkeys, snap zones, and in-app shortcuts.".local
         case .snapZones: "Configure window snapping behavior, layouts, and zone actions.".local
         case .audio: "Audio adjustments, EQ, and per-app volume adjustments.".local
-        case .battery: "Battery widgets, history, charging preferences, and power-related controls.".local
         case .bluetooth: "Bluetooth device integrations, visibility, and connection behavior.".local
         case .hud: "Heads-up display overlays for volume, brightness, keyboard, and media feedback.".local
         case .notifications: "Choose which system notifications Sapphire mirrors or enhances.".local
         case .neardrop: "Nearby sharing preferences, transfers, and device discovery options.".local
-        case .continuity: "Pair an Android phone for clipboard, notifications, media, battery, and Instant Hotspot.".local
+        case .continuity: "Pair an Android phone for clipboard, notifications, media, and Instant Hotspot.".local
         case .fileShelf: "Manage temporary file storage, drag targets, and shelf behavior.".local
         case .notes: "Quick notes widget, click-to-expand behavior, and notch bar access.".local
         case .clipboard: "Clipboard history, monitoring, and notch clipboard shortcuts.".local
         case .emoji: "Slack-style emoji typing with :shortcode: suggestions and a full search picker.".local
         case .mouse: "Mouse and trackpad scroll, acceleration, and button customization.".local
-        case .monitoring: "Menu bar readouts and notifications for CPU, memory, disk, and network.".local
+        case .monitoring: "System monitoring, fan controls, and schedules.".local
         case .devActivity: "Track AI agents, builds, and terminal commands, and keep the Mac awake while they run.".local
         case .archives: "Extract ZIP, RAR, 7-Zip, TAR, and other archives — or auto-mount and install disk images (DMGs) — from anywhere.".local
         case .mirror: "Mirror widget showing live camera feed, with expandable fullscreen view.".local
@@ -3130,7 +3101,6 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         case .keyboardShortcuts: ["shortcut", "keyboard", "hotkey", "key", "keys", "reference", "cheat sheet", "list", "global", "command", "modifier"]
         case .snapZones: ["snap", "zones", "window", "tiling", "layout", "shortcut", "keyboard", "hotkey"]
         case .audio: ["audio", "EQ", "volume", "app", "devices"]
-        case .battery: ["battery", "charging", "power", "history"]
         case .bluetooth: ["bluetooth", "devices", "connections"]
         case .hud: ["hud", "overlay", "volume", "brightness", "media", "pill", "position", "edge", "side"]
         case .notifications: ["notifications", "alerts", "imessage", "facetime", "airdrop"]
@@ -3141,7 +3111,7 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         case .clipboard: ["clipboard", "pasteboard", "history", "copy", "paste"]
         case .emoji: ["emoji", "emoticon", "shortcut", "shortcode", "slack", "rocket", "smiley", "smile", "gif", "picker", "skin tone", "colon", "symbols", "kaomoji"]
         case .mouse: ["mouse", "trackpad", "scroll", "scrolling", "acceleration", "pointer", "cursor", "buttons", "remap", "remapping", "linearmouse", "linear mouse", "natural scrolling", "wheel", "sensitivity", "speed", "invert", "modifier", "back", "forward"]
-        case .monitoring: ["monitor", "readout", "menu bar", "cpu", "ram", "memory", "network", "speed", "alerts", "notifications", "disk", "space", "pressure", "usage", "stats"]
+        case .monitoring: ["monitor", "readout", "menu bar", "cpu", "ram", "memory", "network", "speed", "alerts", "notifications", "disk", "space", "pressure", "usage", "stats", "fan", "fans", "curve", "temperature", "sensor", "schedule", "scheduling", "风扇", "温度", "传感器", "计划", "定时"]
         case .devActivity: ["dev", "developer", "ai", "agent", "agents", "build", "builds", "compile", "compiling", "terminal", "command", "task", "tasks", "progress", "claude", "codex", "cursor", "antigravity", "copilot", "devin", "windsurf", "gemini", "aider", "xcode", "android studio", "gradle", "npm", "cargo", "make", "iterm", "warp", "ghostty", "caffeinate", "awake"]
         case .archives: ["archive", "unarchive", "extract", "extractor", "unarchiver", "zip", "unzip", "rar", "7z", "7-zip", "tar", "gzip", "bzip2", "xz", "compressed", "password", "encrypted", "iso", "cpio", "uncompress", "dmg", "disk image", "install", "mount", "unmount", "eject", "trash", "cleanup", "easy dmg", "easydmg"]
         case .mirror: ["mirror", "camera", "camera feed", "selfie", "webcam"]
@@ -3182,19 +3152,19 @@ enum SettingsSection: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .general: "General".local; case .systemEnhance: "System Enhance".local; case .apps: "Apps".local; case .storage: "Storage".local; case .widgets: "Widgets".local; case .liveActivities: "Live Activities".local; case .appearance: "Appearance".local; case .lockScreen: "Lock Screen".local; case .bluetoothUnlock: "Authentication".local; case .shortcuts: "Shortcuts".local; case .keyboardShortcuts: "Keyboard Shortcuts".local; case .snapZones: "Snap Zones".local; case .audio: "Audio".local; case .battery: "Battery".local; case .bluetooth: "Bluetooth".local; case .hud: "HUD".local; case .notifications: "Notifications".local; case .neardrop: "Nearby Share".local; case .continuity: "Android Continuity".local; case .fileShelf: "File Shelf".local; case .notes: "Notes".local;        case .clipboard: "Clipboard".local; case .emoji: "Emoji".local; case .mouse: "Mouse".local; case .monitoring: "Monitoring".local; case .devActivity: "Dev Activity".local; case .archives: "Archives & DMG".local; case .mirror: "Mirror".local; case .caffeine: "Caffeinate".local; case .music: "Music".local; case .weather: "Weather".local;        case .calendar: "Calendar".local; case .eyeBreak: "Eye Break".local; case .focusSession: "Focus Sessions".local; case .appLock: "App Lock".local; case .intelligence: "Blip".local; case .sports: "Sports".local; case .finance: "Finance".local; case .dockLayouts: "Dock".local; case .mediaOptimizer: "Media Optimizer".local; case .about: "About".local
+        case .general: "General".local; case .systemEnhance: "System Enhance".local; case .apps: "Apps".local; case .storage: "Storage".local; case .widgets: "Widgets".local; case .liveActivities: "Live Activities".local; case .appearance: "Appearance".local; case .lockScreen: "Lock Screen".local; case .bluetoothUnlock: "Authentication".local; case .shortcuts: "Shortcuts".local; case .keyboardShortcuts: "Keyboard Shortcuts".local; case .snapZones: "Snap Zones".local; case .audio: "Audio".local; case .bluetooth: "Bluetooth".local; case .hud: "HUD".local; case .notifications: "Notifications".local; case .neardrop: "Nearby Share".local; case .continuity: "Android Continuity".local; case .fileShelf: "File Shelf".local; case .notes: "Notes".local;        case .clipboard: "Clipboard".local; case .emoji: "Emoji".local; case .mouse: "Mouse".local; case .monitoring: "Monitoring".local; case .devActivity: "Dev Activity".local; case .archives: "Archives & DMG".local; case .mirror: "Mirror".local; case .caffeine: "Caffeinate".local; case .music: "Music".local; case .weather: "Weather".local;        case .calendar: "Calendar".local; case .eyeBreak: "Eye Break".local; case .focusSession: "Focus Sessions".local; case .appLock: "App Lock".local; case .intelligence: "Blip".local; case .sports: "Sports".local; case .finance: "Finance".local; case .dockLayouts: "Dock".local; case .mediaOptimizer: "Media Optimizer".local; case .about: "About".local
         }
     }
 
     var systemImage: String {
         switch self {
-        case .general: "gear"; case .systemEnhance: "macwindow.on.rectangle"; case .apps: "square.stack.3d.up.fill"; case .storage: "internaldrive.fill"; case .widgets: "square.grid.2x2.fill"; case .liveActivities: "timer"; case .appearance: "paintpalette"; case .lockScreen: "lock.fill"; case .bluetoothUnlock: "lock.laptopcomputer"; case .shortcuts: "square.grid.3x1.below.line.grid.1x2"; case .keyboardShortcuts: "keyboard"; case .snapZones: "uiwindow.split.2x1"; case .audio: "waveform"; case .battery: "battery.100"; case .bluetooth: "macbook.and.ipad"; case .hud: "macwindow.on.rectangle"; case .notifications: "bell"; case .neardrop: "shareplay"; case .continuity: "iphone.gen3.radiowaves.left.and.right"; case .fileShelf: "tray.full.fill"; case .notes: "note.text";        case .clipboard: "list.clipboard"; case .emoji: "face.smiling"; case .mouse: "computermouse.fill"; case .monitoring: "gauge.with.dots.needle.50percent"; case .devActivity: "hammer.circle.fill"; case .archives: "archivebox.fill"; case .mirror: "camera.fill"; case .caffeine: "cup.and.saucer.fill"; case .music: "music.note"; case .weather: "cloud.sun.fill";        case .calendar: "calendar"; case .eyeBreak: "eye.fill"; case .focusSession: "moon.fill"; case .appLock: "lock.shield.fill"; case .intelligence: "sparkle"; case .sports: "sportscourt"; case .finance: "chart.line.uptrend.xyaxis"; case .dockLayouts: "dock.rectangle"; case .mediaOptimizer: "photo"; case .about: "info.circle"
+        case .general: "gear"; case .systemEnhance: "macwindow.on.rectangle"; case .apps: "square.stack.3d.up.fill"; case .storage: "internaldrive.fill"; case .widgets: "square.grid.2x2.fill"; case .liveActivities: "timer"; case .appearance: "paintpalette"; case .lockScreen: "lock.fill"; case .bluetoothUnlock: "lock.laptopcomputer"; case .shortcuts: "square.grid.3x1.below.line.grid.1x2"; case .keyboardShortcuts: "keyboard"; case .snapZones: "uiwindow.split.2x1"; case .audio: "waveform"; case .bluetooth: "macbook.and.ipad"; case .hud: "macwindow.on.rectangle"; case .notifications: "bell"; case .neardrop: "shareplay"; case .continuity: "iphone.gen3.radiowaves.left.and.right"; case .fileShelf: "tray.full.fill"; case .notes: "note.text";        case .clipboard: "list.clipboard"; case .emoji: "face.smiling"; case .mouse: "computermouse.fill"; case .monitoring: "gauge.with.dots.needle.50percent"; case .devActivity: "hammer.circle.fill"; case .archives: "archivebox.fill"; case .mirror: "camera.fill"; case .caffeine: "cup.and.saucer.fill"; case .music: "music.note"; case .weather: "cloud.sun.fill";        case .calendar: "calendar"; case .eyeBreak: "eye.fill"; case .focusSession: "moon.fill"; case .appLock: "lock.shield.fill"; case .intelligence: "sparkle"; case .sports: "sportscourt"; case .finance: "chart.line.uptrend.xyaxis"; case .dockLayouts: "dock.rectangle"; case .mediaOptimizer: "photo"; case .about: "info.circle"
         }
     }
 
     var iconBackgroundColor: Color {
         switch self {
-        case .general: .black; case .systemEnhance: .blue; case .apps: .purple; case .storage: .orange; case .widgets: .gray; case .liveActivities: .cyan; case .appearance: .indigo; case .lockScreen: .red; case .bluetoothUnlock: .indigo; case .shortcuts: .orange; case .keyboardShortcuts: .purple; case .snapZones: .blue; case .audio: .red; case .battery: .green; case .bluetooth: .blue; case .hud: .indigo; case .notifications: .red; case .neardrop: .blue; case .continuity: .green; case .fileShelf: .orange; case .notes: .yellow;        case .clipboard: .mint; case .emoji: .indigo; case .mouse: .teal; case .monitoring: .green; case .devActivity: .purple; case .archives: .brown; case .mirror: .indigo; case .caffeine: .brown; case .music: .pink; case .weather: .blue;        case .calendar: .red; case .eyeBreak: .teal; case .focusSession: .purple; case .appLock: .red; case .intelligence: .mint; case .sports: .green; case .finance: .green; case .dockLayouts: .cyan; case .mediaOptimizer: .orange; case .about: .blue
+        case .general: .black; case .systemEnhance: .blue; case .apps: .purple; case .storage: .orange; case .widgets: .gray; case .liveActivities: .cyan; case .appearance: .indigo; case .lockScreen: .red; case .bluetoothUnlock: .indigo; case .shortcuts: .orange; case .keyboardShortcuts: .purple; case .snapZones: .blue; case .audio: .red; case .bluetooth: .blue; case .hud: .indigo; case .notifications: .red; case .neardrop: .blue; case .continuity: .green; case .fileShelf: .orange; case .notes: .yellow;        case .clipboard: .mint; case .emoji: .indigo; case .mouse: .teal; case .monitoring: .green; case .devActivity: .purple; case .archives: .brown; case .mirror: .indigo; case .caffeine: .brown; case .music: .pink; case .weather: .blue;        case .calendar: .red; case .eyeBreak: .teal; case .focusSession: .purple; case .appLock: .red; case .intelligence: .mint; case .sports: .green; case .finance: .green; case .dockLayouts: .cyan; case .mediaOptimizer: .orange; case .about: .blue
         }
     }
 
@@ -3213,7 +3183,6 @@ enum SettingsSection: String, CaseIterable, Identifiable {
         case .keyboardShortcuts: return [Color(hue: 0.78, saturation: 0.40, brightness: 0.86), Color(hue: 0.78, saturation: 0.54, brightness: 0.60)]
         case .snapZones: return [Color(hue: 0.60, saturation: 0.46, brightness: 0.88), Color(hue: 0.60, saturation: 0.60, brightness: 0.63)]
         case .audio: return [Color(hue: 0.57, saturation: 0.40, brightness: 0.87), Color(hue: 0.57, saturation: 0.54, brightness: 0.61)]
-        case .battery: return [Color(hue: 0.36, saturation: 0.44, brightness: 0.84), Color(hue: 0.36, saturation: 0.58, brightness: 0.58)]
         case .bluetooth: return [.blue, .cyan]
         case .hud: return [.indigo, .cyan]
         case .notifications: return [.red, .pink]

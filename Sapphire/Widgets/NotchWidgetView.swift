@@ -283,8 +283,6 @@ struct NotchWidgetView: View {
             UpdateAvailableWidgetView()
         case .focusSessionDetailView:
             FocusSessionDetailView(navigationStack: navigationStack)
-        case .batteryDetailView:
-            BatteryDetailView()
         case .storageDetailView:
             StorageDetailView()
         case .continuityDetail:
@@ -334,8 +332,6 @@ private struct NotchDefaultWidgetsView: View {
                 return settings.settings.shopifyWidgetEnabled
             case .calendar:
                 return settings.settings.calendarWidgetEnabled
-            case .battery:
-                return settings.settings.batteryWidgetEnabled
             case .timer:
                 return settings.settings.timerWidgetEnabled
             case .shortcuts:
@@ -478,8 +474,6 @@ private struct NotchDefaultWidgetsView: View {
             FocusWidgetView()
         case .timer:
             TimerWidgetView()
-        case .battery:
-            BatteryWidgetView()
         case .storage:
             StorageWidgetView()
                 .onTapGesture {

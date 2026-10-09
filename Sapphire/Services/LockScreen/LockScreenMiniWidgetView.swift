@@ -36,7 +36,6 @@ struct LockScreenWidgetBackground<Content: View>: View {
 struct LockScreenMiniWidgetView: View {
     @EnvironmentObject var settings: SettingsModel
 
-    @StateObject private var batteryStatusManager = BatteryStatusManager.shared
 
     @StateObject private var calendarViewModel = InteractiveCalendarViewModel()
     @State private var dummyNavigationStack: [NotchWidgetMode] = []
@@ -72,11 +71,6 @@ struct LockScreenMiniWidgetView: View {
                     LockScreenMusicMiniSlot()
                         .environment(\.navigationStack, $dummyNavigationStack)
                         .transition(fadeTransition)
-                case .battery:
-                    LockScreenWidgetBackground {
-                        BatteryMiniWidget()
-                    }
-                    .transition(fadeTransition)
 
                 case .focus:
                     LockScreenWidgetBackground {
@@ -132,7 +126,6 @@ struct LockScreenMiniWidgetView: View {
             }
         }
         .environment(\.lockScreenMiniWidgetHeight, maxMiniWidgetHeight > 0 ? maxMiniWidgetHeight : nil)
-        .environmentObject(batteryStatusManager)
     }
 
 }
@@ -169,73 +162,5 @@ private struct LockScreenTimerMiniSlot: View {
             }
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: timerManager.isRunning)
-    }
-}
-
-struct BatteryMiniWidget: View {
-    @EnvironmentObject var batteryMonitor: BatteryMonitor
-    @EnvironmentObject var bluetoothManager: BluetoothManager
-    @EnvironmentObject var batteryStatusManager: BatteryStatusManager
-    @StateObject private var batteryEstimator = BatteryEstimator.shared
-    @EnvironmentObject var settings: SettingsModel
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            if let internalState = batteryMonitor.currentState {
-                HStack {
-                    Image(systemName: "laptopcomputer")
-                        .font(.body.weight(.semibold))
-                        .frame(width: 20)
-
-                    Text("MacBook")
-                        .fontWeight(.medium)
-
-                    Spacer()
-
-                    if settings.settings.showEstimatedBatteryTime, let timeRemaining = batteryEstimator.estimatedTimeRemaining, !timeRemaining.isEmpty {
-                        Text(timeRemaining)
-                            .font(.system(size: 13, design: .rounded))
-                            .foregroundStyle(.secondary)
-                    }
-
-                    Text("\(internalState.level)%")
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-
-                    FilledBatteryIcon(
-                        level: internalState.level,
-                        isCharging: internalState.isCharging,
-                        isPluggedIn: internalState.isPluggedIn,
-                        isLowBattery: internalState.isLow,
-                        managementState: batteryStatusManager.currentState.managementState
-                    )
-                }
-            }
-
-            if let device = bluetoothManager.lastEvent, device.eventType == .connected, let batteryLevel = device.batteryLevel {
-                HStack {
-                    Image(systemName: device.iconName)
-                        .font(.body.weight(.semibold))
-                        .frame(width: 20)
-
-                    Text(device.name)
-                        .fontWeight(.medium)
-                        .lineLimit(1)
-
-                    Spacer()
-
-                    Text("\(batteryLevel)%")
-                        .font(.system(size: 14, weight: .semibold, design: .rounded))
-
-                    FilledBatteryIcon(
-                        level: batteryLevel,
-                        isCharging: false,
-                        isPluggedIn: false,
-                        isLowBattery: batteryLevel <= 20,
-                        managementState: .charging
-                    )
-                }
-            }
-        }
-        .foregroundColor(.white)
     }
 }

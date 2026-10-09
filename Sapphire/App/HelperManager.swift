@@ -202,7 +202,7 @@ class HelperManager: ObservableObject {
         if isRunning {
             return "Privileged helper is running.".local
         }
-        return lastIssue?.shortSummary ?? "Install the helper to enable battery management and system integrations.".local
+        return lastIssue?.shortSummary ?? "Install the helper to enable system integrations.".local
     }
 
     var bannerSymbol: String {
@@ -576,7 +576,6 @@ class HelperManager: ObservableObject {
             helperLogger.info("[HelperManager] Post-register ping \(attempt)/5: \(running ? "running" : "not running")")
             if running {
                 applyPingResult(true)
-                BatteryManager.shared.helperDidBecomeReachable()
                 return true
             }
             XPCClient.shared.start(force: true)

@@ -49,12 +49,10 @@ class CaffeineManager: ObservableObject {
     private var caffeineTask: Process?
     private var rootDomainClamshellActive = false
     private var helperSleepDisabledActive = false
-    private var forceClamshellGuard = false
     private var cancellables = Set<AnyCancellable>()
     private var dimmedScreenForLidAngle = false
     private var savedBrightnessBeforeScreenOff: Float?
     private var shouldRemainActive = false
-    private var autoStartedByBatteryDischarge = false
     private var autoStartedByDevTask = false
     private var devTaskAutoSuppressed = false
     private var devTaskReleaseTask: Task<Void, Never>?
@@ -163,15 +161,8 @@ class CaffeineManager: ObservableObject {
         }
     }
 
-    func start(forcePreventSleepInClamshell: Bool = false) {
-        let wasActive = isActive
+    func start() {
         shouldRemainActive = true
-        if forcePreventSleepInClamshell {
-            self.forceClamshellGuard = true
-            if !wasActive {
-                autoStartedByBatteryDischarge = true
-            }
-        }
 
         if isActive {
             refreshAllPowerGuards()
@@ -189,8 +180,6 @@ class CaffeineManager: ObservableObject {
         if hasQualifyingDevTask() { devTaskAutoSuppressed = true }
 
         shouldRemainActive = false
-        forceClamshellGuard = false
-        autoStartedByBatteryDischarge = false
         autoStartedByDevTask = false
         devTaskReleaseTask?.cancel()
         devTaskReleaseTask = nil
@@ -300,11 +289,6 @@ class CaffeineManager: ObservableObject {
         os_log("CaffeineManager: Auto-stopped - no tasks running.")
     }
 
-    func stopIfAutoStartedByBatteryDischarge() {
-        guard autoStartedByBatteryDischarge else { return }
-        stop()
-    }
-
     // MARK: - Layered Power Guards
 
     private func refreshAllPowerGuards() {
@@ -344,15 +328,13 @@ class CaffeineManager: ObservableObject {
     }
 
     private func shouldAcquireClamshellGuard() -> Bool {
-        forceClamshellGuard
-            || settings.settings.sleepInClamshell
+        settings.settings.sleepInClamshell
             || settings.settings.persistentCaffeinateAfterClamshell
             || ClamshellDetector.isClosed
     }
 
     private func shouldKeepClamshellGuardForSession() -> Bool {
-        forceClamshellGuard
-            || settings.settings.sleepInClamshell
+        settings.settings.sleepInClamshell
             || settings.settings.persistentCaffeinateAfterClamshell
     }
 
@@ -485,11 +467,7 @@ class CaffeineManager: ObservableObject {
     }
 
     private func acquireIOPMAssertions() -> Bool {
-        if autoStartedByBatteryDischarge {
-            acquirePreventSystemSleepOnlyAssertion()
-        } else {
-            acquirePreventSleepAssertions()
-        }
+        acquirePreventSleepAssertions()
     }
 
     private func releaseIOPMAssertions() {
@@ -510,11 +488,7 @@ class CaffeineManager: ObservableObject {
     private func startCaffeinateProcess() -> Bool {
         let task = Process()
         task.executableURL = URL(fileURLWithPath: "/usr/bin/caffeinate")
-        if autoStartedByBatteryDischarge {
-            task.arguments = ["-i", "-m", "-s"]
-        } else {
-            task.arguments = ["-d", "-i", "-m", "-s"]
-        }
+        task.arguments = ["-d", "-i", "-m", "-s"]
         task.terminationHandler = { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self, self.shouldRemainActive else { return }
@@ -553,7 +527,7 @@ class CaffeineManager: ObservableObject {
 
         guard !helperSleepDisabledActive else { return }
 
-        guard let helper = BatteryManager.shared.getHelper() else {
+        guard let helper = XPCClient.shared.proxy() else {
             os_log("CaffeineManager: Helper unavailable for clamshell sleep prevention.")
             updateActiveState()
             return
@@ -582,7 +556,7 @@ class CaffeineManager: ObservableObject {
     private func releaseHelperSleepDisabledIfNeeded() {
         guard helperSleepDisabledActive else { return }
 
-        guard let helper = BatteryManager.shared.getHelper() else {
+        guard let helper = XPCClient.shared.proxy() else {
             helperSleepDisabledActive = false
             os_log("CaffeineManager: Helper unavailable while restoring sleep settings.")
             return

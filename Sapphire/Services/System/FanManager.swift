@@ -232,7 +232,10 @@ class FanManager: ObservableObject {
     private func initializeSensors() async {
         guard let helper = getHelper() else { return }
 
-        let availableKeys = Set(await helper.getAllSMCKeys())
+        sensors = Self.temperatureSensors(for: Set(await helper.getAllSMCKeys()))
+    }
+
+    nonisolated static func temperatureSensors(for availableKeys: Set<String>) -> [TemperatureSensor] {
         var foundSensors: [TemperatureSensor] = []
 
         for (key, _) in SensorNameMap.knownSensors where availableKeys.contains(key) {
@@ -246,7 +249,7 @@ class FanManager: ObservableObject {
             }
         }
 
-        sensors = foundSensors
+        return foundSensors
             .reduce(into: [TemperatureSensor]()) { result, sensor in
                 if !result.contains(where: { $0.key == sensor.key }) {
                     result.append(sensor)
@@ -283,12 +286,7 @@ class FanManager: ObservableObject {
             guard let helper = getHelper() else { return }
 
             let currentSensors = sensors
-            let controlSensorKeys = Set(fanModes.values.compactMap { mode -> String? in
-                switch mode {
-                case .sensor(let key, _, _), .customCurve(let key, _): return key
-                case .auto, .constant: return nil
-                }
-            })
+            let controlSensorKeys = Self.controlSensorKeys(for: fanModes, sensors: currentSensors)
             guard !controlSensorKeys.isEmpty else { return }
             let sensorValues = await helper.getSensorValues(keys: Array(controlSensorKeys))
 
@@ -303,6 +301,18 @@ class FanManager: ObservableObject {
             applyActiveControlModes()
         }
 
+    }
+
+    nonisolated static func controlSensorKeys(
+        for modes: [Int: FanControlMode],
+        sensors: [TemperatureSensor]
+    ) -> Set<String> {
+        Set(modes.values.compactMap { mode -> String? in
+            switch mode {
+            case .sensor(let key, _, _), .customCurve(let key, _): return key
+            case .auto, .constant: return nil
+            }
+        }).intersection(Set(sensors.map(\.key)))
     }
 
     private func shouldApply(_ command: AppliedFanCommand, to fanID: Int) -> Bool {
@@ -449,7 +459,7 @@ class FanManager: ObservableObject {
     }
 
     private func getHelper() -> HelperProtocol? {
-        BatteryManager.shared.getHelper()
+        XPCClient.shared.proxy()
     }
 }
 

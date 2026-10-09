@@ -92,8 +92,6 @@ struct LockScreenInfoWidgetView: View {
                     LockScreenFocusInfoSlot()
                 case .bluetooth:
                     LockScreenBluetoothInfoSlot()
-                case .battery:
-                    LockScreenBatteryInfoSlot()
                 case .caffeine:
                     LockScreenCaffeineInfoView()
                 case .timer:
@@ -350,12 +348,12 @@ private struct LockScreenBluetoothInfoSlot: View {
         let device = bluetoothManager.lastEvent
 
         Group {
-            if let device, device.eventType == .connected, let batteryLevel = device.batteryLevel {
+            if let device, device.eventType == .connected {
                 HStack(spacing: LockScreenConfiguration.infoWidgetGenericHSpacing) {
                     Image(systemName: device.iconName)
                         .font(.system(size: LockScreenConfiguration.infoWidgetIconFontSize))
 
-                    Text("\(batteryLevel)%")
+                    Text(device.name)
                         .font(.system(size: LockScreenConfiguration.infoWidgetBoldFontSize, weight: .bold, design: .rounded))
                 }
                 .foregroundColor(.white)
@@ -373,92 +371,5 @@ private struct LockScreenBluetoothInfoSlot: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: device?.eventType)
-    }
-}
-
-private struct LockScreenBatteryInfoSlot: View {
-    @EnvironmentObject private var settings: SettingsModel
-    @EnvironmentObject private var batteryMonitor: BatteryMonitor
-    @StateObject private var batteryEstimator = BatteryEstimator.shared
-
-    var body: some View {
-        Group {
-            if let state = batteryMonitor.currentState {
-                let statusText: String = {
-                    if state.isCharging { return "Charging".local }
-                    if state.isPluggedIn { return "Plugged In".local }
-                    return "On Battery".local
-                }()
-                HStack(spacing: LockScreenConfiguration.infoWidgetGenericHSpacing) {
-                    if settings.settings.lockScreenBatteryInfo.contains(.statusIcon) {
-                        if state.isCharging {
-                            Image(systemName: "bolt.fill")
-                                .font(.system(size: LockScreenConfiguration.infoWidgetIconFontSize - 5, weight: .bold))
-                        } else if state.isPluggedIn {
-                            Image(systemName: "powerplug.fill")
-                                .font(.system(size: LockScreenConfiguration.infoWidgetIconFontSize, weight: .semibold))
-                        }
-                    }
-
-                    if settings.settings.lockScreenBatteryInfo.contains(.batteryIcon) {
-                        let iconSize: CGFloat = LockScreenConfiguration.infoWidgetLargeFontSize + 2
-
-                        if state.isCharging {
-                            Image(systemName: "battery.100.bolt")
-                                .font(.system(size: iconSize, weight: .semibold))
-                                .symbolRenderingMode(.multicolor)
-                                .frame(width: 30, height: 28)
-                        } else {
-                            let batterySymbol = Image(systemName: "battery.100")
-                                .font(.system(size: iconSize, weight: .semibold))
-
-                            ZStack(alignment: .leading) {
-                                batterySymbol
-                                    .foregroundColor(.white.opacity(0.35))
-
-                                GeometryReader { geo in
-                                    let insetHorizontal = geo.size.width * 0.11
-                                    let terminalWidth = geo.size.width * 0.05
-                                    let fillableWidth = geo.size.width - (insetHorizontal * 2) - terminalWidth
-                                    let currentFillWidth = fillableWidth * (CGFloat(state.level) / 100.0)
-                                    let totalMaskWidth = insetHorizontal + currentFillWidth
-
-                                    Rectangle()
-                                        .frame(width: totalMaskWidth)
-                                        .foregroundColor(.white)
-                                }
-                                .mask(batterySymbol)
-                            }
-                            .frame(width: 30, height: 28)
-                        }
-                    }
-
-                    if settings.settings.lockScreenBatteryInfo.contains(.percentage) {
-                        Text("\(state.level)%")
-                            .font(.system(size: LockScreenConfiguration.infoWidgetBoldFontSize, weight: .bold, design: .rounded))
-                    }
-
-                    if settings.settings.lockScreenBatteryInfo.contains(.statusText) {
-                        Text(statusText)
-                            .font(.system(size: LockScreenConfiguration.infoWidgetMediumFontSize, weight: .medium, design: .rounded))
-                            .foregroundColor(.white.opacity(0.8))
-                    }
-
-                    if settings.settings.lockScreenBatteryInfo.contains(.estimatedTime) {
-                        if settings.settings.showEstimatedBatteryTime,
-                           let timeRemaining = batteryEstimator.estimatedTimeRemaining,
-                           !timeRemaining.isEmpty,
-                           timeRemaining != "Charged".local {
-                            Text(timeRemaining)
-                                .font(.system(size: LockScreenConfiguration.infoWidgetMediumFontSize, weight: .medium, design: .rounded))
-                                .foregroundColor(.white.opacity(0.8))
-                        }
-                    }
-                }
-                .foregroundColor(.white)
-                .modifier(TransparentEffect())
-                .transition(.opacity)
-            }
-        }
     }
 }

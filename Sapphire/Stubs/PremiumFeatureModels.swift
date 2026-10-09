@@ -201,7 +201,6 @@ extension Settings {
 }
 
 enum MenuBarRevealConditionKind: String, Codable, CaseIterable, Identifiable {
-    case batteryBelow, batteryAbove, charging, onBatteryPower
     case focusActive, focusIdentifier, wifiEquals, wifiConnected
     case scriptSucceeds, scriptFails, scriptExitCode
 
@@ -209,10 +208,6 @@ enum MenuBarRevealConditionKind: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .batteryBelow: "Battery Level Below".local
-        case .batteryAbove: "Battery Level Above".local
-        case .charging: "Charging".local
-        case .onBatteryPower: "On Battery Power".local
         case .focusActive: "Any Focus Active".local
         case .focusIdentifier: "Focus Mode Is".local
         case .wifiEquals: "Wi-Fi Network Is".local
@@ -225,9 +220,6 @@ enum MenuBarRevealConditionKind: String, Codable, CaseIterable, Identifiable {
 
     var systemImage: String {
         switch self {
-        case .batteryBelow, .batteryAbove: "battery.25"
-        case .charging: "bolt.fill"
-        case .onBatteryPower: "battery.100"
         case .focusActive, .focusIdentifier: "moon.fill"
         case .wifiEquals, .wifiConnected: "wifi"
         case .scriptSucceeds, .scriptFails, .scriptExitCode: "terminal"
@@ -237,8 +229,7 @@ enum MenuBarRevealConditionKind: String, Codable, CaseIterable, Identifiable {
 
 struct MenuBarRevealCondition: Codable, Equatable, Identifiable {
     var id: UUID = UUID()
-    var kind: MenuBarRevealConditionKind = .batteryBelow
-    var batteryThreshold = 20
+    var kind: MenuBarRevealConditionKind = .focusActive
     var focusIdentifier = ""
     var wifiNetworkName = ""
     var scriptPath = ""

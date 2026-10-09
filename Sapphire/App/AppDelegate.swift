@@ -117,9 +117,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     lazy var desktopManager: DesktopManager = DesktopManager()
     lazy var focusModeManager: FocusModeManager = .shared
     lazy var calendarService: CalendarService = CalendarService()
-    lazy var batteryMonitor: BatteryMonitor = .shared
-    lazy var batteryManager = BatteryManager.shared
-    lazy var batteryEstimator: BatteryEstimator = BatteryEstimator(batteryMonitor: batteryMonitor)
     lazy var bluetoothManager: BluetoothManager = BluetoothManager()
     lazy var continuityManager: ContinuityManager = .shared
     lazy var audioDeviceManager: AudioDeviceManager = AudioDeviceManager()
@@ -136,12 +133,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     lazy var geminiLiveManager: GeminiLiveManager = GeminiLiveManager()
     lazy var settingsModel: SettingsModel = .shared
     lazy var activeAppMonitor: ActiveAppMonitor = .shared
-    lazy var powerStateController: PowerStateController = .shared
     lazy var scheduleManager: ScheduleManager = .shared
     lazy var keyboardShortcutManager: KeyboardShortcutManager = .shared
     lazy var plainTextPasteManager: PlainTextPasteManager = .shared
     lazy var globalDragManager: GlobalDragManager = .shared
-    lazy var batteryDataLogger: BatteryDataLogger = .shared
     lazy var fileShelfManager: FileShelfManager = .shared
     lazy var authManager: AuthenticationManager = .shared
     lazy var intelligenceViewModel: IntelligenceNotchViewModel = IntelligenceNotchViewModel()
@@ -207,7 +202,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         focusModeManager: focusModeManager,
         musicWidget: musicManager,
         calendarService: calendarService,
-        batteryMonitor: batteryMonitor,
         bluetoothManager: bluetoothManager,
         audioDeviceManager: audioDeviceManager,
         eyeBreakManager: eyeBreakManager,
@@ -216,8 +210,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         geminiLiveManager: geminiLiveManager,
         settingsModel: settingsModel,
         activeAppMonitor: activeAppMonitor,
-        batteryEstimator: batteryEstimator,
-        batteryStatusManager: BatteryStatusManager.shared,
         intelligenceVM: intelligenceViewModel
     )
 
@@ -764,7 +756,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         Task {
             try? await Task.sleep(for: .seconds(4))
             guard isMainAppRunning else { return }
-            if await batteryManager.verifyHelperResponds() {
+            if await XPCClient.shared.ping() {
                 helperHasConnectedThisSession = true
             }
         }
@@ -772,8 +764,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     private func initializeCoreManagers() {
         _ = settingsModel
-        _ = batteryMonitor
-        _ = batteryManager
     }
 
     private func startNearbyShareIfNeeded() {
@@ -791,7 +781,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
             await MainActor.run {
                 _ = IOBluetoothDevice.pairedDevices()
             }
-            _ = await self.batteryManager.getBatteryTemperature()
         }
     }
 
@@ -861,7 +850,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
 
     @objc private func systemDidWake(notification: NSNotification) {
         scheduleNotchDisplayRefresh()
-        batteryManager.reconnectHelper()
+        XPCClient.shared.start(force: true)
         HelperManager.shared.checkIfRunning(force: true)
 
         let reconnectDelay: TimeInterval = AuthenticationManager.shared.isFaceIDSessionActive ? 4.0 : 1.0
@@ -909,17 +898,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 
     private func evaluateHelperConnection(showAlertOnFailure: Bool) async {
-        if await batteryManager.verifyHelperResponds() {
+        if await XPCClient.shared.ping() {
             helperHasConnectedThisSession = true
             return
         }
 
         guard helperHasConnectedThisSession else { return }
 
-        batteryManager.reconnectHelper()
+        XPCClient.shared.start(force: true)
         try? await Task.sleep(for: .seconds(1.5))
 
-        if await batteryManager.verifyHelperResponds() {
+        if await XPCClient.shared.ping() {
             helperHasConnectedThisSession = true
             return
         }
@@ -1016,7 +1005,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                         .environmentObject(self.musicManager)
                         .environmentObject(self.focusModeManager)
                         .environmentObject(self.bluetoothManager)
-                        .environmentObject(self.batteryMonitor)
                         .environmentObject(self.timerManager),
                     withId: "infoWidget",
                     initialFrame: initialFrame,
@@ -1039,10 +1027,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                         .environmentObject(self.settingsModel)
                         .environmentObject(self.musicManager)
                         .environmentObject(self.calendarService)
-                        .environmentObject(BatteryStatusManager.shared)
                         .environmentObject(self.focusModeManager)
                         .environmentObject(self.timerManager)
-                        .environmentObject(self.batteryMonitor)
                         .environmentObject(self.bluetoothManager),
                     withId: "mainWidgetContainer",
                     initialFrame: initialFrame,
@@ -1066,9 +1052,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                         .environmentObject(self.weatherActivityViewModel)
                         .environmentObject(self.calendarService)
                         .environmentObject(self.musicManager)
-                        .environmentObject(self.batteryMonitor)
                         .environmentObject(self.bluetoothManager)
-                        .environmentObject(self.batteryEstimator)
                         .environmentObject(self.focusModeManager)
                         .environmentObject(self.timerManager),
                     withId: "miniWidgets",
@@ -1177,7 +1161,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         settingsModel.flushPendingSave()
         NearbyConnectionManager.shared.becomeInvisible()
         continuityManager.stop()
-        BatteryManager.shared.stopSleepBatteryLogging()
         cleanupNotchWindow()
 
         if Thread.isMainThread {
@@ -1294,7 +1277,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                 let menu = NSMenu()
                 menu.addItem(NSMenuItem(title: "Show Launchpad".local, action: #selector(showLaunchpadAction), keyEquivalent: ""))
                 menu.addItem(.separator())
-                menu.addItem(NSMenuItem(title: "Quit Sapphire".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+                menu.addItem(NSMenuItem(title: "Quit Island".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
                 for item in menu.items { item.target = self }
                 statusItem?.menu = menu
             }
@@ -1499,7 +1482,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
                 .environmentObject(geminiLiveManager)
                 .environmentObject(settingsModel)
                 .environmentObject(activeAppMonitor)
-                .environmentObject(batteryEstimator)
                 .environmentObject(DragStateManager.shared)
                 .environmentObject(calendarService)
                 .environmentObject(intelligenceViewModel)
@@ -1641,7 +1623,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
         window.isReleasedWhenClosed = false
 
         let root = SettingsView()
-            .environmentObject(powerStateController)
             .environment(\.locale, AppLocalization.locale)
 
         let hosting = FocusableHostingView(rootView: root)

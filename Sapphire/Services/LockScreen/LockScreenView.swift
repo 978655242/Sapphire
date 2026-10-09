@@ -141,9 +141,6 @@ struct LockScreenMainWidgetContainerView: View {
         case .calendar:
             LockScreenCalendarView()
                 .transition(fadeTransition)
-        case .battery:
-            LockScreenBatteryMainView()
-                .transition(fadeTransition)
         case .focus:
             LockScreenFocusMainView()
                 .transition(fadeTransition)

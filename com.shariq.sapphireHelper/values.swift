@@ -50,7 +50,6 @@ internal let SENSORS_LIST: [SensorDefinition] = [
 
     SensorDefinition(key: "Tm0P", name: "Mainboard", type: .temperature, group: .system),
     SensorDefinition(key: "Tp0P", name: "Powerboard", type: .temperature, group: .system),
-    SensorDefinition(key: "TB1T", name: "Battery", type: .temperature, group: .system),
     SensorDefinition(key: "TW0P", name: "Airport", type: .temperature, group: .system),
     SensorDefinition(key: "TL0P", name: "Display", type: .temperature, group: .system),
     SensorDefinition(key: "TI%P", name: "Thunderbolt %", type: .temperature, group: .system),
@@ -151,8 +150,6 @@ internal let SENSORS_LIST: [SensorDefinition] = [
     SensorDefinition(key: "TaRF", name: "Airflow right", type: .temperature, group: .sensor),
 
     SensorDefinition(key: "TH0x", name: "NAND", type: .temperature, group: .system),
-    SensorDefinition(key: "TB1T", name: "Battery 1", type: .temperature, group: .system),
-    SensorDefinition(key: "TB2T", name: "Battery 2", type: .temperature, group: .system),
     SensorDefinition(key: "TW0P", name: "Airport", type: .temperature, group: .system),
 
     SensorDefinition(key: "VCAC", name: "CPU IA", type: .voltage, group: .CPU),
@@ -163,9 +160,7 @@ internal let SENSORS_LIST: [SensorDefinition] = [
     SensorDefinition(key: "VG0C", name: "GPU", type: .voltage, group: .GPU),
 
     SensorDefinition(key: "VM0R", name: "Memory", type: .voltage, group: .system),
-    SensorDefinition(key: "Vb0R", name: "CMOS", type: .voltage, group: .system),
 
-    SensorDefinition(key: "VD0R", name: "DC In", type: .voltage, group: .sensor),
     SensorDefinition(key: "VP0R", name: "12V rail", type: .voltage, group: .sensor),
     SensorDefinition(key: "Vp0C", name: "12V vcc", type: .voltage, group: .sensor),
     SensorDefinition(key: "VV2S", name: "3V", type: .voltage, group: .sensor),
@@ -176,8 +171,6 @@ internal let SENSORS_LIST: [SensorDefinition] = [
 
     SensorDefinition(key: "IC0R", name: "CPU High side", type: .current, group: .sensor),
     SensorDefinition(key: "IG0R", name: "GPU High side", type: .current, group: .sensor),
-    SensorDefinition(key: "ID0R", name: "DC In", type: .current, group: .sensor),
-    SensorDefinition(key: "IBAC", name: "Battery", type: .current, group: .sensor),
 
     SensorDefinition(key: "PC0C", name: "CPU Core", type: .power, group: .CPU),
     SensorDefinition(key: "PCPC", name: "CPU Package", type: .power, group: .CPU),
@@ -191,7 +184,5 @@ internal let SENSORS_LIST: [SensorDefinition] = [
     SensorDefinition(key: "PCGC", name: "Intel GPU", type: .power, group: .GPU),
 
     SensorDefinition(key: "PC3C", name: "RAM", type: .power, group: .sensor),
-    SensorDefinition(key: "PPBR", name: "Battery", type: .power, group: .sensor),
-    SensorDefinition(key: "PDTR", name: "DC In", type: .power, group: .sensor),
     SensorDefinition(key: "PSTR", name: "System Total", type: .power, group: .sensor)
 ]

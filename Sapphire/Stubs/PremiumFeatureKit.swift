@@ -77,7 +77,6 @@ extension WidgetType {
         switch self {
         case .sports: .sportsWidget
         case .finance: .financeWidget
-        case .battery: .batteryWidget
         case .storage: .storageWidgets
         default: nil
         }

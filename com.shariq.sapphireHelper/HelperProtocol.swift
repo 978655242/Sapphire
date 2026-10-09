@@ -7,13 +7,8 @@
 
 import Foundation
 
-let SapphireHelperProtocolVersion: Int = 12
+let SapphireHelperProtocolVersion: Int = 13
 
-public enum ChargeControlMode: Int {
-    case unsupported = 0
-    case legacy = 1
-    case firmware = 2
-}
 
 @objc(FanInfo)
 public class FanInfo: NSObject, NSSecureCoding, Identifiable {
@@ -55,27 +50,16 @@ public class FanInfo: NSObject, NSSecureCoding, Identifiable {
 }
 
 @objc protocol HelperProtocol {
-    func setChargeLimit(_ limit: Int, reply: @escaping (Error?) -> Void)
-    func enableCharging(_ enabled: Bool, reply: @escaping (Error?) -> Void)
-    func setDischarge(_ discharging: Bool, safetyFloor: Int, rechargeOnFloor: Bool, bypassSafetyFloor: Bool, reply: @escaping (Error?) -> Void)
-    func setMagSafeLED(color: Int, reply: @escaping (Error?) -> Void)
-    func startCalibration(reply: @escaping (Error?) -> Void)
     func getFanCount(reply: @escaping (Int) -> Void)
     func getFanInfo(fanIndex: Int, reply: @escaping (FanInfo?) -> Void)
     func setFanMode(fanIndex: Int, mode: UInt8, reply: @escaping (Error?) -> Void)
     func setFanTargetSpeed(fanIndex: Int, speed: Int, reply: @escaping (Error?) -> Void)
     func setFanToConstantRPM(fanIndex: Int, speed: Int, reply: @escaping (Error?) -> Void)
-    func getBatteryTemperature(reply: @escaping (Double) -> Void)
     func getAllSMCKeys(reply: @escaping ([String]) -> Void)
     func getSensorValues(keys: [String], reply: @escaping (NSDictionary) -> Void)
     func getSensorValue(key: String, reply: @escaping (Double) -> Void)
     func getVersion(reply: @escaping (String) -> Void)
     func getProtocolVersion(reply: @escaping (Int) -> Void)
-    func getChargeControlMode(reply: @escaping (Int) -> Void)
-
-    func enableLowPowerMode(reply: @escaping (Error?) -> Void)
-    func disableLowPowerMode(reply: @escaping (Error?) -> Void)
-
     func createAggregateDevice(subDeviceUIDs: [String], masterDeviceUID: String, reply: @escaping (UInt32) -> Void)
     func destroyAggregateDevice(id: UInt32, reply: @escaping (Bool) -> Void)
     func setAggregateSubDeviceVolume(aggregateDeviceID: UInt32, subDeviceUID: String, volume: Float, reply: @escaping (Bool) -> Void)
@@ -85,9 +69,6 @@ public class FanInfo: NSObject, NSSecureCoding, Identifiable {
 
     func preventSystemSleep(reply: @escaping (Error?) -> Void)
     func allowSystemSleep(reply: @escaping (Error?) -> Void)
-
-    func startSleepBatteryMonitoring(intervalMinutes: Int, chargeLimit: Int, stopChargingWhileAsleep: Bool, logPath: String, reply: @escaping (Error?) -> Void)
-    func stopSleepBatteryMonitoring(reply: @escaping (Error?) -> Void)
 
     func writeHostsEntries(_ lines: [String], reply: @escaping (Bool) -> Void)
     func removeHostsEntries(reply: @escaping (Bool) -> Void)

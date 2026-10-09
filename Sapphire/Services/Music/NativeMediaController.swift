@@ -188,7 +188,7 @@ final class NativeMediaController: NSObject {
                 let fields = line.split(separator: " ", maxSplits: 2, omittingEmptySubsequences: true)
                 guard fields.count == 3,
                       let pid = pid_t(fields[0]), fields[1] == "1",
-                      fields[2].contains("Sapphire.app/Contents/Resources/mediaremote-adapter.pl"),
+                      fields[2].contains("Island.app/Contents/Resources/mediaremote-adapter.pl"),
                       fields[2].contains(" stream") else { continue }
                 kill(pid, SIGTERM)
             }

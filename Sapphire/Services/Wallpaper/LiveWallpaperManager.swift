@@ -13,8 +13,6 @@ struct LiveWallpaperConfiguration: Equatable {
     var lockScreenPath: String?
     var scaling: WallpaperScaling = .fill
     var playbackMode: LiveWallpaperPlaybackMode = .adaptive
-    var pauseOnLowPower = false
-    var pauseOnBattery = false
 
     init() {}
 
@@ -30,8 +28,6 @@ struct LiveWallpaperConfiguration: Equatable {
         desktopPath = customDesktopPath ?? (settings.lockScreenKeepWallpaperAfterUnlock ? lockPath : nil)
         scaling = settings.liveWallpaperScaling
         playbackMode = settings.liveWallpaperPlaybackMode
-        pauseOnLowPower = settings.liveWallpaperPauseOnLowPower
-        pauseOnBattery = settings.liveWallpaperPauseOnBattery
     }
 
     private static func nonEmpty(_ path: String?) -> String? {
@@ -120,8 +116,6 @@ final class LiveWallpaperManager {
             }
         }
 
-        policy.pauseOnLowPower = configuration.playbackMode == .adaptive && configuration.pauseOnLowPower
-        policy.pauseOnBattery = configuration.playbackMode == .adaptive && configuration.pauseOnBattery
         policy.start()
         refresh()
     }
@@ -175,9 +169,6 @@ final class LiveWallpaperManager {
             ? lockSurface
             : nil
         nativeLockScreen.configure(media: nativeLockMedia)
-
-        policy.pauseOnLowPower = configuration.playbackMode == .adaptive && configuration.pauseOnLowPower
-        policy.pauseOnBattery = configuration.playbackMode == .adaptive && configuration.pauseOnBattery
 
         applySystemWallpaper(plan.systemWallpaper, configured: [desktopMedia, lockMedia].compactMap { $0 })
 
@@ -273,8 +264,6 @@ final class LiveWallpaperManager {
             switch reason {
             case .sessionInactive:
                 return !isLocked
-            case .lowPowerMode, .onBattery:
-                return mode == .adaptive
             case .displaysAsleep, .systemSleeping, .thermalPressure:
                 return true
             }

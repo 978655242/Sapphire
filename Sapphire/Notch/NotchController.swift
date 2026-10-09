@@ -2231,7 +2231,7 @@ struct NotchController: View {
         case .musicApiKeysMissing, .geminiApiKeysMissing, .musicLoginPrompt, .musicLyrics,
                 .musicPlaylistDetail, .musicArtistDetail, .musicAlbumDetail, .snapZones, .fileShelfLanding, .fileActionPreview,
                 .multiAudioDeviceAdjust, .multiAudioAppEQ, .multiAudioApp8D, .multiAudioAppSurround, .multiAudioEQ, .dragActivated,
-                .agentS, .blipHub, .circleToSearch, .updateAvailable, .focusSessionDetailView, .batteryDetailView,
+                .agentS, .blipHub, .circleToSearch, .updateAvailable, .focusSessionDetailView,
                 .storageDetailView, .continuityDetail, .continuityActivityDetail:
             return nil
         }

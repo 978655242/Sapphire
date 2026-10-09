@@ -9,7 +9,6 @@ import Foundation
 
 enum ActivityType: Int, Equatable, Comparable, CaseIterable {
     case none = 0
-    case persistentBattery = 1
     case persistentStats = 2
     case persistentWeather = 3
     case weather = 5
@@ -20,7 +19,6 @@ enum ActivityType: Int, Equatable, Comparable, CaseIterable {
     case desktopChange = 30
     case stats = 40
     case updateAvailable = 45
-    case battery = 50
     case focusModeChange = 55
     case reminder = 59
     case calendar = 60
@@ -57,7 +55,6 @@ enum ActivityType: Int, Equatable, Comparable, CaseIterable {
         case .calendar: self = .calendar
         case .reminders: self = .reminder
         case .timers: self = .timer
-        case .battery: self = .battery
         case .eyeBreak: self = .eyeBreak
         case .desktop: self = .desktopChange
         case .focus: self = .focusModeChange
@@ -78,7 +75,6 @@ enum ActivityType: Int, Equatable, Comparable, CaseIterable {
         case .calendar: return .calendar
         case .reminder: return .reminders
         case .timer: return .timers
-        case .battery, .persistentBattery: return .battery
         case .eyeBreak: return .eyeBreak
         case .desktopChange: return .desktop
         case .focusModeChange: return .focus

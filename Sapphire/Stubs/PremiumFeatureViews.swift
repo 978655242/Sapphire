@@ -7,26 +7,6 @@
 #if !SAPPHIRE_FULL_BUILD
 import SwiftUI
 
-struct SystemPowerReading {
-    let systemLoad: Double
-    let adapterPower: Double
-    let adapterConnected: Bool
-    let isCharging: Bool
-
-    var heroWatts: Double { adapterConnected ? max(adapterPower, systemLoad) : systemLoad }
-    var adapterDisplayWatts: Double { adapterPower > 0 ? adapterPower : heroWatts }
-    var statusLabel: String { isCharging ? "Charging".local : (adapterConnected ? "On AC Power".local : "On Battery".local) }
-    var statusColor: Color { isCharging ? .green : (adapterConnected ? .cyan : .orange) }
-}
-
-struct PowerSplitBar: View {
-    let reading: SystemPowerReading
-    var body: some View { Capsule().fill(reading.statusColor) }
-}
-
-extension StatsManager {
-    var adapterSensorPower: Double { 0 }
-}
 
 private struct PremiumUnavailableView: View {
     let title: String

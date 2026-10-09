@@ -9,66 +9,7 @@ import SwiftUI
 import EventKit
 import AVFoundation
 
-private func foregroundStyle(for state: ManagementState) -> AnyShapeStyle {
-    switch state {
-    case .inhibited:
-        return AnyShapeStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
-    case .calibrationStarted, .calibrating:
-        return AnyShapeStyle(Color.purple)
-    case .calibrationDone:
-        return AnyShapeStyle(LinearGradient(colors: [.purple, .green], startPoint: .topLeading, endPoint: .bottomTrailing))
-    case .calibrationFailed:
-        return AnyShapeStyle(LinearGradient(colors: [.cyan, .red], startPoint: .topLeading, endPoint: .bottomTrailing))
-    case .sailing:
-        return AnyShapeStyle(Color.orange)
-    case .dischargeStarted, .discharging, .dischargeStopped:
-        return AnyShapeStyle(Color.cyan)
-    case .heatProtectionOn, .heatProtection:
-        return AnyShapeStyle(Color.red)
-    case .heatProtectionOff:
-        return AnyShapeStyle(Color.cyan)
-    default:
-        return AnyShapeStyle(Color.white.opacity(0.8))
-    }
-}
 
-struct PersistentBatteryActivityView {
-    static func left(for state: BatteryState, timeRemaining: String?, systemState: BatterySystemState) -> some View {
-        let managementState = systemState.managementState
-
-        return Group {
-            if let timeString = timeRemaining, !timeString.isEmpty {
-                Text(timeString)
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                    .foregroundColor(.white.opacity(0.8))
-                    .transition(.opacity.animation(.easeInOut))
-            } else {
-                let iconName: String = {
-                    switch managementState {
-                    case .inhibited: return "pause.fill"
-                    case .sailing: return "sailboat.fill"
-                    case .heatProtection: return "thermometer.sun.fill"
-                    case .discharging: return "arrow.down.to.line.compact"
-                    case .calibrating: return "battery.100.bolt"
-                    case .charging: return state.isPluggedIn ? "bolt.fill" : "powerplug.fill"
-                    default: return "info.circle"
-                    }
-                }()
-                Image(systemName: iconName)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(foregroundStyle(for: managementState))
-            }
-        }
-    }
-
-    static func right(for state: BatteryState, systemState: BatterySystemState) -> some View {
-        HStack(spacing: 6) {
-            Text("\(state.level)%")
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
-            FilledBatteryIcon(level: state.level, isCharging: state.isCharging, isPluggedIn: state.isPluggedIn, isLowBattery: state.isLow, managementState: systemState.managementState)
-        }
-    }
-}
 
 struct statsLiveActivityView {
     enum DisplayableStat: Identifiable, Hashable {
@@ -178,12 +119,11 @@ struct statsLiveActivityView {
                             case .ram: return payload.ram?.usage ?? 0
                             case .gpu: return payload.gpu?.utilization ?? 0
                             case .systemPower: return payload.systemPower ?? 0
-                            case .batteryPower: return payload.batteryPower ?? 0
                             default: return 0
                             }
                         }()
 
-                        if statType == .systemPower || statType == .batteryPower {
+                        if statType == .systemPower {
                              Text(String(format: "%.1fW", value))
                                 .contentTransition(.numericText())
                         } else {
@@ -265,7 +205,6 @@ struct statsLiveActivityView {
                         return "\(Int(utilization.isFinite ? utilization * 100 : 0))%"
                     case .disk: return String(localized: "\(Units(bytes: payload.disk?.activity.read ?? 0).getReadableSpeed(base: .byte)) R / \(Units(bytes: payload.disk?.activity.write ?? 0).getReadableSpeed(base: .byte)) W")
                     case .systemPower: return String(format: "%.1f W", payload.systemPower ?? 0)
-                    case .batteryPower: return String(format: "%.1f W", payload.batteryPower ?? 0)
                     }
                 case .sensor(let sensor):
                     return sensor.formattedValue
@@ -686,97 +625,7 @@ struct AudioSwitchActivityView {
     }
 }
 
-struct CompactBatteryActivityView {
-    static func left(for state: BatteryState, systemState: BatterySystemState) -> some View {
-        let managementState = systemState.managementState
 
-        let iconName: String = {
-            switch managementState {
-            case .inhibited: return "pause.fill"
-            case .sailing: return "sailboat.fill"
-            case .heatProtection, .heatProtectionOn: return "thermometer.sun.fill"
-            case .heatProtectionOff: return "snowflake"
-            case .discharging, .dischargeStarted: return "arrow.down.to.line.compact"
-            case .dischargeStopped: return "checkmark"
-            case .calibrating, .calibrationStarted: return "battery.100.bolt"
-            case .calibrationDone: return "checkmark.seal.fill"
-            case .calibrationFailed: return "exclamationmark.triangle.fill"
-            case .charging: return state.isLow ? "battery.25" : "bolt.fill"
-            }
-        }()
-
-        return Image(systemName: iconName)
-            .frame(width: 20, height: 20)
-            .foregroundStyle(foregroundStyle(for: managementState))
-    }
-
-    static func right(for state: BatteryState) -> some View {
-        Text("\(state.level)%")
-            .font(.system(size: 13, weight: .semibold))
-    }
-}
-
-struct DefaultBatteryActivityView {
-    static func left(for state: BatteryState, systemState: BatterySystemState) -> some View {
-        let managementState = systemState.managementState
-
-        let iconName: String
-        let text: String
-        let style: AnyShapeStyle
-
-        switch managementState {
-        case .charging:
-            iconName = "bolt.fill"; text = "Charging".local; style = AnyShapeStyle(Color.green)
-        case .inhibited:
-            iconName = "pause.fill"; text = "Charging Paused".local; style = foregroundStyle(for: .inhibited)
-        case .sailing:
-            iconName = "sailboat.fill"; text = String(localized: "Sailing by \(state.level)%"); style = foregroundStyle(for: .sailing)
-        case .heatProtectionOn:
-            iconName = "thermometer.sun.fill"; text = "Heat Protection On".local; style = foregroundStyle(for: .heatProtectionOn)
-        case .heatProtectionOff:
-            iconName = "snowflake"; text = "Heat Protection Off".local; style = AnyShapeStyle(Color.cyan)
-        case .heatProtection:
-            iconName = "thermometer.sun.fill"; text = "Heat Protection".local; style = foregroundStyle(for: .heatProtection)
-        case .dischargeStarted:
-            iconName = "arrow.down.to.line.compact"; text = "Discharge Started".local; style = foregroundStyle(for: .dischargeStarted)
-        case .dischargeStopped:
-            iconName = "checkmark"; text = "Discharge Stopped".local; style = foregroundStyle(for: .dischargeStopped)
-        case .discharging:
-            iconName = "arrow.down.to.line.compact"; text = "Discharging".local; style = foregroundStyle(for: .discharging)
-        case .calibrationStarted:
-            iconName = "battery.100.bolt"; text = "Calibration Started".local; style = foregroundStyle(for: .calibrationStarted)
-        case .calibrating:
-            iconName = "battery.100.bolt"; text = "Calibrating".local; style = foregroundStyle(for: .calibrating)
-        case .calibrationDone:
-            iconName = "checkmark.seal.fill"; text = "Calibration Complete".local; style = foregroundStyle(for: .calibrationDone)
-        case .calibrationFailed:
-            iconName = "exclamationmark.triangle.fill"; text = "Calibration Failed".local; style = foregroundStyle(for: .calibrationFailed)
-        }
-
-        return AnyView(
-            HStack(spacing: 6) {
-                Image(systemName: iconName)
-                Text(text)
-            }
-            .font(.system(size: 13, weight: .semibold))
-            .foregroundStyle(style)
-        )
-    }
-
-    static func right(for state: BatteryState, timeRemaining: String?, systemState: BatterySystemState) -> some View {
-        HStack(spacing: 6) {
-            if SettingsModel.shared.settings.showEstimatedBatteryTime, let timeString = timeRemaining, !timeString.isEmpty {
-                 Text(timeString)
-                    .font(.system(size: 12, weight: .semibold, design: .rounded))
-                    .foregroundColor(.white.opacity(0.8))
-                    .transition(.opacity)
-            }
-            Text("\(state.level)%")
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
-            FilledBatteryIcon(level: state.level, isCharging: state.isCharging, isPluggedIn: state.isPluggedIn, isLowBattery: state.isLow, managementState: systemState.managementState)
-        }
-    }
-}
 
 struct ReminderProximityActivityView {
     static func left() -> some View {
@@ -797,99 +646,7 @@ struct ReminderProximityActivityView {
     }
 }
 
-struct FilledBatteryIcon: View {
-    let level: Int
-    let isCharging: Bool
-    let isPluggedIn: Bool
-    let isLowBattery: Bool
-    let managementState: ManagementState
 
-    private let iconSize: CGFloat = 26
-    private let iconWeight: Font.Weight = .regular
-
-    private var iconName: String {
-        if isCharging {
-            switch managementState {
-            case .calibrating, .calibrationStarted, .charging:
-                return "battery.100.bolt"
-            default:
-                break
-            }
-        }
-
-        switch level {
-        case 96...100: return "battery.100"
-        case 71...95:  return "battery.75"
-        case 46...70:  return "battery.50"
-        case 11...45:  return "battery.25"
-        default:       return "battery.0"
-        }
-    }
-
-    private var iconStyle: AnyShapeStyle {
-        switch managementState {
-        case .sailing:
-            return AnyShapeStyle(Color.orange)
-        case .heatProtection, .heatProtectionOn:
-            return AnyShapeStyle(Color.red)
-        case .discharging, .dischargeStarted:
-            return AnyShapeStyle(Color.cyan)
-        case .calibrating, .calibrationStarted:
-            return AnyShapeStyle(Color.purple)
-        case .inhibited:
-            return AnyShapeStyle(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
-        case .calibrationDone:
-            return AnyShapeStyle(LinearGradient(colors: [.purple, .green], startPoint: .topLeading, endPoint: .bottomTrailing))
-        case .calibrationFailed:
-            return AnyShapeStyle(LinearGradient(colors: [.cyan, .red], startPoint: .topLeading, endPoint: .bottomTrailing))
-        default:
-            if isCharging { return AnyShapeStyle(Color.green) }
-            if isLowBattery { return AnyShapeStyle(Color.red) }
-            return AnyShapeStyle(Color.white)
-        }
-    }
-
-    var body: some View {
-        Image(systemName: iconName)
-            .font(.system(size: iconSize, weight: iconWeight))
-            .foregroundStyle(iconStyle)
-            .frame(width: iconSize + 4, height: iconSize / 2 + 4)
-            .animation(.easeInOut(duration: 0.3), value: iconName)
-            .animation(.easeInOut(duration: 0.3), value: managementState)
-            .padding(.leading, 4)
-            .padding(.trailing, 7)
-    }
-}
-
-struct BatteryRingView: View {
-    let level: Int
-    var color: Color?
-
-    private var setColor: Color {
-        if let unwrappedColor = color {
-            return unwrappedColor
-        } else {
-            if level <= 10 {
-                return .red
-            } else if level <= 25 {
-                return .yellow
-            }
-            return .green
-        }
-    }
-
-    var body: some View {
-        ProgressRingView(
-            progress: Double(level) / 100.0,
-            lineWidth: 3,
-            track: AnyShapeStyle(Color.accentColor.opacity(0.3)),
-            active: setColor
-        )
-        .animation(.easeOut, value: level)
-        .frame(width: 14, height: 14)
-        .padding(3)
-    }
-}
 
 private extension BluetoothDeviceState {
     var liveActivityIconName: String {
@@ -918,22 +675,14 @@ struct BluetoothConnectedPeripheralView {
                     .foregroundColor(.white.opacity(0.9))
                     .lineLimit(1)
 
-                if let level = device.batteryLevel {
-                    BatteryRingView(level: level)
-                } else {
-                    Image(systemName: "checkmark.circle.fill")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.green)
-                }
-            }
-        } else {
-            if let level = device.batteryLevel {
-                BatteryRingView(level: level)
-            } else {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.green)
             }
+        } else {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.green)
         }
     }
 }
@@ -980,29 +729,6 @@ struct BluetoothDisconnectedView {
     }
 }
 
-struct BluetoothBatteryLowView {
-    static func left(for device: BluetoothDeviceState) -> some View {
-        Image(systemName: device.liveActivityIconName)
-            .font(.system(size: 18, weight: .semibold))
-            .foregroundColor(.white)
-            .symbolRenderingMode(.hierarchical)
-    }
-
-    static func right(for device: BluetoothDeviceState) -> some View {
-        HStack(spacing: 8) {
-            if let level = device.batteryLevel {
-                BatteryRingView(level: level)
-                Text("\(level)%")
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-                    .foregroundColor(.red)
-            } else {
-                Text("Low Battery")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundColor(.red)
-            }
-        }
-    }
-}
 
 struct CalendarProximityActivityView {
     static func left() -> some View {
@@ -1806,100 +1532,7 @@ struct LockScreenLiveActivityView {
     }
 }
 
-struct PowerStateActivityView {
-    static func left(for state: BatterySystemState) -> some View {
-        let iconName: String
-        let color: Color
-        switch state.managementState {
-        case .sailing:
-            iconName = "sailboat.fill"
-            color = .cyan
-        case .heatProtection:
-            iconName = "thermometer.sun.fill"
-            color = .orange
-        case .discharging:
-            iconName = "arrow.down.to.line.compact"
-            color = .yellow
-        default:
-            iconName = "info.circle.fill"
-            color = .secondary
-        }
-        return Image(systemName: iconName)
-            .font(.system(size: 18, weight: .semibold))
-            .foregroundColor(color)
-            .symbolRenderingMode(.hierarchical)
-    }
 
-    static func right(for state: BatterySystemState, batteryLevel: Int) -> some View {
-        HStack(spacing: 6) {
-            Text(state.managementState.displayName)
-                .font(.system(size: 13, weight: .semibold))
-                .lineLimit(1)
-
-            HStack(spacing: 2) {
-                Image(systemName: "battery.100")
-                    .font(.caption)
-                Text("\(batteryLevel)%")
-                    .font(.system(size: 13, weight: .semibold, design: .rounded))
-            }
-        }
-        .foregroundColor(.white.opacity(0.9))
-    }
-}
-
-struct CalibrationActivityView: View {
-    @EnvironmentObject var calibrationManager: CalibrationManager
-    @EnvironmentObject var liveActivityManager: LiveActivityManager
-    @State private var isShowing = false
-
-    var body: some View {
-        VStack(spacing: 12) {
-            HStack {
-                Image(systemName: "battery.100.bolt")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundStyle(.cyan)
-
-                Text("Battery Calibration")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-            }
-
-            Text(calibrationManager.state.description)
-                .font(.callout)
-                .foregroundColor(.secondary)
-                .contentTransition(.interpolate)
-                .animation(.easeInOut, value: calibrationManager.state)
-
-            ProgressView(value: calibrationManager.progress)
-                .progressViewStyle(LinearProgressViewStyle(tint: .cyan))
-                .padding(.horizontal)
-                .animation(.easeInOut, value: calibrationManager.progress)
-
-            Button(action: {
-                calibrationManager.cancel()
-                liveActivityManager.dismissCurrentActivity()
-            }) {
-                Text("Cancel")
-                    .font(.subheadline.weight(.semibold))
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 16)
-                    .background(.white.opacity(0.1))
-                    .clipShape(Capsule())
-            }
-            .buttonStyle(.plain)
-        }
-        .padding(.vertical, 15)
-        .padding(.horizontal, 25)
-        .padding(.top, NotchConfiguration.universalHeight)
-        .frame(width: 380)
-        .scaleEffect(isShowing ? 1 : 0.95)
-        .opacity(isShowing ? 1 : 0)
-        .onAppear {
-            withAnimation(.spring(response: 0.4, dampingFraction: 0.75, blendDuration: 0.2)) {
-                isShowing = true
-            }
-        }
-    }
-}
 
 // MARK: - OTP / Parcel smart inbox live activities
 

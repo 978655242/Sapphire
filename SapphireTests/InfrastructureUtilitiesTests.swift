@@ -11,6 +11,39 @@ import XCTest
 @testable import Sapphire
 
 final class InfrastructureUtilitiesTests: XCTestCase {
+    func testSystemSensorDiscoveryOnlyPollsKnownNonbatteryDefinitions() {
+        let retiredKeys: Set<String> = [
+            "TB0T", "TB1T", "TB2T", "TB3T", "Tb0P", "Tb0T",
+            "TCHP", "IBAC", "PPBR", "Vb0R", "TBXT", "VD0R", "ID0R", "PDTR", "Unknown"
+        ]
+        let retainedKeys: Set<String> = ["PCPC", "PG0C", "PC3C", "PSTR"]
+        let discovered = SensorsStatsReader.sensors(for: retiredKeys.union(retainedKeys))
+
+        XCTAssertEqual(Set(discovered.map(\.key)), retainedKeys)
+        XCTAssertTrue(SensorsStatsReader.sensors(for: []).isEmpty)
+    }
+
+    func testFanControlCannotPollRetiredOrUndiscoveredSensorKeys() {
+        let retiredKeys: Set<String> = [
+            "TB0T", "TB1T", "TB2T", "TB3T", "Tb0P", "Tb0T",
+            "TCHP", "IBAC", "PPBR", "Vb0R", "TBXT", "VD0R", "ID0R", "PDTR", "Unknown"
+        ]
+        let retainedKeys: Set<String> = ["TC0P", "TC0c"]
+        let sensors = FanManager.temperatureSensors(for: retiredKeys.union(retainedKeys))
+        XCTAssertEqual(Set(sensors.map(\.key)), retainedKeys)
+
+        var modes: [Int: FanControlMode] = [:]
+        for (index, key) in retiredKeys.union(retainedKeys).enumerated() {
+            modes[index] = .sensor(sensorKey: key, minTemp: 40, maxTemp: 75)
+        }
+        modes[modes.count] = .customCurve(sensorKey: "Tb0T", points: [])
+        modes[modes.count] = .customCurve(sensorKey: "TC0P", points: [])
+        modes[modes.count] = .sensor(sensorKey: "TC1P", minTemp: 40, maxTemp: 75)
+        XCTAssertEqual(FanManager.controlSensorKeys(for: modes, sensors: sensors), retainedKeys)
+        XCTAssertTrue(FanManager.controlSensorKeys(for: modes, sensors: []).isEmpty)
+        XCTAssertTrue(FanManager.controlSensorKeys(for: [0: .auto, 1: .constant(rpm: 2500)], sensors: sensors).isEmpty)
+    }
+
     @MainActor
     func testNotchDragLocationOnlyPublishesDistinctCoordinates() {
         let state = NotchDragLocationState()

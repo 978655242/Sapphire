@@ -30,7 +30,7 @@ public enum AppFeature: String, Codable, CaseIterable {
          surroundSound, snapZonesKeyboardShortcuts, emojiSuggestAsYouType,
          basicStorageFeatures, clipboardPicker, clipboardAdvancedTools, dmgInstaller,
          macScreenMirroringOnAndroid, macScreenExtensionOnMac, androidInstantHotspot,
-         androidRemoteConnection, advancedStorageFeatures, batteryWidget, audio8D,
+         androidRemoteConnection, advancedStorageFeatures, audio8D,
          storageWidgets, ocrFeature
 }
 

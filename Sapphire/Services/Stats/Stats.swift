@@ -9,7 +9,6 @@ import Cocoa
 import Foundation
 import SystemConfiguration
 import CoreWLAN
-import IOKit.ps
 import IOKit.storage
 import CoreServices
 import Combine
@@ -272,21 +271,6 @@ public struct Fan: Sensor_p, Codable {
     public var formattedValue: String { "\(Int(value)) RPM" }
 }
 
-public struct Battery_Usage: Codable, Equatable, Hashable {
-    var powerSource: String = ""
-    var isCharging: Bool = false
-    var level: Double = 0
-    var timeToEmpty: Int = 0
-    var timeToCharge: Int = 0
-    var amperage: Int = 0
-    var voltage: Double = 0
-    var power: Int = 0
-
-    var powerDraw: Double {
-        return voltage * (Double(amperage) / 1000.0)
-    }
-}
-
 // MARK: - Main Stats Manager
 @MainActor
 public class StatsManager: ObservableObject {
@@ -300,7 +284,6 @@ public class StatsManager: ObservableObject {
     private lazy var gpuReader: GPUInfoReader = GPUInfoReader { [weak self] value in self?.gpus = value ?? GPUs() }
     private lazy var diskReader: DiskActivityReader = DiskActivityReader { [weak self] value in self?.disks = value ?? Disks() }
     private lazy var sensorsReader: SensorsStatsReader = SensorsStatsReader { [weak self] value in self?.sensors = value ?? Sensors_List() }
-    private lazy var batteryReader: BatteryStatsReader = BatteryStatsReader { [weak self] value in self?.battery = value }
 
     private var cpu: CPU_Load? { didSet { schedulePayloadUpdate() } }
     private var ram: RAM_Usage? { didSet { schedulePayloadUpdate() } }
@@ -313,7 +296,6 @@ public class StatsManager: ObservableObject {
         }
         schedulePayloadUpdate()
     }}
-    private var battery: Battery_Usage? { didSet { schedulePayloadUpdate() } }
     private var payloadUpdateTask: Task<Void, Never>?
 
     private var pollingRequesters: [String: Set<StatType>] = [:]
@@ -345,10 +327,8 @@ public class StatsManager: ObservableObject {
         if activeStats.contains(.ram) { ramReader.refresh() }
         if activeStats.contains(.gpu) { gpuReader.refresh() }
         if activeStats.contains(.disk) { diskReader.refresh() }
-        let needsPower = activeStats.contains(.systemPower) || activeStats.contains(.batteryPower)
-        if needsPower {
+        if activeStats.contains(.systemPower) {
             Task { @MainActor in await sensorsReader.readNow() }
-            batteryReader.refresh()
         }
     }
 
@@ -370,20 +350,13 @@ public class StatsManager: ObservableObject {
         return requiredStats
     }
 
-    private var pollingIntervals: [String: DispatchTimeInterval] = [:]
-
-    public func setPolling(for requester: String, requiredStats: Set<StatType>, interval: DispatchTimeInterval? = nil) {
+    public func setPolling(for requester: String, requiredStats: Set<StatType>) {
         var changed = false
         if requiredStats.isEmpty {
             changed = pollingRequesters.removeValue(forKey: requester) != nil || changed
-            changed = pollingIntervals.removeValue(forKey: requester) != nil || changed
         } else {
             if pollingRequesters[requester] != requiredStats {
                 pollingRequesters[requester] = requiredStats
-                changed = true
-            }
-            if let interval, pollingIntervals[requester]?.nanoseconds != interval.nanoseconds {
-                pollingIntervals[requester] = interval
                 changed = true
             }
         }
@@ -398,27 +371,19 @@ public class StatsManager: ObservableObject {
         update(reader: gpuReader, for: .gpu, in: activeStats)
         update(reader: diskReader, for: .disk, in: activeStats)
 
-        let needsPowerStats = activeStats.contains(.systemPower) || activeStats.contains(.batteryPower)
-        update(reader: sensorsReader, for: .systemPower, in: activeStats, force: needsPowerStats)
-        update(reader: batteryReader, for: .batteryPower, in: activeStats, force: needsPowerStats)
-
-        let fastestBattery = pollingIntervals
-            .filter { pollingRequesters[$0.key]?.contains(.batteryPower) == true }
-            .values
-            .min { $0.nanoseconds < $1.nanoseconds }
-        batteryReader.setInterval(fastestBattery ?? .milliseconds(1000))
+        update(reader: sensorsReader, for: .systemPower, in: activeStats)
     }
 
-    private func update<R: Reader<T>, T>(reader: R, for statType: StatType, in activeStats: Set<StatType>, force: Bool = false) {
-        if activeStats.contains(statType) || force {
+    private func update<R: Reader<T>, T>(reader: R, for statType: StatType, in activeStats: Set<StatType>) {
+        if activeStats.contains(statType) {
             reader.start()
         } else {
             reader.stop()
         }
     }
 
-    private func update(reader: SensorsStatsReader, for statType: StatType, in activeStats: Set<StatType>, force: Bool = false) {
-        if activeStats.contains(statType) || force {
+    private func update(reader: SensorsStatsReader, for statType: StatType, in activeStats: Set<StatType>) {
+        if activeStats.contains(statType) {
             reader.start()
         } else {
             reader.stop()
@@ -454,8 +419,7 @@ public class StatsManager: ObservableObject {
             ram: self.ram,
             disk: primaryDisk,
             gpu: primaryGPU,
-            sensors: sensorSnapshot,
-            battery: self.battery
+            sensors: sensorSnapshot
         )
         if currentStats != newPayload {
             self.currentStats = newPayload
@@ -463,8 +427,7 @@ public class StatsManager: ObservableObject {
     }
 }
 
-// MARK: - DispatchTimeInterval Helpers
-private extension DispatchTimeInterval {
+extension DispatchTimeInterval {
     var nanoseconds: Int {
         switch self {
         case .seconds(let s): return s * 1_000_000_000
@@ -480,7 +443,7 @@ private extension DispatchTimeInterval {
 // MARK: - Base Reader Class
 internal class Reader<T> {
     private var isActive = false
-    private var interval: DispatchTimeInterval
+    private let interval: DispatchTimeInterval
     internal let callback: (T?) -> Void
     private let queue: DispatchQueue
     private let readerName: String
@@ -510,17 +473,6 @@ internal class Reader<T> {
             self.isActive = false
             self.source?.cancel()
             self.source = nil
-        }
-    }
-
-    public func setInterval(_ interval: DispatchTimeInterval) {
-        queue.async { [weak self] in
-            guard let self else { return }
-            guard self.interval.nanoseconds != interval.nanoseconds else { return }
-            self.interval = interval
-            if self.isActive {
-                self.startTimer()
-            }
         }
     }
 
@@ -1028,9 +980,12 @@ internal class SensorsStatsReader {
     }
 
     private func initializeSensors() async {
-        guard let helper = BatteryManager.shared.getHelper() else { return }
+        guard let helper = XPCClient.shared.proxy() else { return }
 
-        let availableKeys = Set(await helper.getAllSMCKeys())
+        self.list.sensors = Self.sensors(for: Set(await helper.getAllSMCKeys()))
+    }
+
+    nonisolated static func sensors(for availableKeys: Set<String>) -> [any Sensor_p] {
         var sensors: [any Sensor_p] = []
 
         SENSORS_LIST.forEach { def in
@@ -1039,25 +994,7 @@ internal class SensorsStatsReader {
             }
         }
 
-        availableKeys.forEach { key in
-            if !sensors.contains(where: { $0.key == key }) {
-                if SENSORS_LIST.first(where: { $0.key == key }) == nil {
-                    var type: SensorType?
-                    switch key.prefix(1) {
-                    case "T": type = .temperature
-                    case "V": type = .voltage
-                    case "P": type = .power
-                    case "I": type = .current
-                    default: break
-                    }
-                    if let type = type {
-                        sensors.append(Sensor(key: key, name: key, value: 0, group: .unknown, type: type))
-                    }
-                }
-            }
-        }
-
-        self.list.sensors = sensors.sorted(by: { $0.name < $1.name })
+        return sensors.sorted(by: { $0.name < $1.name })
     }
 
     private func scheduleRead(generation: UInt) {
@@ -1080,7 +1017,7 @@ internal class SensorsStatsReader {
     private func read(generation: UInt? = nil) async {
         if let generation, !isCurrent(generation) { return }
         guard !readInFlight else { return }
-        guard initialized, let helper = BatteryManager.shared.getHelper() else { return }
+        guard initialized, let helper = XPCClient.shared.proxy() else { return }
         readInFlight = true
         defer { readInFlight = false }
 
@@ -1103,71 +1040,5 @@ internal class SensorsStatsReader {
         }
         self.list.sensors = updatedSensors
         callback(list)
-    }
-}
-
-// MARK: - Battery Reader
-internal class BatteryStatsReader: Reader<Battery_Usage> {
-    private var service: io_connect_t = 0
-
-    override func setup() {
-        service = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("AppleSmartBattery"))
-    }
-
-    override func read() {
-        let psInfo = IOPSCopyPowerSourcesInfo().takeRetainedValue()
-        let psList = IOPSCopyPowerSourcesList(psInfo).takeRetainedValue() as [CFTypeRef]
-        if let ps = psList.first,
-           let list = IOPSGetPowerSourceDescription(psInfo, ps).takeUnretainedValue() as? [String: Any] {
-
-            let powerSource = list[kIOPSPowerSourceStateKey] as? String ?? "AC Power"
-            let isCharging = list[kIOPSIsChargingKey] as? Bool ?? false
-            let level = Double(list[kIOPSCurrentCapacityKey] as? Int ?? 0) / 100
-            let timeToEmpty = list[kIOPSTimeToEmptyKey] as? Int ?? 0
-            let timeToCharge = list[kIOPSTimeToFullChargeKey] as? Int ?? 0
-
-            var amperage: Int = 0
-            if let value = getIntValue("Amperage" as CFString) {
-                amperage = value
-            }
-
-            var voltage: Double = 0
-            if let value = getDoubleValue("Voltage" as CFString) {
-                voltage = value / 1000.0
-            }
-
-            var power: Int = 0
-            if let ACDetails = IOPSCopyExternalPowerAdapterDetails(), let ACList = ACDetails.takeRetainedValue() as? [String: Any] {
-                if let watts = ACList[kIOPSPowerAdapterWattsKey] as? Int {
-                    power = watts
-                }
-            }
-
-            self.fireCallback(Battery_Usage(
-                powerSource: powerSource,
-                isCharging: isCharging,
-                level: level,
-                timeToEmpty: timeToEmpty,
-                timeToCharge: timeToCharge,
-                amperage: amperage,
-                voltage: voltage,
-                power: power
-            ))
-        }
-        super.read()
-    }
-
-    private func getIntValue(_ identifier: CFString) -> Int? {
-        if let value = IORegistryEntryCreateCFProperty(self.service, identifier, kCFAllocatorDefault, 0) {
-            return value.takeRetainedValue() as? Int
-        }
-        return nil
-    }
-
-    private func getDoubleValue(_ identifier: CFString) -> Double? {
-        if let value = IORegistryEntryCreateCFProperty(self.service, identifier, kCFAllocatorDefault, 0) {
-            return value.takeRetainedValue() as? Double
-        }
-        return nil
     }
 }

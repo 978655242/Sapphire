@@ -171,12 +171,6 @@ struct NotchExpandedChrome: View {
                 SubtleIconButton(systemName: caffeineManager.isActive ? "cup.and.heat.waves.fill" : "cup.and.heat.waves", action: { caffeineManager.toggle() }, horizontalPadding: 6)
                     .offset(y: -2)
             }
-        case .battery:
-            if settings.settings.batteryEstimatorEnabled {
-                NotchBatteryInfoSlot()
-            } else {
-                EmptyView()
-            }
         case .multiAudio:
             if settings.settings.showMultiAudioIcon {
                 SubtleIconButton(systemName: "hifispeaker.and.homepod.mini.fill", action: { navigationStack.append(.multiAudio) })
@@ -209,18 +203,6 @@ private struct NotchMediaSourceSwitcherSlot: View {
     }
 }
 
-private struct NotchBatteryInfoSlot: View {
-    @EnvironmentObject private var batteryEstimator: BatteryEstimator
-
-    var body: some View {
-        BatteryInfoView(
-            level: batteryEstimator.batteryLevel,
-            isCharging: batteryEstimator.isCharging,
-            timeRemaining: batteryEstimator.estimatedTimeRemaining
-        )
-        .padding(.horizontal, NotchConfiguration.batteryHorizontalPadding)
-    }
-}
 
 private struct NotchIntelligenceControls: View {
     @EnvironmentObject private var geminiLiveManager: GeminiLiveManager

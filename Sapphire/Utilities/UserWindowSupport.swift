@@ -26,7 +26,7 @@ enum SapphireStandardMenu {
         let appMenu = NSMenu()
         appMenuItem.submenu = appMenu
         appMenu.addItem(
-            withTitle: "Quit Sapphire".local,
+            withTitle: "Quit Island".local,
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         )

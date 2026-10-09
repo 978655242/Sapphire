@@ -153,12 +153,6 @@ struct NotchActivityContentView: View {
         case .calendar: CalendarProximityActivityView.left()
         case .reminder: ReminderProximityActivityView.left()
         case .timer: TimerActivityLeftView()
-        case .battery(let state, let style, let timeRemaining, let systemState):
-            switch style {
-            case .persistent: PersistentBatteryActivityView.left(for: state, timeRemaining: timeRemaining, systemState: systemState)
-            case .default: DefaultBatteryActivityView.left(for: state, systemState: systemState)
-            case .compact: CompactBatteryActivityView.left(for: state, systemState: systemState)
-            }
         case .desktop: DesktopActivityLeftView(screen: screen)
         case .focus(let mode): FocusModeActivityView.left(for: mode)
         case .fileShelf: FileShelfActivityView.left()
@@ -169,7 +163,6 @@ struct NotchActivityContentView: View {
                 if device.isContinuityDevice { BluetoothConnectedContinuityView.left(for: device) }
                 else { BluetoothConnectedPeripheralView.left(for: device) }
             case .disconnected: BluetoothDisconnectedView.left(for: device)
-            case .batteryLow: BluetoothBatteryLowView.left(for: device)
             }
         case .audioSwitch(let event): AudioSwitchActivityView.left(for: event)
         case .continuity(let snapshot): ContinuityNotchActivityView.left(for: snapshot)
@@ -200,12 +193,6 @@ struct NotchActivityContentView: View {
         case .calendar(let event): CalendarProximityActivityView.right(event: event)
         case .reminder(let reminder): ReminderProximityActivityView.right(reminder: reminder)
         case .timer: TimerActivityRightView()
-        case .battery(let state, let style, let timeRemaining, let systemState):
-            switch style {
-            case .persistent: PersistentBatteryActivityView.right(for: state, systemState: systemState)
-            case .default: DefaultBatteryActivityView.right(for: state, timeRemaining: timeRemaining, systemState: systemState)
-            case .compact: CompactBatteryActivityView.right(for: state)
-            }
         case .desktop: DesktopActivityRightView(screen: screen)
         case .focus(let mode): FocusModeActivityView.right(for: mode, displayMode: settings.settings.focusDisplayMode)
         case .fileShelf(let count): FileShelfActivityView.right(count: count)
@@ -216,7 +203,6 @@ struct NotchActivityContentView: View {
                 if device.isContinuityDevice { BluetoothConnectedContinuityView.right(for: device) }
                 else { BluetoothConnectedPeripheralView.right(for: device) }
             case .disconnected: BluetoothDisconnectedView.right(for: device)
-            case .batteryLow: BluetoothBatteryLowView.right(for: device)
             }
         case .audioSwitch(let event): AudioSwitchActivityView.right(for: event)
         case .continuity(let snapshot): ContinuityNotchActivityView.right(for: snapshot)

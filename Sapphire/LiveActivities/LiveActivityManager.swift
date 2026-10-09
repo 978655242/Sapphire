@@ -41,12 +41,6 @@ private struct LiveActivityEvaluationSettings: Equatable {
     let statsLiveActivityThresholdEnabled: Bool
     let showPersistentStatsLiveActivity: Bool
     let statThresholds: [StatType: StatThreshold]
-    let batteryLiveActivityEnabled: Bool
-    let showPersistentBatteryLiveActivity: Bool
-    let lowBatteryNotificationPercentage: Int
-    let lowBatteryNotificationSoundEnabled: Bool
-    let batteryNotificationStyle: BatteryNotificationStyle
-    let promptForLowPowerMode: Bool
     let weatherLiveActivityEnabled: Bool
     let showPersistentWeatherLiveActivity: Bool
     let weatherLiveActivityInterval: Int
@@ -99,12 +93,6 @@ private struct LiveActivityEvaluationSettings: Equatable {
         statsLiveActivityThresholdEnabled = settings.statsLiveActivityThresholdEnabled
         showPersistentStatsLiveActivity = settings.showPersistentStatsLiveActivity
         statThresholds = settings.statThresholds
-        batteryLiveActivityEnabled = settings.batteryLiveActivityEnabled
-        showPersistentBatteryLiveActivity = settings.showPersistentBatteryLiveActivity
-        lowBatteryNotificationPercentage = settings.lowBatteryNotificationPercentage
-        lowBatteryNotificationSoundEnabled = settings.lowBatteryNotificationSoundEnabled
-        batteryNotificationStyle = settings.batteryNotificationStyle
-        promptForLowPowerMode = settings.promptForLowPowerMode
         weatherLiveActivityEnabled = settings.weatherLiveActivityEnabled
         showPersistentWeatherLiveActivity = settings.showPersistentWeatherLiveActivity
         weatherLiveActivityInterval = settings.weatherLiveActivityInterval
@@ -260,7 +248,6 @@ class LiveActivityManager: ObservableObject {
     private var activityCheckers: [ActivityType: () -> ActivityCandidate?] = [:]
     private var snoozedActivities: [ActivityType: Date] = [:]
     private let snoozableActivityTypes: Set<ActivityType> = [
-        .persistentBattery,
         .weather,
         .timer,
         .calendar,
@@ -275,7 +262,6 @@ class LiveActivityManager: ObservableObject {
         .bluetooth,
         .audioSwitch,
         .focusModeChange,
-        .battery,
         .stats,
     ]
     private var dismissedNotifications: [AnyHashable: Date] = [:]
@@ -286,7 +272,7 @@ class LiveActivityManager: ObservableObject {
     private var tickerFetchTick = 0
     private var sportsFinanceWatchTimer: Timer?
     private var lastKnownFocusStatus: FocusStatus?
-    private var hasShownPluggedInAlert = false, hasShownLowBatteryAlert = false, hasShownCurrentEyeBreak = false
+    private var hasShownCurrentEyeBreak = false
     private var lastShownDesktopNumber: Int?, lastShownFocusModeID: String?
     private var lastShownBluetoothEvent: BluetoothDeviceState?, lastShownAudioSwitchEventID: UUID?
     private var lastShownContinuityStatusKey: String?
@@ -298,14 +284,13 @@ class LiveActivityManager: ObservableObject {
     private var notifiedReminderMilestones: [String: Set<ReminderNotificationMilestone>] = [:]
 
     private var hasReceivedInitialFocusStatus = false
-    private var lastShownBatteryManagementState: ManagementState?
     private var lastLyricContentID: AnyHashable?
     private var lyricContentUpdateTask: Task<Void, Never>?
     private var lastMusicLiveActivityTick: CFAbsoluteTime = 0
     public var intelligenceVM: IntelligenceNotchViewModel?
 
     // MARK: - Dependencies
-    private let systemHUDManager: SystemHUDManager, notificationManager: NotificationManager, desktopManager: DesktopManager, focusModeManager: FocusModeManager, musicWidget: MusicManager, calendarService: CalendarService, batteryMonitor: BatteryMonitor, bluetoothManager: BluetoothManager, audioDeviceManager: AudioDeviceManager, eyeBreakManager: EyeBreakManager, timerManager: TimerManager, weatherActivityViewModel: WeatherActivityViewModel, geminiLiveManager: GeminiLiveManager, settingsModel: SettingsModel, activeAppMonitor: ActiveAppMonitor, batteryEstimator: BatteryEstimator, batteryStatusManager: BatteryStatusManager
+    private let systemHUDManager: SystemHUDManager, notificationManager: NotificationManager, desktopManager: DesktopManager, focusModeManager: FocusModeManager, musicWidget: MusicManager, calendarService: CalendarService, bluetoothManager: BluetoothManager, audioDeviceManager: AudioDeviceManager, eyeBreakManager: EyeBreakManager, timerManager: TimerManager, weatherActivityViewModel: WeatherActivityViewModel, geminiLiveManager: GeminiLiveManager, settingsModel: SettingsModel, activeAppMonitor: ActiveAppMonitor
 
     private let devActivityMonitor = DevActivityMonitor.shared
 
@@ -317,7 +302,6 @@ class LiveActivityManager: ObservableObject {
         focusModeManager: FocusModeManager,
         musicWidget: MusicManager,
         calendarService: CalendarService,
-        batteryMonitor: BatteryMonitor,
         bluetoothManager: BluetoothManager,
         audioDeviceManager: AudioDeviceManager,
         eyeBreakManager: EyeBreakManager,
@@ -326,11 +310,9 @@ class LiveActivityManager: ObservableObject {
         geminiLiveManager: GeminiLiveManager,
         settingsModel: SettingsModel,
         activeAppMonitor: ActiveAppMonitor,
-        batteryEstimator: BatteryEstimator,
-        batteryStatusManager: BatteryStatusManager,
         intelligenceVM: IntelligenceNotchViewModel? = nil
     ) {
-        self.systemHUDManager = systemHUDManager; self.notificationManager = notificationManager; self.desktopManager = desktopManager; self.focusModeManager = focusModeManager; self.musicWidget = musicWidget; self.calendarService = calendarService; self.batteryMonitor = batteryMonitor; self.bluetoothManager = bluetoothManager; self.audioDeviceManager = audioDeviceManager; self.eyeBreakManager = eyeBreakManager; self.timerManager = timerManager; self.weatherActivityViewModel = weatherActivityViewModel; self.geminiLiveManager = geminiLiveManager; self.settingsModel = settingsModel; self.activeAppMonitor = activeAppMonitor; self.batteryEstimator = batteryEstimator; self.batteryStatusManager = batteryStatusManager
+        self.systemHUDManager = systemHUDManager; self.notificationManager = notificationManager; self.desktopManager = desktopManager; self.focusModeManager = focusModeManager; self.musicWidget = musicWidget; self.calendarService = calendarService; self.bluetoothManager = bluetoothManager; self.audioDeviceManager = audioDeviceManager; self.eyeBreakManager = eyeBreakManager; self.timerManager = timerManager; self.weatherActivityViewModel = weatherActivityViewModel; self.geminiLiveManager = geminiLiveManager; self.settingsModel = settingsModel; self.activeAppMonitor = activeAppMonitor
         self.intelligenceVM = intelligenceVM
         self.lastShownDesktopNumber = desktopManager.currentDesktopNumber
         self.activityCheckers = [
@@ -350,7 +332,6 @@ class LiveActivityManager: ObservableObject {
             .focusModeChange: { self.checkForFocusMode() },
             .calendar: { self.checkForCalendar() },
             .reminder: { self.checkForReminder() },
-            .battery: { self.checkForBatteryAlert() },
             .desktopChange: { self.checkForDesktopChange() },
             .timer: { self.checkForTimer() },
             .music: { self.checkForMusic() },
@@ -642,7 +623,6 @@ class LiveActivityManager: ObservableObject {
             calendarService.$upcomingReminders
                 .throttle(for: .seconds(2), scheduler: RunLoop.main, latest: true)
                 .mapToVoid(),
-            batteryMonitor.$currentState.removeDuplicates().mapToVoid(),
             audioDeviceManager.$lastSwitchEvent.removeDuplicates().mapToVoid(),
             bluetoothManager.$lastEvent.removeDuplicates().mapToVoid(),
             NotificationCenter.default.publisher(for: NSNotification.Name("IOBluetoothHostControllerPoweredOnNotification")).mapToVoid(),
@@ -677,7 +657,6 @@ class LiveActivityManager: ObservableObject {
             .mapToVoid(),
             focusModeManager.$currentStatus.removeDuplicates().mapToVoid(),
             UpdateChecker.shared.$status.mapToVoid(),
-            batteryStatusManager.$currentState.removeDuplicates().mapToVoid(),
             ContinuityManager.shared.$connectivity.removeDuplicates().mapToVoid(),
             intelligenceRunningPublisher,
             intelligenceStatusPublisher
@@ -851,7 +830,6 @@ class LiveActivityManager: ObservableObject {
     private func currentActivityCandidate(for type: ActivityType) -> ActivityCandidate? {
         switch type {
         case .persistentStats: return checkForPersistentStats()
-        case .persistentBattery: return checkForPersistentBattery()
         case .persistentWeather: return checkForPersistentWeather()
         case .continuity: return checkForContinuity(issuesOnly: false) ?? checkForContinuity(issuesOnly: true)
         case .focusSession: return checkForFocusSession()
@@ -941,9 +919,6 @@ class LiveActivityManager: ObservableObject {
             return
         }
 
-        if self.currentActivity == .battery, let state = batteryMonitor.currentState, !state.isPluggedIn, self.dismissalTimer != nil {
-            return
-        }
 
         let isFullScreen = notchDisplaysAreFullScreen()
         logFullScreenGateIfChanged(isFullScreen: isFullScreen)
@@ -1019,12 +994,6 @@ class LiveActivityManager: ObservableObject {
             winningCandidate = candidate
         }
 
-        if winningCandidate == nil,
-           !(isFullScreen && isHiddenInFullScreen(.persistentBattery)),
-           snoozedActivities[.persistentBattery] == nil,
-           let candidate = checkForPersistentBattery() {
-            winningCandidate = candidate
-        }
 
         if winningCandidate == nil,
            snoozedActivities[.focusSession] == nil,
@@ -1178,11 +1147,6 @@ class LiveActivityManager: ObservableObject {
     private func handleActivityDismissal(for type: ActivityType) {
         switch type {
         case .desktopChange: self.lastShownDesktopNumber = self.desktopManager.currentDesktopNumber
-        case .battery:
-            if let state = self.batteryMonitor.currentState {
-                if state.isLow { self.hasShownLowBatteryAlert = true }
-                else if state.isPluggedIn { self.hasShownPluggedInAlert = true }
-            }
         case .focusModeChange: self.lastShownFocusModeID = self.focusModeManager.currentStatus.identifier
         case .eyeBreak: self.hasShownCurrentEyeBreak = true
         case .bluetooth: self.lastShownBluetoothEvent = self.bluetoothManager.lastEvent
@@ -1309,128 +1273,7 @@ class LiveActivityManager: ObservableObject {
         )
     }
 
-    private func checkForBatteryAlert() -> (ActivityType, LiveActivityContent, TimeInterval?)? {
-        let settings = settingsModel.settings
-        guard settings.batteryLiveActivityEnabled || settings.showPersistentBatteryLiveActivity else {
-            return nil
-        }
-        guard let state = batteryMonitor.currentState else { return nil }
 
-        let systemState = batteryStatusManager.currentState
-        let newManagementState = systemState.managementState
-        let timeRemaining = batteryEstimator.estimatedTimeRemaining
-
-        if state.level > settings.lowBatteryNotificationPercentage { hasShownLowBatteryAlert = false }
-        if !state.isPluggedIn { hasShownPluggedInAlert = false }
-
-        let isLow = state.level <= settings.lowBatteryNotificationPercentage && !state.isCharging
-
-        if isLow && !hasShownLowBatteryAlert {
-            if settings.lowBatteryNotificationSoundEnabled {
-                if let soundURL = Bundle.main.url(forResource: "head_gestures_double_shake", withExtension: "caf") {
-                    NSSound(contentsOf: soundURL, byReference: true)?.play()
-                } else {
-                    NSSound(named: "Tink")?.play()
-                }
-            }
-            self.hasShownLowBatteryAlert = true
-
-            let data = StandardActivityData.battery(
-                state: state,
-                style: settings.batteryNotificationStyle,
-                timeRemaining: timeRemaining,
-                systemState: systemState
-            )
-            let id = "low_battery_alert"
-
-            if settings.promptForLowPowerMode {
-                let view = BatteryLowPowerView(
-                    state: state,
-                    onToggle: {
-                        let enabled = PowerModeManager.shared.toggleLowPowerMode()
-                        self.logger.info("Low Power Mode toggled from low-battery prompt (now \(enabled ? "on" : "off", privacy: .public))")
-                        self.hasShownLowBatteryAlert = true
-                        self.dismissalTimer?.invalidate()
-                        self.evaluateAndDisplayActivity()
-                    },
-                    onDismiss: {
-                        self.dismissCurrentActivity()
-                    }
-                )
-                return (.battery, .full(view: AnyView(view), id: "low_power_prompt"), 5.0)
-            } else {
-                return (.battery, .standard(data: data, id: id), 5.0)
-            }
-        }
-
-        if state.isPluggedIn && !isLow && !hasShownPluggedInAlert {
-            let data = StandardActivityData.battery(
-                state: state,
-                style: settings.batteryNotificationStyle,
-                timeRemaining: timeRemaining,
-                systemState: systemState
-            )
-            let id = "plugged_in_alert_\(state.isCharging)"
-            return (.battery, .standard(data: data, id: id), 5.0)
-        }
-
-        if newManagementState != lastShownBatteryManagementState {
-            let previousState = lastShownBatteryManagementState
-            var eventState: ManagementState?
-
-            switch (previousState, newManagementState) {
-            case (_, .calibrating): eventState = .calibrationStarted
-            case (.calibrating, .charging), (.calibrating, .inhibited): eventState = .calibrationDone
-            case (_, .discharging):
-                if previousState != .discharging { eventState = .dischargeStarted }
-            case (.discharging, _):
-                if newManagementState != .discharging { eventState = .dischargeStopped }
-            case (_, .heatProtection): eventState = .heatProtectionOn
-            case (.heatProtection, _): eventState = .heatProtectionOff
-            case (_, .sailing), (_, .inhibited):
-                if previousState != newManagementState { eventState = newManagementState }
-            default: break
-            }
-
-            if newManagementState == .calibrationFailed {
-                eventState = .calibrationFailed
-            }
-
-            if let eventState = eventState {
-                self.lastShownBatteryManagementState = newManagementState
-
-                let data = StandardActivityData.battery(
-                    state: state,
-                    style: .default,
-                    timeRemaining: nil,
-                    systemState: BatterySystemState(managementState: eventState)
-                )
-                let id = "management_event_\(eventState.rawValue)_\(Date().timeIntervalSince1970)"
-                return (.battery, .standard(data: data, id: id), 7.0)
-            }
-        }
-
-        return nil
-    }
-
-    private func checkForPersistentBattery() -> (ActivityType, LiveActivityContent, TimeInterval?)? {
-        guard settingsModel.settings.showPersistentBatteryLiveActivity else {
-            return nil
-        }
-        guard let state = batteryMonitor.currentState else { return nil }
-
-        let systemState = batteryStatusManager.currentState
-        let timeRemaining = batteryEstimator.estimatedTimeRemaining
-        let data = StandardActivityData.battery(
-            state: state,
-            style: .persistent,
-            timeRemaining: timeRemaining,
-            systemState: systemState
-        )
-        let dynamicId = "persistent_battery_\(state.level)_\(state.isCharging)_\(state.isPluggedIn)_\(timeRemaining ?? "nil")_\(systemState.managementState.rawValue)"
-
-        return (.persistentBattery, .standard(data: data, id: dynamicId), nil)
-    }
 
     private func checkForContinuity(issuesOnly: Bool) -> (ActivityType, LiveActivityContent, TimeInterval?)? {
         guard settingsModel.settings.continuityEnabled,
@@ -1441,7 +1284,7 @@ class LiveActivityManager: ObservableObject {
         guard snapshot.hasDevice else { return nil }
         if issuesOnly != snapshot.isIssue { return nil }
 
-        let id = "continuity_\(snapshot.severity)_\(snapshot.linkState.rawValue)_\(snapshot.headline)_\(snapshot.phoneBatteryPercent ?? -1)_\(snapshot.phoneCharging)"
+        let id = "continuity_\(snapshot.severity)_\(snapshot.linkState.rawValue)_\(snapshot.headline)"
         let content = LiveActivityContent.standard(data: .continuity(snapshot: snapshot), id: id)
 
         if issuesOnly { return (.continuity, content, nil) }
@@ -2084,7 +1927,7 @@ class LiveActivityManager: ObservableObject {
         }
 
         let duration: TimeInterval = switch event.eventType {
-        case .connected: 6.0; case .disconnected: 5.0; case .batteryLow: 12.0
+        case .connected: 6.0; case .disconnected: 5.0
         }
         return (
             .bluetooth,

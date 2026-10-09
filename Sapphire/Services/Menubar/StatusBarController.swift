@@ -371,9 +371,9 @@ final class StatusBarController {
         let menu = NSMenu()
         menu.addItem(withTitle: "Edit Menu Bar Items".local, action: #selector(enterEditMode), keyEquivalent: "").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Open Sapphire Setting".local, action: #selector(openPreferences), keyEquivalent: ",").target = self
+        menu.addItem(withTitle: "Open Island Setting".local, action: #selector(openPreferences), keyEquivalent: ",").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Quit Sapphire".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        menu.addItem(withTitle: "Quit Island".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         return menu
     }
 
@@ -385,7 +385,7 @@ final class StatusBarController {
         }
         menu.addItem(withTitle: "Preferences".local, action: #selector(openPreferences), keyEquivalent: ",").target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Quit Sapphire".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        menu.addItem(withTitle: "Quit Island".local, action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         return menu
     }
 

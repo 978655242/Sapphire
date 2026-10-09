@@ -10,18 +10,12 @@ import Combine
 import AppKit
 
 enum TaskAction: String, Codable, CaseIterable, Identifiable {
-    case setChargeLimit, topUp, dischargeTo, startCalibration
-
     case setFanAuto, setFanConstant, setFanSensorBased
 
     var id: String { self.rawValue }
 
     var displayName: String {
         switch self {
-        case .setChargeLimit: "Set Charge Limit".local
-        case .topUp: "Top Up (Charge to 100%)".local
-        case .dischargeTo: "Discharge To".local
-        case .startCalibration: "Start Calibration".local
         case .setFanAuto: "Set Fans to Automatic".local
         case .setFanConstant: "Set Fans to Constant RPM".local
         case .setFanSensorBased: "Set Fans to Sensor-based".local
@@ -31,10 +25,9 @@ enum TaskAction: String, Codable, CaseIterable, Identifiable {
 
 struct ScheduledTask: Codable, Equatable, Identifiable {
     var id = UUID()
-    var action: TaskAction = .setChargeLimit
+    var action: TaskAction = .setFanAuto
     var repeatInterval: RepeatInterval = .never
     var startTime: Date = Date()
-    var chargeLimit: Int = 80
     var fanSpeed: Int = 2500
     var sensorKey: String = ""
     var minTemp: Int = 40
@@ -59,22 +52,18 @@ class ScheduleManager: ObservableObject {
 
     // MARK: - Dependencies
     private let settings = SettingsModel.shared
-    private let caffeineManager = CaffeineManager.shared
     private let fanManager = FanManager.shared
 
     // MARK: - Properties
     private var timer: Timer?
     private var cancellables = Set<AnyCancellable>()
     private var notificationObservers: [(NotificationCenter, NSObjectProtocol)] = []
-    private let lastCalibrationDateKey = "lastAutomaticCalibrationDate"
 
     private struct Configuration: Equatable {
         let tasks: [ScheduledTask]
-        let calibrationEnabled: Bool
 
         init(_ settings: Settings) {
             tasks = settings.scheduledTasks
-            calibrationEnabled = settings.enableBiweeklyCalibration
         }
     }
 
@@ -113,17 +102,6 @@ class ScheduleManager: ObservableObject {
     private func checkScheduledTasks() {
         let now = Date()
         let calendar = Calendar.current
-
-        if settings.settings.enableBiweeklyCalibration {
-            let lastCalibrationDate = UserDefaults.standard.object(forKey: lastCalibrationDateKey) as? Date
-            let twoWeeksAgo = calendar.date(byAdding: .day, value: -14, to: now)!
-
-            if lastCalibrationDate == nil || lastCalibrationDate! < twoWeeksAgo {
-                print("[ScheduleManager] Bi-weekly calibration is due. Executing.")
-                executeTask(ScheduledTask(action: .startCalibration))
-                UserDefaults.standard.set(now, forKey: lastCalibrationDateKey)
-            }
-        }
 
         for task in settings.settings.scheduledTasks where task.isActive {
             let scheduledTime = calendar.dateComponents([.hour, .minute], from: task.startTime)
@@ -168,16 +146,9 @@ class ScheduleManager: ObservableObject {
         timer?.invalidate()
         timer = nil
 
-        var candidates = settings.settings.scheduledTasks
+        let candidates = settings.settings.scheduledTasks
             .filter(\.isActive)
             .compactMap { nextFireDate(for: $0, after: now) }
-
-        if settings.settings.enableBiweeklyCalibration,
-           let lastCalibrationDate = UserDefaults.standard.object(forKey: lastCalibrationDateKey) as? Date,
-           let dueDate = Calendar.current.date(byAdding: .day, value: 14, to: lastCalibrationDate),
-           dueDate > now {
-            candidates.append(dueDate)
-        }
 
         guard let nextDate = candidates.min() else { return }
         let delay = max(0.05, nextDate.timeIntervalSinceNow)
@@ -228,20 +199,6 @@ class ScheduleManager: ObservableObject {
         logTaskExecution(task)
 
         switch task.action {
-        case .setChargeLimit:
-            settings.settings.batteryChargeLimit = task.chargeLimit
-        case .startCalibration:
-            if settings.settings.preventSleepDuringCalibration {
-                caffeineManager.start(forcePreventSleepInClamshell: true)
-            }
-            CalibrationManager.shared.start()
-        case .topUp:
-            BatteryManager.shared.setChargeLimit(100)
-            BatteryManager.shared.enableCharging(true)
-        case .dischargeTo:
-            self.settings.settings.batteryChargeLimit = task.chargeLimit
-            self.settings.settings.dischargeToLimitEnabled = true
-
         case .setFanAuto:
             print("[ScheduleManager] Executing task: Set Fans to Automatic.")
             for fan in fanManager.fans {

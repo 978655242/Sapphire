@@ -51,8 +51,6 @@ struct ContinuityConnectivitySnapshot: Equatable {
     var suggestion: String?
     var bluetoothWarning: String?
     var linkError: String?
-    var phoneBatteryPercent: Int?
-    var phoneCharging = false
     var phoneNetwork: ContinuityNetworkKind?
     var phoneSSID: String?
     var rssi: Int?

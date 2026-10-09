@@ -17,7 +17,7 @@ extension SettingsSection {
     static let sidebarGroups: [SettingsSidebarGroup] = [
         .init(title: "General", sections: [.general, .keyboardShortcuts, .bluetoothUnlock, .intelligence, .neardrop, .continuity]),
         .init(title: "Notch", sections: [.appearance, .widgets, .liveActivities, .lockScreen, .notifications, .hud]),
-        .init(title: "Widgets & Content", sections: [.music, .weather, .calendar, .sports, .finance, .battery, .audio, .bluetooth, .shortcuts, .fileShelf, .notes, .clipboard, .mirror, .caffeine]),
+        .init(title: "Widgets & Content", sections: [.music, .weather, .calendar, .sports, .finance, .audio, .bluetooth, .shortcuts, .fileShelf, .notes, .clipboard, .mirror, .caffeine]),
         .init(title: "System & Utilities", sections: [.systemEnhance, .snapZones, .dockLayouts, .mediaOptimizer, .mouse, .monitoring, .devActivity, .emoji, .archives, .apps, .storage]),
         .init(title: "Focus & Security", sections: [.eyeBreak, .focusSession, .appLock]),
         .init(title: "", sections: [.about])

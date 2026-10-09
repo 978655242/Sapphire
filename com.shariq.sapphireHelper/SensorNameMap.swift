@@ -67,13 +67,6 @@ struct SensorNameMap {
         "TMB4": "RAM B4",
         "TPCD": "Platform Controller Hub",
 
-        "TB0T": "Battery 1",
-        "TB1T": "Battery 2",
-        "TB2T": "Battery 3",
-        "TB3T": "Battery 4",
-        "Tb0P": "Battery Proximity",
-        "Tb0T": "Battery TS_MAX",
-
         "TW0P": "Airport Card",
         "TL0P": "Display",
         "TI0P": "Thunderbolt 1",
@@ -166,7 +159,6 @@ struct SensorNameMap {
         "TaLP": "Airflow Left",
         "TaRF": "Airflow Right",
         "TH0x": "NAND",
-        "TCHP": "Charger Proximity",
         "TCMb": "Core Media Engine",
         "TCMz": "Core Media Engine Block",
     ]

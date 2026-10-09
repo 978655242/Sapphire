@@ -22,13 +22,9 @@ struct LiveWallpaperTests {
 
         #expect(!settings.lockScreenCustomWallpaperEnabled)
         #expect(!settings.desktopWallpaperEnabled)
-        #expect(!settings.liveWallpaperPauseOnLowPower)
-        #expect(!settings.liveWallpaperPauseOnBattery)
         #expect(settings.liveWallpaperPlaybackMode == .adaptive)
         #expect(configuration.desktopPath == nil)
         #expect(configuration.lockScreenPath == nil)
-        #expect(!configuration.pauseOnLowPower)
-        #expect(!configuration.pauseOnBattery)
         #expect(configuration.playbackMode == .adaptive)
     }
 
@@ -230,13 +226,22 @@ struct LiveWallpaperTests {
                 isLocked: true
             )
         )
-        #expect(
-            !LiveWallpaperManager.shouldSuspendPlayback(
-                for: [.onBattery, .lowPowerMode],
-                isLocked: false,
-                mode: .always
-            )
-        )
+        for mode in [LiveWallpaperPlaybackMode.adaptive, .always] {
+            for reason in [
+                LiveWallpaperPlaybackPolicy.Reason.displaysAsleep,
+                .systemSleeping,
+                .thermalPressure
+            ] {
+                #expect(
+                    LiveWallpaperManager.shouldSuspendPlayback(
+                        for: [reason],
+                        isLocked: false,
+                        mode: mode
+                    )
+                )
+            }
+            #expect(!LiveWallpaperManager.shouldSuspendPlayback(for: [], isLocked: false, mode: mode))
+        }
         #expect(
             LiveWallpaperManager.shouldSuspendPlayback(
                 for: [],

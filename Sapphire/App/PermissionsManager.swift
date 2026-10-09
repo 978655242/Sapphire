@@ -92,7 +92,7 @@ class PermissionsManager: NSObject, ObservableObject, @MainActor CLLocationManag
         .init(type: .notifications, title: "Notifications".local, description: "Needed to show custom alerts for messages and system events.".local, iconName: "bell.badge.fill", iconColor: .red, category: .recommended),
         .init(type: .location, title: "Location".local, description: "Needed to provide live weather updates for your current location.".local, iconName: "location.fill", iconColor: .blue, category: .recommended),
         .init(type: .calendar, title: "Calendar".local, description: "Needed to show your upcoming events.".local, iconName: "calendar", iconColor: .red, category: .recommended),
-        .init(type: .bluetooth, title: "Bluetooth".local, description: "Needed to detect connected devices and their battery levels.".local, iconName: "ipad.landscape.and.iphone", iconColor: .blue, category: .recommended),
+        .init(type: .bluetooth, title: "Bluetooth".local, description: "Needed to detect connected devices and their proximity.".local, iconName: "ipad.landscape.and.iphone", iconColor: .blue, category: .recommended),
         .init(type: .reminders, title: "Reminders".local, description: "Needed to show your upcoming reminders.".local, iconName: "checklist", iconColor: .orange, category: .optional),
         .init(type: .focusStatus, title: "Focus Status".local, description: "Needed to show when a Focus mode is active.".local, iconName: "moon.fill", iconColor: .indigo, category: .optional)
     ]

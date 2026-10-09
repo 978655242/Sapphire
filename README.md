@@ -30,11 +30,15 @@ Sapphire is a sleek notch app that displays current activities neatly around the
 2.  **Install:** Open the downloaded package and follow the installation process.
 3.  **Permissions:** At startup, Sapphire automatically requests location permission for local weather if it has not been decided yet. It then guides you through missing macOS permissions one at a time, with location first, before starting the notch and background services. Already granted permissions are skipped; denied permissions link to `System Settings`. You can skip a permission or cancel the guide and continue launching. Music/Spotify Automation consent is never requested by this guide; request it explicitly from the permissions overview when needed.
 
+This local fork does not manage or monitor batteries: charging/discharging control, calibration, MagSafe LED control, low-power policies, battery history/alerts/widgets, and peripheral/phone battery telemetry are removed from both the app and helper. Update and restart both components together; helper protocol 13 removes the former battery APIs. Existing preferences migrate without resetting unrelated settings, and historical battery logs are not deleted. Fan controls and fan-only scheduling remain under **Settings → Monitoring**. The new version does not reset hardware state left by an older build or another charge controller; recover any existing charging inhibit separately before upgrading.
+
 ### Local development builds
 
 Public-source development builds can include unavailable private-feature implementations; they are not equivalent to the complete official release. Keep an application and preferences backup before replacing an installed release. Supply a valid, ignored local `Sapphire/App/GoogleService-Info.plist`; the public placeholder is not a working Firebase configuration.
 
 This local developer fork uses `com.yuxi.sapphire.local` and its own helper/widget identifiers so a different Apple developer team can provision it legitimately. Import the original preferences into the local bundle's domain when upgrading; the original preferences and signing identity remain separate.
+
+The local app builds and installs as `Island.app`, with `Island` as its macOS application name. The Xcode scheme and Swift module remain `Sapphire`; bundle identifiers, preferences domains, keychain accounts and helper identifiers are unchanged.
 
 macOS privacy permissions belong to an application's signing identity, not its display name. An enabled `Sapphire` entry for the official `com.cshariq.sapphire` release does not grant Accessibility or other permissions to `com.yuxi.sapphire.local`. Install the local build at its final path before granting its permissions; existing official-release consent remains untouched.
 

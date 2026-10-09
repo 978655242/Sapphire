@@ -375,22 +375,12 @@ struct LockScreenBluetoothMiniWidget: View {
                 Text(device?.name ?? "Bluetooth".local)
                     .font(.system(size: 15, weight: .semibold, design: .rounded))
                     .lineLimit(1)
-                if let level = device?.batteryLevel, device?.eventType == .connected {
-                    Text("\(level)% battery")
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
-                } else {
-                    Text("No device connected")
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(.secondary)
-                }
+                Text(device?.eventType == .connected ? "Connected".local : "No device connected".local)
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
             }
             Spacer(minLength: 0)
 
-            if let level = device?.batteryLevel, device?.eventType == .connected {
-                Text("\(level)%")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
-            }
         }
         .foregroundStyle(.white)
         .frame(minWidth: 220)
@@ -453,14 +443,6 @@ struct LockScreenSystemMiniWidget: View {
 
 // MARK: - Main widgets
 
-struct LockScreenBatteryMainView: View {
-    var body: some View {
-        LockScreenPaddedBackground {
-            BatteryMiniWidget()
-                .frame(minWidth: 280)
-        }
-    }
-}
 
 struct LockScreenFocusMainView: View {
     var body: some View {

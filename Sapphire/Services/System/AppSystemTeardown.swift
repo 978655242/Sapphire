@@ -11,10 +11,6 @@ enum AppSystemTeardown {
     static func restoreManagedSystemState(reason: String) {
         print("[AppSystemTeardown] Restoring session-scoped system state (\(reason))")
 
-        if CalibrationManager.shared.isActive {
-            CalibrationManager.shared.cancel()
-        }
-
         LiveWallpaperManager.shared.shutdown()
 
         CaffeineManager.shared.stop()
@@ -23,7 +19,7 @@ enum AppSystemTeardown {
     }
 
     private static func restoreHelperSleepIfNeeded() {
-        guard let helper = BatteryManager.shared.getHelper() else { return }
+        guard let helper = XPCClient.shared.proxy() else { return }
 
         let group = DispatchGroup()
         group.enter()
